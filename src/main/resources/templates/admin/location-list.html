@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위치 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: #111827;
+            color: white;
+            padding: 28px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 36px;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .menu-title {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: #d1d5db;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            padding: 34px;
+        }
+
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 0 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+        }
+
+        .add-btn {
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 24px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .location-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .location-item {
+            padding: 18px;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .location-info strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .location-info span {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .edit {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .hide {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .sub-add {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .sub-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sub-item {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #dcfce7;
+            color: #16a34a;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 1000px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <div class="logo">FindCampus <span>Admin</span></div>
+
+        <div class="menu-title">메뉴</div>
+
+        <nav class="menu">
+            <a th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-chart-line"></i> 대시보드
+            </a>
+            <a th:href="@{/admin/users}">
+                <i class="fa-solid fa-users"></i> 사용자 관리
+            </a>
+            <a th:href="@{/admin/items}">
+                <i class="fa-solid fa-box"></i> 분실물/습득물 관리
+            </a>
+            <a th:href="@{/admin/storages}">
+                <i class="fa-solid fa-warehouse"></i> 보관 장소 관리
+            </a>
+            <a th:href="@{/admin/locations}" class="active">
+                <i class="fa-solid fa-location-dot"></i> 위치 관리
+            </a>
+            <a th:href="@{/admin/categories}">
+                <i class="fa-solid fa-tags"></i> 카테고리 관리
+            </a>
+            <a th:href="@{/admin/reports}">
+                <i class="fa-solid fa-triangle-exclamation"></i> 신고 관리
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h1>위치 관리</h1>
+            <a href="#" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+                위치 추가
+            </a>
+        </div>
+
+        <div class="content-grid">
+
+            <section class="card">
+                <h2>위치 목록</h2>
+
+                <div class="location-list">
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>1. 대학본관</strong>
+                            <span>동명대학교 대학본관 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>2. 보건복지관</strong>
+                            <span>보건복지관 건물 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>3. 건축디자인관</strong>
+                            <span>건축디자인관 건물 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>10. 중앙도서관</strong>
+                            <span>중앙도서관 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>13. ICT 2관</strong>
+                            <span>ICT 2관 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <div class="location-info">
+                            <strong>15. ICT 1관</strong>
+                            <span>ICT 1관 · 사용중</span>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn sub-add">하위 추가</button>
+                            <button class="btn edit">수정</button>
+                            <button class="btn hide">숨김</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>하위 위치</h2>
+
+                <div class="sub-list">
+                    <div class="sub-item">
+                        <span>301호</span>
+                        <span class="badge">사용</span>
+                    </div>
+
+                    <div class="sub-item">
+                        <span>302호</span>
+                        <span class="badge">사용</span>
+                    </div>
+
+                    <div class="sub-item">
+                        <span>303호</span>
+                        <span class="badge">사용</span>
+                    </div>
+
+                    <div class="sub-item">
+                        <span>3층 복도</span>
+                        <span class="badge">사용</span>
+                    </div>
+
+                    <div class="sub-item">
+                        <span>1층 로비</span>
+                        <span class="badge">사용</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

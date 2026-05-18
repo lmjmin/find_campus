@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>습득물 등록 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header-inner {
+            max-width: 1040px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-link {
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 44px 24px 80px;
+        }
+
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 34px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .notice {
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 26px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #374151;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .input,
+        .select,
+        .textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 16px;
+            background: #ffffff;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .input,
+        .select {
+            height: 54px;
+            padding: 0 16px;
+        }
+
+        .textarea {
+            height: 160px;
+            padding: 16px;
+            resize: none;
+            line-height: 1.6;
+        }
+
+        .input:focus,
+        .select:focus,
+        .textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .category-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-list input {
+            display: none;
+        }
+
+        .category-list span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 16px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .category-list input:checked + span {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .upload-box {
+            height: 180px;
+            border: 2px dashed #c7d2fe;
+            border-radius: 20px;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .upload-box i {
+            font-size: 36px;
+            color: #4f46e5;
+            margin-bottom: 14px;
+        }
+
+        .upload-box strong {
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .ai-info {
+            padding: 18px;
+            border-radius: 18px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 60px;
+            border: none;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #4f46e5, #2563eb);
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 700px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <a th:href="@{/found/list}" class="back-link">
+            습득물 목록으로
+        </a>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-title">
+        <h1>습득물 등록</h1>
+        <p>발견한 물건의 정보를 정확하게 입력하면 주인을 더 빨리 찾을 수 있습니다.</p>
+    </div>
+
+    <form th:action="@{/found/write}" method="post" enctype="multipart/form-data" class="form-card">
+
+        <div class="notice">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>
+                허위 등록 시 서비스 이용이 제한될 수 있습니다.
+                습득 위치와 현재 보관 장소를 정확하게 입력해주세요.
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>제목 <span class="required">*</span></label>
+            <input type="text"
+                   name="title"
+                   class="input"
+                   placeholder="예: 도서관에서 에어팟을 발견했어요">
+        </div>
+
+        <div class="form-group">
+            <label>물건명 <span class="required">*</span></label>
+            <input type="text"
+                   name="itemName"
+                   class="input"
+                   placeholder="예: 에어팟, 지갑, 학생증">
+        </div>
+
+        <div class="form-group">
+            <label>카테고리 <span class="required">*</span></label>
+
+            <div class="category-list">
+                <label>
+                    <input type="radio" name="categoryId" value="1">
+                    <span>전자기기</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="2">
+                    <span>의류/잡화</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="3">
+                    <span>지갑/카드</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="4">
+                    <span>가방</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="5">
+                    <span>열쇠</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="6">
+                    <span>신분증</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="7">
+                    <span>기타</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>색상</label>
+                <input type="text"
+                       name="color"
+                       class="input"
+                       placeholder="예: 흰색">
+            </div>
+
+            <div class="form-group">
+                <label>브랜드</label>
+                <input type="text"
+                       name="brand"
+                       class="input"
+                       placeholder="예: Apple, Samsung">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>습득 위치 <span class="required">*</span></label>
+
+            <select name="foundLocationId" class="select">
+                <option value="">위치를 선택하세요</option>
+                <option value="1">대학본관</option>
+                <option value="2">보건복지관</option>
+                <option value="3">건축디자인관</option>
+                <option value="4">학생회관</option>
+                <option value="5">중앙도서관</option>
+                <option value="6">ICT 1관</option>
+                <option value="7">ICT 2관</option>
+                <option value="8">동명생활관</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>상세 위치</label>
+            <input type="text"
+                   name="foundLocationDetail"
+                   class="input"
+                   placeholder="예: ICT 2관 201호 강의실 안">
+        </div>
+
+        <div class="form-group">
+            <label>현재 보관 장소 <span class="required">*</span></label>
+
+            <select name="storageId" class="select">
+                <option value="">보관 장소를 선택하세요</option>
+                <option value="1">본인 소지</option>
+                <option value="2">대학본관 안내데스크</option>
+                <option value="3">중앙도서관 안내데스크</option>
+                <option value="4">학과 사무실</option>
+                <option value="5">학생회관 안내데스크</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>습득 날짜 <span class="required">*</span></label>
+                <input type="date"
+                       name="foundDate"
+                       class="input">
+            </div>
+
+            <div class="form-group">
+                <label>습득 시간</label>
+                <input type="time"
+                       name="foundTime"
+                       class="input">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>습득 시간대</label>
+            <input type="text"
+                   name="foundTimeRange"
+                   class="input"
+                   placeholder="예: 오전 9:00 ~ 9:30">
+        </div>
+
+        <div class="form-group">
+            <label>상세 설명 <span class="required">*</span></label>
+
+            <textarea name="description"
+                      class="textarea"
+                      placeholder="물건의 특징, 색상, 브랜드, 상태 등을 자세히 적어주세요. 예) 흰색 에어팟 프로, 케이스 포함, 케이스에 작은 스티커 있음"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>물건 사진 <span class="required">*</span></label>
+
+            <label class="upload-box">
+                <input type="file" name="images" multiple hidden>
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <strong>사진을 드래그하거나 클릭하여 업로드</strong>
+                <span>JPG, PNG 최대 10MB</span>
+            </label>
+        </div>
+
+        <div class="ai-info">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>
+                습득물 등록 시 AI가 분실물 게시글과 자동 매칭을 시도합니다.
+            </span>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            습득물 등록하기
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

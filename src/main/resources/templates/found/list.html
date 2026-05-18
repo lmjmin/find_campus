@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>습득물 목록 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: #2563eb;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #4b5563;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 36px 24px 80px;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 28px;
+        }
+
+        .filter {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            height: fit-content;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .filter h3 {
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .filter-section {
+            margin-bottom: 28px;
+        }
+
+        .filter-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .check-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .check-list label {
+            font-size: 14px;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
+        .check-list input {
+            margin-right: 8px;
+        }
+
+        .more {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #2563eb;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .content {
+            min-width: 0;
+        }
+
+        .page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-head h1 {
+            font-size: 30px;
+        }
+
+        .write-btn {
+            padding: 13px 20px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            width: 360px;
+            height: 48px;
+            padding: 0 16px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .sort-box {
+            width: 140px;
+            height: 48px;
+            padding: 0 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            outline: none;
+        }
+
+        .result-count {
+            margin-bottom: 18px;
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .item-card {
+            background: #ffffff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            transition: 0.2s;
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .item-img {
+            height: 160px;
+            background: #e0e7ff;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-size: 48px;
+        }
+
+        .badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .status-wait {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-find {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-done {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .item-body {
+            padding: 20px;
+        }
+
+        .item-type {
+            font-size: 13px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .item-desc {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .item-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .pagination {
+            margin-top: 36px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .page-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+
+        .page-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .filter {
+                display: none;
+            }
+
+            .item-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .nav {
+                display: none;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+
+            .search-box,
+            .sort-box {
+                width: 100%;
+            }
+
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}" class="active">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/guide}">서비스안내</a>
+        </nav>
+
+        <div class="user-menu">
+            <i class="fa-regular fa-bell"></i>
+            <i class="fa-solid fa-circle-user"></i>
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <aside class="filter">
+
+        <h3>필터</h3>
+
+        <div class="filter-section">
+            <div class="filter-title">상태</div>
+
+            <div class="check-list">
+                <label><input type="checkbox" name="status" value="FINDING">찾는중</label>
+                <label><input type="checkbox" name="status" value="STORED">보관중</label>
+                <label><input type="checkbox" name="status" value="DONE">반환완료</label>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">카테고리</div>
+
+            <div class="check-list">
+                <label><input type="checkbox">가방</label>
+                <label><input type="checkbox">전자기기</label>
+                <label><input type="checkbox">지갑</label>
+                <label><input type="checkbox">신분증</label>
+                <label><input type="checkbox">열쇠</label>
+                <label><input type="checkbox">의류</label>
+                <label><input type="checkbox">안경</label>
+                <label><input type="checkbox">서류</label>
+                <label><input type="checkbox">기타</label>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-title">위치</div>
+
+            <div class="check-list">
+                <label><input type="checkbox">대학본관</label>
+                <label><input type="checkbox">보건복지관</label>
+                <label><input type="checkbox">건축디자인관</label>
+                <label><input type="checkbox">대학원</label>
+                <label><input type="checkbox">학생회관</label>
+                <label><input type="checkbox">중앙도서관</label>
+                <label><input type="checkbox">동명관</label>
+                <label><input type="checkbox">ICT 2관</label>
+            </div>
+
+            <div class="more">더보기</div>
+        </div>
+
+    </aside>
+
+    <main class="content">
+
+        <div class="page-head">
+            <h1>습득물 목록</h1>
+
+            <a th:href="@{/found/write}" class="write-btn">
+                습득물 등록
+            </a>
+        </div>
+
+        <div class="toolbar">
+
+            <form th:action="@{/found/list}" method="get" class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="keyword" placeholder="습득물 검색...">
+            </form>
+
+            <select class="sort-box" name="sort">
+                <option value="latest">최신순</option>
+                <option value="view">조회순</option>
+                <option value="old">오래된순</option>
+            </select>
+
+        </div>
+
+        <div class="result-count">
+            총 50건의 습득물
+        </div>
+
+        <div class="item-grid">
+
+            <a th:href="@{/found/detail/1}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-wait">보관중</span>
+                    <i class="fa-solid fa-headphones"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">에어팟 습득</div>
+                    <div class="item-desc">흰색 에어팟 케이스 포함, 보관중</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> 건축디자인관 6층</span>
+                        <span><i class="fa-regular fa-clock"></i> 오늘 09:15</span>
+                    </div>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail/2}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-find">찾는중</span>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">지갑 발견</div>
+                    <div class="item-desc">갈색 가죽 지갑, 학생증 포함</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> 대학원 앞</span>
+                        <span><i class="fa-regular fa-clock"></i> 오늘 10:30</span>
+                    </div>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail/3}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-wait">보관중</span>
+                    <i class="fa-solid fa-umbrella"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">우산 습득</div>
+                    <div class="item-desc">파란색 접이식 우산</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> 학생회관 1층</span>
+                        <span><i class="fa-regular fa-clock"></i> 어제 16:00</span>
+                    </div>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail/4}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-done">반환완료</span>
+                    <i class="fa-solid fa-glasses"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">안경 발견</div>
+                    <div class="item-desc">뿔테 안경, 검정색 케이스 포함</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> 학생회관</span>
+                        <span><i class="fa-regular fa-clock"></i> 어제 12:45</span>
+                    </div>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail/5}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-wait">보관중</span>
+                    <i class="fa-solid fa-key"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">열쇠 습득</div>
+                    <div class="item-desc">열쇠 2개와 키링이 달린 묶음</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> 봉사관 입구</span>
+                        <span><i class="fa-regular fa-clock"></i> 2일 전</span>
+                    </div>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail/6}" class="item-card">
+                <div class="item-img">
+                    <span class="badge status-wait">보관중</span>
+                    <i class="fa-solid fa-memory"></i>
+                </div>
+
+                <div class="item-body">
+                    <div class="item-type">습득물</div>
+                    <div class="item-title">USB 드라이브 습득</div>
+                    <div class="item-desc">Samsung USB 64GB, 파란색</div>
+
+                    <div class="item-meta">
+                        <span><i class="fa-solid fa-location-dot"></i> Do-ing관</span>
+                        <span><i class="fa-regular fa-clock"></i> 2일 전</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="pagination">
+            <a href="#" class="page-btn active">1</a>
+            <a href="#" class="page-btn">2</a>
+            <a href="#" class="page-btn">3</a>
+            <a href="#" class="page-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

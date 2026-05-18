@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>분실물/습득물 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: #111827;
+            color: white;
+            padding: 28px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 36px;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .menu-title {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: #d1d5db;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            padding: 34px;
+        }
+
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 0 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+        }
+
+        .admin-user {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .card-head h2 {
+            font-size: 22px;
+        }
+
+        .tools {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box {
+            width: 260px;
+            height: 44px;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .select {
+            height: 44px;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 0 14px;
+            background: white;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #4b5563;
+            font-size: 14px;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .badge {
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .lost {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .found {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .stored {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .finding {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .done {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .confirm {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .hide {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .detail {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        @media (max-width: 900px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .tools {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .card {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <div class="logo">FindCampus <span>Admin</span></div>
+
+        <div class="menu-title">메뉴</div>
+
+        <nav class="menu">
+            <a th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-chart-line"></i> 대시보드
+            </a>
+            <a th:href="@{/admin/users}">
+                <i class="fa-solid fa-users"></i> 사용자 관리
+            </a>
+            <a th:href="@{/admin/items}" class="active">
+                <i class="fa-solid fa-box"></i> 분실물/습득물 관리
+            </a>
+            <a th:href="@{/admin/storages}">
+                <i class="fa-solid fa-warehouse"></i> 보관 장소 관리
+            </a>
+            <a th:href="@{/admin/locations}">
+                <i class="fa-solid fa-location-dot"></i> 위치 관리
+            </a>
+            <a th:href="@{/admin/categories}">
+                <i class="fa-solid fa-tags"></i> 카테고리 관리
+            </a>
+            <a th:href="@{/admin/reports}">
+                <i class="fa-solid fa-triangle-exclamation"></i> 신고 관리
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h1>분실물/습득물 관리</h1>
+            <div class="admin-user">관리자</div>
+        </div>
+
+        <section class="card">
+
+            <div class="card-head">
+                <h2>목록</h2>
+
+                <div class="tools">
+                    <form th:action="@{/admin/items}" method="get" class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="keyword" placeholder="물품명 검색...">
+                    </form>
+
+                    <select name="type" class="select">
+                        <option value="">전체</option>
+                        <option value="LOST">분실물</option>
+                        <option value="FOUND">습득물</option>
+                    </select>
+
+                    <select name="status" class="select">
+                        <option value="">상태: 전체</option>
+                        <option value="REGISTERED">등록중</option>
+                        <option value="STORED">보관중</option>
+                        <option value="COMPLETED">반환완료</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>물품명</th>
+                    <th>카테고리</th>
+                    <th>위치</th>
+                    <th>등록일</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td><span class="badge lost">분실물</span></td>
+                    <td>검정 노트북 가방</td>
+                    <td>가방</td>
+                    <td>중앙도서관</td>
+                    <td>2026.05.09</td>
+                    <td><span class="badge finding">찾는중</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn detail">상세</button>
+                            <button class="btn confirm">반환확인</button>
+                            <button class="btn hide">숨김 처리</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="badge found">습득물</span></td>
+                    <td>에어팟 프로</td>
+                    <td>전자기기</td>
+                    <td>ICT 2관</td>
+                    <td>2026.05.19</td>
+                    <td><span class="badge stored">보관중</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn detail">상세</button>
+                            <button class="btn confirm">수령완료</button>
+                            <button class="btn hide">숨김 처리</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="badge lost">분실물</span></td>
+                    <td>갈색 지갑</td>
+                    <td>지갑</td>
+                    <td>학생복지관</td>
+                    <td>2026.05.10</td>
+                    <td><span class="badge done">반환완료</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn detail">상세</button>
+                            <button class="btn hide">숨김 처리</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><span class="badge found">습득물</span></td>
+                    <td>학생증</td>
+                    <td>신분증</td>
+                    <td>학생회관</td>
+                    <td>2026.05.12</td>
+                    <td><span class="badge stored">보관중</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn detail">상세</button>
+                            <button class="btn confirm">수령완료</button>
+                            <button class="btn hide">숨김 처리</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>분실물 등록 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header-inner {
+            max-width: 1040px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-link {
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 44px 24px 80px;
+        }
+
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 34px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .notice {
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 26px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #374151;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .input,
+        .select,
+        .textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 16px;
+            background: #ffffff;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .input,
+        .select {
+            height: 54px;
+            padding: 0 16px;
+        }
+
+        .textarea {
+            height: 160px;
+            padding: 16px;
+            resize: none;
+            line-height: 1.6;
+        }
+
+        .input:focus,
+        .select:focus,
+        .textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .category-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-list input {
+            display: none;
+        }
+
+        .category-list span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 11px 16px;
+            border-radius: 999px;
+
+            background: #f3f4f6;
+            color: #4b5563;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .category-list input:checked + span {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .upload-box {
+            height: 180px;
+            border: 2px dashed #c7d2fe;
+            border-radius: 20px;
+            background: #f8fafc;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            color: #6b7280;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .upload-box i {
+            font-size: 36px;
+            color: #4f46e5;
+            margin-bottom: 14px;
+        }
+
+        .upload-box strong {
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .ai-info {
+            padding: 18px;
+            border-radius: 18px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 28px;
+
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 60px;
+            border: none;
+            border-radius: 18px;
+
+            background: linear-gradient(135deg, #4f46e5, #2563eb);
+            color: #ffffff;
+
+            font-size: 17px;
+            font-weight: 800;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 700px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <a th:href="@{/lost/list}" class="back-link">
+            분실물 목록으로
+        </a>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-title">
+        <h1>분실물 등록</h1>
+        <p>분실한 물건의 정보를 정확하게 입력하면 매칭률이 높아집니다.</p>
+    </div>
+
+    <form th:action="@{/lost/write}" method="post" enctype="multipart/form-data" class="form-card">
+
+        <div class="notice">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>
+                허위 등록 시 서비스 이용이 제한될 수 있습니다.
+                물건의 특징, 색상, 위치 정보를 가능한 자세히 입력해주세요.
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label>제목 <span class="required">*</span></label>
+            <input type="text"
+                   name="title"
+                   class="input"
+                   placeholder="예: 검정 노트북 가방을 잃어버렸어요">
+        </div>
+
+        <div class="form-group">
+            <label>물건명 <span class="required">*</span></label>
+            <input type="text"
+                   name="itemName"
+                   class="input"
+                   placeholder="예: 노트북 가방, 에어팟, 학생증">
+        </div>
+
+        <div class="form-group">
+            <label>카테고리 <span class="required">*</span></label>
+
+            <div class="category-list">
+                <label>
+                    <input type="radio" name="categoryId" value="1">
+                    <span>전자기기</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="2">
+                    <span>의류/잡화</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="3">
+                    <span>지갑/카드</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="4">
+                    <span>가방</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="5">
+                    <span>열쇠</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="6">
+                    <span>신분증</span>
+                </label>
+
+                <label>
+                    <input type="radio" name="categoryId" value="7">
+                    <span>기타</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>색상</label>
+                <input type="text"
+                       name="color"
+                       class="input"
+                       placeholder="예: 검정색">
+            </div>
+
+            <div class="form-group">
+                <label>브랜드</label>
+                <input type="text"
+                       name="brand"
+                       class="input"
+                       placeholder="예: Nike, Apple">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>분실 위치 <span class="required">*</span></label>
+
+            <select name="lostLocationId" class="select">
+                <option value="">위치를 선택하세요</option>
+                <option value="1">대학본관</option>
+                <option value="2">보건복지관</option>
+                <option value="3">건축디자인관</option>
+                <option value="4">학생회관</option>
+                <option value="5">중앙도서관</option>
+                <option value="6">ICT 1관</option>
+                <option value="7">ICT 2관</option>
+                <option value="8">동명생활관</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>상세 위치</label>
+            <input type="text"
+                   name="lostLocationDetail"
+                   class="input"
+                   placeholder="예: 중앙도서관 3층 열람실 앞">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>분실 날짜 <span class="required">*</span></label>
+                <input type="date"
+                       name="lostDate"
+                       class="input">
+            </div>
+
+            <div class="form-group">
+                <label>분실 시간</label>
+                <input type="time"
+                       name="lostTime"
+                       class="input">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>분실 시간대</label>
+            <input type="text"
+                   name="lostTimeRange"
+                   class="input"
+                   placeholder="예: 오후 2:00 ~ 3:00">
+        </div>
+
+        <div class="form-group">
+            <label>상세 설명 <span class="required">*</span></label>
+
+            <textarea name="description"
+                      class="textarea"
+                      placeholder="물건의 특징, 색상, 브랜드, 내용물 등을 자세히 적어주세요. 예) 검정 나이키 백팩, 내부에 맥북과 충전기 있음, 앞주머니에 파란 키링 달려있음"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>물건 사진</label>
+
+            <label class="upload-box">
+                <input type="file" name="images" multiple hidden>
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <strong>사진을 드래그하거나 클릭하여 업로드</strong>
+                <span>JPG, PNG 최대 10MB</span>
+            </label>
+        </div>
+
+        <div class="ai-info">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>
+                등록 후 AI가 유사한 습득물을 자동으로 추천해드립니다.
+            </span>
+        </div>
+
+        <button type="submit" class="submit-btn">
+            분실물 등록하기
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

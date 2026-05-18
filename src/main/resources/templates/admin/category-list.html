@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: #111827;
+            color: white;
+            padding: 28px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 36px;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .menu-title {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: #d1d5db;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            padding: 34px;
+        }
+
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 0 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+        }
+
+        .add-btn {
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-head {
+            margin-bottom: 22px;
+        }
+
+        .card-head h2 {
+            font-size: 22px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #4b5563;
+            font-size: 14px;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .badge {
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .active-yn {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .inactive-yn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .edit {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        @media (max-width: 900px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .card {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <div class="logo">FindCampus <span>Admin</span></div>
+
+        <div class="menu-title">메뉴</div>
+
+        <nav class="menu">
+            <a th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-chart-line"></i> 대시보드
+            </a>
+            <a th:href="@{/admin/users}">
+                <i class="fa-solid fa-users"></i> 사용자 관리
+            </a>
+            <a th:href="@{/admin/items}">
+                <i class="fa-solid fa-box"></i> 분실물/습득물 관리
+            </a>
+            <a th:href="@{/admin/storages}">
+                <i class="fa-solid fa-warehouse"></i> 보관 장소 관리
+            </a>
+            <a th:href="@{/admin/locations}">
+                <i class="fa-solid fa-location-dot"></i> 위치 관리
+            </a>
+            <a th:href="@{/admin/categories}" class="active">
+                <i class="fa-solid fa-tags"></i> 카테고리 관리
+            </a>
+            <a th:href="@{/admin/reports}">
+                <i class="fa-solid fa-triangle-exclamation"></i> 신고 관리
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h1>카테고리 관리</h1>
+            <a href="#" class="add-btn">
+                <i class="fa-solid fa-plus"></i>
+                카테고리 추가
+            </a>
+        </div>
+
+        <section class="card">
+
+            <div class="card-head">
+                <h2>목록</h2>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>카테고리명</th>
+                    <th>설명</th>
+                    <th>사용 여부</th>
+                    <th>게시글 수</th>
+                    <th>생성/수정일</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>지갑</td>
+                    <td>지갑, 카드지갑, 현금 관련 물품</td>
+                    <td><span class="badge active-yn">사용</span></td>
+                    <td>128개</td>
+                    <td>2026.05.01</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn edit">수정</button>
+                            <button class="btn delete">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>전자기기</td>
+                    <td>휴대폰, 이어폰, 노트북, 충전기 등</td>
+                    <td><span class="badge active-yn">사용</span></td>
+                    <td>32개</td>
+                    <td>2026.04.29</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn edit">수정</button>
+                            <button class="btn delete">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>가방</td>
+                    <td>백팩, 크로스백, 노트북 가방 등</td>
+                    <td><span class="badge active-yn">사용</span></td>
+                    <td>87개</td>
+                    <td>2026.04.20</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn edit">수정</button>
+                            <button class="btn delete">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>기타</td>
+                    <td>분류되지 않은 물품</td>
+                    <td><span class="badge inactive-yn">미사용</span></td>
+                    <td>12개</td>
+                    <td>2026.04.12</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn edit">수정</button>
+                            <button class="btn delete">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
