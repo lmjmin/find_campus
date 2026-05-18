@@ -1,10 +1,660 @@
 <!DOCTYPE html>
-<html>
-<html xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            width: 100%;
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1180px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #2563eb;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .nav a:hover {
+            color: #2563eb;
+        }
+
+        .auth {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth a {
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .login {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .join {
+            color: #ffffff;
+            background: #2563eb;
+        }
+
+        main {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4f46e5, #1e3a8a);
+            border-radius: 32px;
+            padding: 56px;
+
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            align-items: center;
+            gap: 40px;
+
+            color: white;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.18);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 9px 16px;
+            margin-bottom: 20px;
+
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.16);
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.25;
+            margin-bottom: 18px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #e0e7ff;
+            margin-bottom: 32px;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 620px;
+            height: 58px;
+            padding: 0 8px 0 22px;
+
+            background: #ffffff;
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box i {
+            color: #6b7280;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            height: 44px;
+            padding: 0 24px;
+
+            border: none;
+            border-radius: 14px;
+            background: #2563eb;
+            color: #ffffff;
+
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .hero-visual {
+            height: 260px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.12);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-visual i {
+            font-size: 120px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .stats {
+            margin-top: 26px;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .stat-card span {
+            display: block;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card strong {
+            font-size: 30px;
+            color: #1d4ed8;
+        }
+
+        .quick-section {
+            margin-top: 42px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title h2 {
+            font-size: 26px;
+        }
+
+        .section-title a {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .quick-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            transition: 0.2s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .quick-icon {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 18px;
+
+            border-radius: 18px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #2563eb;
+            font-size: 24px;
+        }
+
+        .quick-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .quick-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .list-wrap {
+            margin-top: 46px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .list-box {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .list-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .list-head h2 {
+            font-size: 22px;
+        }
+
+        .list-head a {
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .item {
+            padding: 18px 0;
+            border-bottom: 1px solid #eef2f7;
+
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item h3 {
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .item p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .status {
+            height: fit-content;
+            padding: 7px 10px;
+
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .yellow {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .cta {
+            margin-top: 44px;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .cta a {
+            height: 58px;
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .cta-lost {
+            background: #ef4444;
+        }
+
+        .cta-found {
+            background: #2563eb;
+        }
+
+        .cta-search {
+            background: #111827;
+        }
+
+        footer {
+            margin-top: 80px;
+            padding: 36px 0;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .nav {
+                display: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 36px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .stats,
+            .quick-grid,
+            .list-wrap,
+            .cta {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<h1>Index Page</h1>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/guide}">서비스안내</a>
+        </nav>
+
+        <div class="auth">
+            <a th:href="@{/login}" class="login">로그인</a>
+            <a th:href="@{/join}" class="join">회원가입</a>
+        </div>
+
+    </div>
+</header>
+
+<main>
+
+    <section class="hero">
+
+        <div>
+            <span class="hero-badge">동명대학교 학생 전용 서비스</span>
+
+            <h1>
+                잃어버린 물건을<br>
+                찾아드립니다
+            </h1>
+
+            <p>
+                분실물과 습득물을 연결하는 스마트 분실물 서비스입니다.<br>
+                캠퍼스 안에서 잃어버린 물건을 빠르게 검색하고 등록할 수 있습니다.
+            </p>
+
+            <form th:action="@{/search}" method="get" class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input type="text"
+                       name="keyword"
+                       placeholder="분실물 또는 습득물을 검색하세요...">
+
+                <button type="submit">검색</button>
+            </form>
+        </div>
+
+        <div class="hero-visual">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <span>분실물</span>
+            <strong>1,234건</strong>
+        </div>
+
+        <div class="stat-card">
+            <span>습득물</span>
+            <strong>987건</strong>
+        </div>
+
+        <div class="stat-card">
+            <span>반환 완료</span>
+            <strong>456건</strong>
+        </div>
+
+    </section>
+
+    <section class="quick-section">
+
+        <div class="section-title">
+            <h2>빠른 메뉴</h2>
+        </div>
+
+        <div class="quick-grid">
+
+            <a th:href="@{/lost/write}" class="quick-card">
+                <div class="quick-icon">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+                <h3>분실물 등록</h3>
+                <p>잃어버린 물건 정보를 등록하고 유사 습득물을 추천받을 수 있습니다.</p>
+            </a>
+
+            <a th:href="@{/found/write}" class="quick-card">
+                <div class="quick-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <h3>습득물 등록</h3>
+                <p>주운 물건 정보를 등록하고 주인이 찾을 수 있도록 도와주세요.</p>
+            </a>
+
+            <a th:href="@{/search}" class="quick-card">
+                <div class="quick-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <h3>통합 검색</h3>
+                <p>분실물과 습득물을 한 번에 검색하고 상태별로 확인할 수 있습니다.</p>
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="list-wrap">
+
+        <div class="list-box">
+
+            <div class="list-head">
+                <h2>최근 분실물</h2>
+                <a th:href="@{/lost/list}">더보기</a>
+            </div>
+
+            <a th:href="@{/lost/detail/1}" class="item">
+                <div>
+                    <h3>검정 노트북 가방</h3>
+                    <p>대학본관 10층 · 2026.01.15</p>
+                </div>
+                <span class="status green">반환완료</span>
+            </a>
+
+            <a th:href="@{/lost/detail/2}" class="item">
+                <div>
+                    <h3>은색 에어팟 케이스</h3>
+                    <p>중앙도서관 1층 · 2026.01.14</p>
+                </div>
+                <span class="status blue">찾는중</span>
+            </a>
+
+            <a th:href="@{/lost/detail/3}" class="item">
+                <div>
+                    <h3>파란색 우산</h3>
+                    <p>학생회관 1층 · 2026.01.13</p>
+                </div>
+                <span class="status blue">찾는중</span>
+            </a>
+
+        </div>
+
+        <div class="list-box">
+
+            <div class="list-head">
+                <h2>최근 습득물</h2>
+                <a th:href="@{/found/list}">더보기</a>
+            </div>
+
+            <a th:href="@{/found/detail/1}" class="item">
+                <div>
+                    <h3>학생증</h3>
+                    <p>중앙도서관 열람실 · 2026.01.15</p>
+                </div>
+                <span class="status yellow">보관중</span>
+            </a>
+
+            <a th:href="@{/found/detail/2}" class="item">
+                <div>
+                    <h3>충전기 케이블</h3>
+                    <p>ICT 1관 302호 · 2026.01.14</p>
+                </div>
+                <span class="status yellow">보관중</span>
+            </a>
+
+            <a th:href="@{/found/detail/3}" class="item">
+                <div>
+                    <h3>갤럭시 버즈 케이스</h3>
+                    <p>동명관 4층 · 2026.01.12</p>
+                </div>
+                <span class="status blue">찾는중</span>
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="cta">
+
+        <a th:href="@{/lost/write}" class="cta-lost">
+            <i class="fa-solid fa-pen"></i>
+            분실물 등록하기
+        </a>
+
+        <a th:href="@{/found/write}" class="cta-found">
+            <i class="fa-solid fa-box"></i>
+            습득물 등록하기
+        </a>
+
+        <a th:href="@{/search}" class="cta-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            통합 검색
+        </a>
+
+    </section>
+
+    <footer>
+        FindCampus · 동명대학교 분실물 서비스
+    </footer>
+
+</main>
+
 </body>
 </html>
