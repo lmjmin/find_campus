@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: #111827;
+            color: white;
+            padding: 28px 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 36px;
+        }
+
+        .logo span {
+            color: #60a5fa;
+        }
+
+        .menu-title {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 14px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            padding: 14px 16px;
+            border-radius: 14px;
+            color: #d1d5db;
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main {
+            padding: 34px;
+        }
+
+        .topbar {
+            height: 64px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 0 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .summary-card span {
+            display: block;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .summary-card strong {
+            font-size: 30px;
+            color: #2563eb;
+        }
+
+        .summary-card.waiting strong {
+            color: #dc2626;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .card-head h2 {
+            font-size: 22px;
+        }
+
+        .select {
+            height: 44px;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 0 14px;
+            background: white;
+            outline: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #4b5563;
+            font-size: 14px;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+            color: #374151;
+            vertical-align: top;
+        }
+
+        .badge {
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .waiting {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .checking {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .done {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .target {
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .target-type {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 11px;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .process {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .hide {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .complete {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        @media (max-width: 900px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <div class="logo">FindCampus <span>Admin</span></div>
+
+        <div class="menu-title">메뉴</div>
+
+        <nav class="menu">
+            <a th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-chart-line"></i> 대시보드
+            </a>
+            <a th:href="@{/admin/users}">
+                <i class="fa-solid fa-users"></i> 사용자 관리
+            </a>
+            <a th:href="@{/admin/items}">
+                <i class="fa-solid fa-box"></i> 분실물/습득물 관리
+            </a>
+            <a th:href="@{/admin/storages}">
+                <i class="fa-solid fa-warehouse"></i> 보관 장소 관리
+            </a>
+            <a th:href="@{/admin/locations}">
+                <i class="fa-solid fa-location-dot"></i> 위치 관리
+            </a>
+            <a th:href="@{/admin/categories}">
+                <i class="fa-solid fa-tags"></i> 카테고리 관리
+            </a>
+            <a th:href="@{/admin/reports}" class="active">
+                <i class="fa-solid fa-triangle-exclamation"></i> 신고 관리
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h1>신고 관리</h1>
+            <div>관리자</div>
+        </div>
+
+        <section class="summary">
+            <div class="summary-card waiting">
+                <span>처리 대기 중인 신고</span>
+                <strong>12건</strong>
+            </div>
+
+            <div class="summary-card">
+                <span>확인 중인 신고</span>
+                <strong>4건</strong>
+            </div>
+
+            <div class="summary-card">
+                <span>처리 완료 신고</span>
+                <strong>36건</strong>
+            </div>
+        </section>
+
+        <section class="card">
+
+            <div class="card-head">
+                <h2>목록</h2>
+
+                <select class="select">
+                    <option>상태: 전체</option>
+                    <option>처리 대기</option>
+                    <option>확인 중</option>
+                    <option>처리 완료</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>신고 대상</th>
+                    <th>신고 사유</th>
+                    <th>신고자</th>
+                    <th>신고일</th>
+                    <th>상태</th>
+                    <th>처리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="target">검정 노트북 가방</div>
+                        <div class="target-type">분실물 게시글</div>
+                    </td>
+                    <td>허위 게시글 등록</td>
+                    <td>이찾음</td>
+                    <td>2026.05.01</td>
+                    <td><span class="badge waiting">처리 대기</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn process">처리하기</button>
+                            <button class="btn hide">게시글 숨김</button>
+                            <button class="btn complete">완료</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="target">에어팟 프로 습득</div>
+                        <div class="target-type">습득물 게시글</div>
+                    </td>
+                    <td>개인정보 노출</td>
+                    <td>김동명</td>
+                    <td>2026.05.02</td>
+                    <td><span class="badge checking">확인 중</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn process">상세 확인</button>
+                            <button class="btn hide">게시글 숨김</button>
+                            <button class="btn complete">완료</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="target">학생증 습득</div>
+                        <div class="target-type">습득물 게시글</div>
+                    </td>
+                    <td>부적절한 내용</td>
+                    <td>박찾음</td>
+                    <td>2026.05.03</td>
+                    <td><span class="badge done">처리 완료</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn process">상세</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="target">기숙사 열쇠 분실</div>
+                        <div class="target-type">분실물 게시글</div>
+                    </td>
+                    <td>스팸/광고</td>
+                    <td>홍길동</td>
+                    <td>2026.05.04</td>
+                    <td><span class="badge waiting">처리 대기</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn process">처리하기</button>
+                            <button class="btn hide">게시글 숨김</button>
+                            <button class="btn complete">완료</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

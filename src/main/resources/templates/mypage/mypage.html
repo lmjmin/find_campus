@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1180px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: #2563eb;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #4f46e5, #1e3a8a);
+            color: white;
+
+            border-radius: 30px;
+            padding: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.18);
+            margin-bottom: 28px;
+        }
+
+        .profile-left {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .profile-avatar {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.18);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .profile-info h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .profile-info p {
+            color: #dbeafe;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .edit-btn {
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: #ffffff;
+            color: #2563eb;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            text-align: center;
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 30px;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .stat-card span {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 700;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 28px;
+        }
+
+        .side-card,
+        .content-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .side-card {
+            padding: 16px;
+            height: fit-content;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 18px;
+            border-radius: 18px;
+
+            transition: 0.2s;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: #eef2ff;
+        }
+
+        .menu-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: #f3f4f6;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #2563eb;
+        }
+
+        .menu-text strong {
+            display: block;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .menu-text span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .content-card {
+            padding: 28px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .section-head h2 {
+            font-size: 24px;
+        }
+
+        .write-btn {
+            padding: 11px 16px;
+            border-radius: 14px;
+            background: #2563eb;
+            color: white;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: #4b5563;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .tab.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .post-card {
+            padding: 20px;
+            border: 1px solid #eef2f7;
+            border-radius: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .post-info {
+            min-width: 0;
+        }
+
+        .post-top {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .type {
+            padding: 6px 10px;
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .lost {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .found {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .finding {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .stored {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .done {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .post-title {
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .post-meta {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .post-counts {
+            display: flex;
+            gap: 14px;
+            margin-top: 10px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .action-btn {
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: none;
+
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .edit {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .delete {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .complete {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .logout {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 18px;
+            background: #fee2e2;
+            color: #dc2626;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            font-weight: 800;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        @media (max-width: 950px) {
+            .profile-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .nav {
+                display: none;
+            }
+
+            .profile-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .post-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .post-actions {
+                width: 100%;
+            }
+
+            .action-btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/chat/rooms}">채팅</a>
+            <a th:href="@{/mypage}" class="active">마이페이지</a>
+        </nav>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <section class="profile-card">
+
+        <div class="profile-left">
+
+            <div class="profile-avatar">
+                김
+            </div>
+
+            <div class="profile-info">
+                <h1>김동명</h1>
+                <p>
+                    tongmyong@tu.ac.kr<br>
+                    동명대학교 컴퓨터공학과
+                </p>
+            </div>
+
+        </div>
+
+        <a href="#" class="edit-btn">
+            정보 수정
+        </a>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <strong>5</strong>
+            <span>등록한 글</span>
+        </div>
+
+        <div class="stat-card">
+            <strong>3</strong>
+            <span>해결한 건수</span>
+        </div>
+
+        <div class="stat-card">
+            <strong>8</strong>
+            <span>받은 감사</span>
+        </div>
+
+        <div class="stat-card">
+            <strong>4.8</strong>
+            <span>매너 점수</span>
+        </div>
+
+    </section>
+
+    <section class="layout">
+
+        <aside class="side-card">
+
+            <a href="#" class="menu-item active">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>내 게시글</strong>
+                        <span>등록한 분실물/습득물 관리</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a th:href="@{/chat/rooms}" class="menu-item">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-regular fa-comments"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>채팅 목록</strong>
+                        <span>진행 중인 채팅</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>알림 설정</strong>
+                        <span>알림 받을 항목 설정</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>AI 서비스</strong>
+                        <span>AI 매칭 결과 확인</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>개인정보 보호</strong>
+                        <span>정보 공개 범위 설정</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a href="#" class="menu-item">
+                <div class="menu-left">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+
+                    <div class="menu-text">
+                        <strong>설정</strong>
+                        <span>앱 설정 및 계정 관리</span>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+
+            <a th:href="@{/logout}" class="logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                로그아웃
+            </a>
+
+        </aside>
+
+        <main class="content-card">
+
+            <div class="section-head">
+                <h2>내 등록글 관리</h2>
+
+                <a th:href="@{/lost/write}" class="write-btn">
+                    새 게시글 등록
+                </a>
+            </div>
+
+            <div class="tabs">
+                <a href="#" class="tab active">전체 5</a>
+                <a href="#" class="tab">분실물 3</a>
+                <a href="#" class="tab">습득물 2</a>
+                <a href="#" class="tab">해결 3</a>
+            </div>
+
+            <div class="post-list">
+
+                <div class="post-card">
+
+                    <div class="post-info">
+                        <div class="post-top">
+                            <span class="type lost">분실물</span>
+                            <span class="status finding">찾는중</span>
+                        </div>
+
+                        <div class="post-title">
+                            검정 노트북 가방 분실
+                        </div>
+
+                        <div class="post-meta">
+                            중앙도서관 · 2026.05.09
+                        </div>
+
+                        <div class="post-counts">
+                            <span><i class="fa-regular fa-eye"></i> 42</span>
+                            <span><i class="fa-regular fa-comment"></i> 3</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="action-btn edit">수정</button>
+                        <button type="button" class="action-btn delete">삭제</button>
+                        <button type="button" class="action-btn complete">완료 처리</button>
+                    </div>
+
+                </div>
+
+                <div class="post-card">
+
+                    <div class="post-info">
+                        <div class="post-top">
+                            <span class="type lost">분실물</span>
+                            <span class="status stored">보관중</span>
+                        </div>
+
+                        <div class="post-title">
+                            기숙사 열쇠 분실
+                        </div>
+
+                        <div class="post-meta">
+                            동명생활관 2호관 · 2026.05.12
+                        </div>
+
+                        <div class="post-counts">
+                            <span><i class="fa-regular fa-eye"></i> 18</span>
+                            <span><i class="fa-regular fa-comment"></i> 1</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="action-btn edit">수정</button>
+                        <button type="button" class="action-btn delete">삭제</button>
+                        <button type="button" class="action-btn complete">완료 처리</button>
+                    </div>
+
+                </div>
+
+                <div class="post-card">
+
+                    <div class="post-info">
+                        <div class="post-top">
+                            <span class="type found">습득물</span>
+                            <span class="status done">반환완료</span>
+                        </div>
+
+                        <div class="post-title">
+                            학생증 습득
+                        </div>
+
+                        <div class="post-meta">
+                            학생복지관 · 2026.05.10
+                        </div>
+
+                        <div class="post-counts">
+                            <span><i class="fa-regular fa-eye"></i> 29</span>
+                            <span><i class="fa-regular fa-comment"></i> 2</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="action-btn edit">수정</button>
+                        <button type="button" class="action-btn delete">삭제</button>
+                        <button type="button" class="action-btn complete">완료</button>
+                    </div>
+
+                </div>
+
+                <div class="post-card">
+
+                    <div class="post-info">
+                        <div class="post-top">
+                            <span class="type found">습득물</span>
+                            <span class="status done">반환완료</span>
+                        </div>
+
+                        <div class="post-title">
+                            우산 습득
+                        </div>
+
+                        <div class="post-meta">
+                            셔틀버스 정류장 · 2026.05.08
+                        </div>
+
+                        <div class="post-counts">
+                            <span><i class="fa-regular fa-eye"></i> 11</span>
+                            <span><i class="fa-regular fa-comment"></i> 1</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="action-btn edit">수정</button>
+                        <button type="button" class="action-btn delete">삭제</button>
+                        <button type="button" class="action-btn complete">완료</button>
+                    </div>
+
+                </div>
+
+                <div class="post-card">
+
+                    <div class="post-info">
+                        <div class="post-top">
+                            <span class="type lost">분실물</span>
+                            <span class="status done">반환완료</span>
+                        </div>
+
+                        <div class="post-title">
+                            아이폰 분실
+                        </div>
+
+                        <div class="post-meta">
+                            ICT 2관 · 2026.04.30
+                        </div>
+
+                        <div class="post-counts">
+                            <span><i class="fa-regular fa-eye"></i> 67</span>
+                            <span><i class="fa-regular fa-comment"></i> 5</span>
+                        </div>
+                    </div>
+
+                    <div class="post-actions">
+                        <button type="button" class="action-btn edit">수정</button>
+                        <button type="button" class="action-btn delete">삭제</button>
+                        <button type="button" class="action-btn complete">완료</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </section>
+
+    <footer>
+        FindCampus v1.0.0 · 동명대학교
+    </footer>
+
+</div>
+
+</body>
+</html>
