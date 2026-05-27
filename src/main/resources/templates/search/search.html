@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>통합 검색 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: #2563eb;
+        }
+
+        .auth {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-icon {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 999px;
+            background: #f5f6fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            transition: 0.2s;
+        }
+
+        .header-icon:hover {
+            background: #e9ecff;
+            transform: translateY(-1px);
+        }
+
+        .header-icon i {
+            font-size: 18px;
+        }
+
+        .search-layout {
+            max-width: 1200px;
+            min-height: calc(100vh - 72px);
+            margin: 0 auto;
+
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            background: #f5f7fb;
+        }
+
+        .sidebar {
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 28px 24px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 26px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .search-input,
+        .select-box,
+        .date-input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f8fafc;
+            padding: 0 14px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .keyword-box {
+            position: relative;
+        }
+
+        .keyword-box i {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        .keyword-box .search-input {
+            padding-left: 36px;
+        }
+
+        .date-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-btn {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4f46e5, #1e2a6f);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 34px 28px;
+        }
+
+        .result-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 28px;
+        }
+
+        .tab-menu {
+            display: flex;
+            gap: 44px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-menu button {
+            border: none;
+            background: none;
+            padding: 0 0 14px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+
+        .tab-menu button.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .result-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .result-item {
+            height: 72px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 12px 16px;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            transition: 0.2s;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .thumb {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .result-info h3 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .result-info p {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 800px) {
+            .nav {
+                display: none;
+            }
+
+            .search-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}" class="active">검색</a>
+            <a th:href="@{/map}">지도</a>
+        </nav>
+
+        <div class="auth">
+            <a th:href="@{/notification}" class="header-icon">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="header-icon">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<div class="search-layout">
+
+    <aside class="sidebar">
+
+        <h2>상세 검색</h2>
+
+        <form th:action="@{/search}" method="get">
+
+            <div class="form-group">
+                <label>키워드</label>
+
+                <div class="keyword-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text"
+                           name="keyword"
+                           class="search-input"
+                           placeholder="검색어 입력..."
+                           th:value="${param.keyword}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>카테고리</label>
+
+                <select name="category" class="select-box">
+                    <option value="">전체</option>
+                    <option value="전자기기">전자기기</option>
+                    <option value="가방">가방</option>
+                    <option value="지갑">지갑</option>
+                    <option value="신분증">신분증</option>
+                    <option value="열쇠">열쇠</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>위치</label>
+
+                <select name="location" class="select-box">
+                    <option value="">건물 선택...</option>
+                    <option value="중앙도서관">중앙도서관</option>
+                    <option value="학생회관">학생회관</option>
+                    <option value="ICT 1관">ICT 1관</option>
+                    <option value="ICT 2관">ICT 2관</option>
+                    <option value="동명관">동명관</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>날짜 범위</label>
+
+                <div class="date-list">
+                    <input type="date" name="startDate" class="date-input">
+                    <input type="date" name="endDate" class="date-input">
+                </div>
+            </div>
+
+            <button type="submit" class="search-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                검색하기
+            </button>
+
+        </form>
+
+    </aside>
+
+    <main class="content">
+
+        <div class="result-title">검색 결과 4건</div>
+
+        <div class="tab-menu">
+            <button type="button" class="active">분실물 (7)</button>
+            <button type="button">습득물 (5)</button>
+        </div>
+
+        <div class="result-list">
+
+            <a th:href="@{/lost/detail}" class="result-item">
+                <div class="thumb">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+
+                <div class="result-info">
+                    <h3>검정 노트북 가방</h3>
+                    <p>중앙도서관 2층 · 오늘 14:30</p>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail}" class="result-item">
+                <div class="thumb">
+                    <i class="fa-solid fa-headphones"></i>
+                </div>
+
+                <div class="result-info">
+                    <h3>에어팟 프로</h3>
+                    <p>ICT 2관 201호 · 오늘 09:15</p>
+                </div>
+            </a>
+
+            <a th:href="@{/lost/detail}" class="result-item">
+                <div class="thumb">
+                    <i class="fa-solid fa-id-card"></i>
+                </div>
+
+                <div class="result-info">
+                    <h3>학생증 분실</h3>
+                    <p>ICT 1관 3층 · 오늘 11:00</p>
+                </div>
+            </a>
+
+            <a th:href="@{/found/detail}" class="result-item">
+                <div class="thumb">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div class="result-info">
+                    <h3>지갑 발견</h3>
+                    <p>대학원 앞 · 오늘 10:30</p>
+                </div>
+            </a>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

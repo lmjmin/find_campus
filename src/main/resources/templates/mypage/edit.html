@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>정보 수정 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .nav a:hover {
+            color: #2563eb;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #f5f6fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #e9ecff;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 38px 24px 80px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: 800;
+
+            margin-bottom: 24px;
+        }
+
+        .page-head {
+            margin-bottom: 26px;
+        }
+
+        .page-head h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .page-head p {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .profile-summary {
+            background: linear-gradient(135deg, #6366f1, #3730a3);
+            color: #ffffff;
+            border-radius: 26px;
+            padding: 30px;
+            margin-bottom: 26px;
+
+            display: flex;
+            align-items: center;
+            gap: 22px;
+
+            box-shadow: 0 14px 30px rgba(79, 70, 229, 0.18);
+        }
+
+        .avatar {
+            width: 86px;
+            height: 86px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 34px;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .profile-info h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .profile-info p {
+            color: #e0e7ff;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .edit-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 32px;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .section {
+            padding: 28px 0;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .section:first-child {
+            padding-top: 0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: #eff6ff;
+            color: #2563eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title h2 {
+            font-size: 19px;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 800;
+            color: #374151;
+        }
+
+        .required {
+            color: #ef4444;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            height: 52px;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            background: #f9fafb;
+            outline: none;
+            padding: 0 16px;
+
+            font-size: 14px;
+            color: #111827;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: #2563eb;
+            background: #ffffff;
+        }
+
+        .input[readonly] {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+
+        .auth-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .auth-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .auth-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            background: #dcfce7;
+            color: #16a34a;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .auth-text strong {
+            display: block;
+            font-size: 15px;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .auth-text span {
+            display: block;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .auth-btn {
+            height: 42px;
+            padding: 0 16px;
+            border: none;
+            border-radius: 13px;
+            background: #2563eb;
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .password-box {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 18px;
+        }
+
+        .password-box-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #9a3412;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .toggle-password-btn {
+            height: 46px;
+            padding: 0 18px;
+            border: 1px solid #fed7aa;
+            border-radius: 14px;
+            background: #ffffff;
+            color: #9a3412;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .password-fields {
+            display: none;
+            margin-top: 18px;
+        }
+
+        .password-fields.active {
+            display: grid;
+        }
+
+        .notice-box {
+            background: #eef2ff;
+            color: #3730a3;
+            border-radius: 18px;
+            padding: 18px 20px;
+            margin-top: 24px;
+
+            display: flex;
+            gap: 14px;
+
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .notice-box i {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .button-area {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            height: 54px;
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .cancel-btn {
+            width: 180px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+        }
+
+        .save-btn {
+            flex: 1;
+            border: none;
+            background: #2563eb;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+        }
+
+        @media (max-width: 800px) {
+            .nav {
+                display: none;
+            }
+
+            .container {
+                padding: 30px 18px 70px;
+            }
+
+            .page-head h1 {
+                font-size: 28px;
+            }
+
+            .profile-summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .edit-card {
+                padding: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .auth-btn {
+                width: 100%;
+            }
+
+            .button-area {
+                flex-direction: column;
+            }
+
+            .cancel-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/map}">지도</a>
+        </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <a th:href="@{/mypage}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        마이페이지로 돌아가기
+    </a>
+
+    <div class="page-head">
+        <h1>정보 수정</h1>
+        <p>내 계정 정보, 학교 인증 정보, 비밀번호를 수정할 수 있습니다.</p>
+    </div>
+
+    <div class="profile-summary">
+        <div class="avatar">김</div>
+
+        <div class="profile-info">
+            <h2>김동명</h2>
+            <p>
+                tongmyong@tu.ac.kr<br>
+                동명대학교 컴퓨터공학과
+            </p>
+        </div>
+    </div>
+
+    <form th:action="@{/mypage/edit}" method="post">
+
+        <div class="edit-card">
+
+            <section class="section">
+                <div class="section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>기본 정보</h2>
+                        <p>서비스에서 사용하는 기본 계정 정보를 수정합니다.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="loginId">아이디</label>
+                        <input type="text"
+                               id="loginId"
+                               name="loginId"
+                               class="input"
+                               value="student01"
+                               readonly>
+                        <p class="help-text">아이디는 변경할 수 없습니다.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">이름 <span class="required">*</span></label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="input"
+                               value="김동명"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">이메일 <span class="required">*</span></label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="input"
+                               value="tongmyong@tu.ac.kr"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">전화번호</label>
+                        <input type="text"
+                               id="phone"
+                               name="phone"
+                               class="input"
+                               value="010-1234-5678"
+                               placeholder="010-0000-0000">
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>학교 인증 정보</h2>
+                        <p>학교, 학번, 학과 정보를 확인하고 인증 상태를 관리합니다.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="school">학교</label>
+                        <input type="text"
+                               id="school"
+                               name="school"
+                               class="input"
+                               value="동명대학교"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentNo">학번 <span class="required">*</span></label>
+                        <input type="text"
+                               id="studentNo"
+                               name="studentNo"
+                               class="input"
+                               value="20240001"
+                               required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="department">학과</label>
+                        <select id="department" name="department" class="select">
+                            <option value="">학과를 선택하세요</option>
+                            <option value="computer" selected>컴퓨터공학과</option>
+                            <option value="ai">인공지능학과</option>
+                            <option value="game">게임공학과</option>
+                            <option value="design">시각디자인학과</option>
+                            <option value="business">경영학과</option>
+                            <option value="etc">기타</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="auth-box" style="margin-top: 18px;">
+                    <div class="auth-left">
+                        <div class="auth-icon">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+
+                        <div class="auth-text">
+                            <strong>학교 이메일 인증 완료</strong>
+                            <span>현재 tongmyong@tu.ac.kr 이메일로 학교 인증이 완료된 상태입니다.</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="auth-btn" id="authBtn">
+                        재인증하기
+                    </button>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>비밀번호 변경</h2>
+                        <p>비밀번호를 변경하려면 현재 비밀번호 확인이 필요합니다.</p>
+                    </div>
+                </div>
+
+                <div class="password-box">
+                    <div class="password-box-title">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        비밀번호는 영문, 숫자, 특수문자를 조합해 설정하는 것을 권장합니다.
+                    </div>
+
+                    <button type="button" class="toggle-password-btn" id="passwordToggleBtn">
+                        비밀번호 변경하기
+                    </button>
+
+                    <div class="form-grid password-fields" id="passwordFields">
+
+                        <div class="form-group full">
+                            <label for="currentPassword">현재 비밀번호</label>
+                            <input type="password"
+                                   id="currentPassword"
+                                   name="currentPassword"
+                                   class="input"
+                                   placeholder="현재 비밀번호를 입력하세요">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">새 비밀번호</label>
+                            <input type="password"
+                                   id="newPassword"
+                                   name="newPassword"
+                                   class="input"
+                                   placeholder="새 비밀번호를 입력하세요">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPasswordConfirm">새 비밀번호 확인</label>
+                            <input type="password"
+                                   id="newPasswordConfirm"
+                                   name="newPasswordConfirm"
+                                   class="input"
+                                   placeholder="새 비밀번호를 다시 입력하세요">
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>개인정보 공개 설정 바로가기</h2>
+                        <p>게시글 공개 범위와 검색 허용 여부는 개인정보 설정에서 관리합니다.</p>
+                    </div>
+                </div>
+
+                <div class="auth-box">
+                    <div class="auth-left">
+                        <div class="auth-icon" style="background:#eef2ff; color:#4f46e5;">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+
+                        <div class="auth-text">
+                            <strong>개인정보 공개 범위 설정</strong>
+                            <span>프로필 공개, 검색 허용, 채팅 요청 허용 여부를 변경할 수 있습니다.</span>
+                        </div>
+                    </div>
+
+                    <a th:href="@{/mypage/setting/privacy}" class="auth-btn">
+                        설정하기
+                    </a>
+                </div>
+            </section>
+
+            <div class="notice-box">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    현재 화면은 HTML 화면 구현용입니다.
+                    실제 정보 수정, 학교 인증, 비밀번호 변경은 Controller, DTO, Service, DAO 작업 후 USERS 테이블과 연결하면 됩니다.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="button-area">
+            <a th:href="@{/mypage}" class="cancel-btn">
+                <i class="fa-solid fa-xmark"></i>
+                취소
+            </a>
+
+            <button type="submit" class="save-btn">
+                <i class="fa-solid fa-check"></i>
+                수정 내용 저장
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordToggleBtn = document.getElementById("passwordToggleBtn");
+        const passwordFields = document.getElementById("passwordFields");
+        const authBtn = document.getElementById("authBtn");
+
+        const currentPassword = document.getElementById("currentPassword");
+        const newPassword = document.getElementById("newPassword");
+        const newPasswordConfirm = document.getElementById("newPasswordConfirm");
+
+        passwordToggleBtn.addEventListener("click", function () {
+            passwordFields.classList.toggle("active");
+
+            if (passwordFields.classList.contains("active")) {
+                passwordToggleBtn.textContent = "비밀번호 변경 닫기";
+            } else {
+                passwordToggleBtn.textContent = "비밀번호 변경하기";
+                currentPassword.value = "";
+                newPassword.value = "";
+                newPasswordConfirm.value = "";
+            }
+        });
+
+        authBtn.addEventListener("click", function () {
+            alert("학교 이메일 인증 기능은 백엔드 연결 후 구현하면 됩니다.");
+        });
+
+        document.querySelector("form").addEventListener("submit", function (event) {
+            if (passwordFields.classList.contains("active")) {
+                if (newPassword.value !== newPasswordConfirm.value) {
+                    alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                    newPasswordConfirm.focus();
+                    event.preventDefault();
+                    return;
+                }
+
+                if (newPassword.value.length > 0 && newPassword.value.length < 8) {
+                    alert("새 비밀번호는 8자 이상으로 입력해주세요.");
+                    newPassword.focus();
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            alert("정보 수정 화면입니다. 실제 저장 기능은 백엔드 연결 후 처리됩니다.");
+        });
+    });
+</script>
+
+</body>
+
+</html>

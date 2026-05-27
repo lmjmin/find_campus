@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>유사 물건 추천 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .header-inner {
+            max-width: 1120px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 13px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #374151;
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 22px 32px 80px;
+        }
+
+        .ai-banner {
+            height: 48px;
+            border-radius: 8px;
+            padding: 0 18px;
+            margin-bottom: 20px;
+
+            background: linear-gradient(135deg, #1f2a68, #4f46e5);
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+        }
+
+        .ai-banner i {
+            color: #fde68a;
+        }
+
+        .my-item {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 22px;
+
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .my-thumb {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            background: #eef2ff;
+            flex-shrink: 0;
+        }
+
+        .my-info span {
+            font-size: 12px;
+            color: #9ca3af;
+            font-weight: 700;
+        }
+
+        .my-info h3 {
+            margin: 4px 0 6px;
+            font-size: 17px;
+        }
+
+        .my-info p {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+        .recommend-grid {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 34px;
+        }
+
+        .recommend-card {
+            width: 250px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .recommend-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-img {
+            height: 180px;
+            background: #eef2ff;
+        }
+
+        .card-body {
+            padding: 12px;
+        }
+
+        .card-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .status {
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #fef3c7;
+            color: #d97706;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .card-loc {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .card-keyword {
+            font-size: 12px;
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+
+        .match-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-bar {
+            flex: 1;
+            height: 7px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .match-fill.green {
+            width: 94%;
+            height: 100%;
+            background: #22c55e;
+        }
+
+        .match-fill.blue {
+            width: 87%;
+            height: 100%;
+            background: #6366f1;
+        }
+
+        .percent {
+            font-size: 12px;
+            font-weight: 800;
+            color: #22c55e;
+        }
+
+        .percent.blue {
+            color: #6366f1;
+        }
+
+        .ai-tip {
+            width: 460px;
+            max-width: 100%;
+            padding: 16px 18px;
+            border-radius: 14px;
+            background: #eef2ff;
+            color: #4f46e5;
+
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .ai-tip i {
+            margin-top: 3px;
+        }
+
+        @media (max-width: 700px) {
+            .recommend-card {
+                width: 100%;
+            }
+
+            .container {
+                padding: 22px 20px 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <div class="page-title">
+            유사 물건 추천
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="ai-banner">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        AI가 분석한 유사 물건을 추천해드립니다
+    </div>
+
+    <div class="my-item">
+        <div class="my-thumb"></div>
+
+        <div class="my-info">
+            <span>내 분실물</span>
+            <h3>검정 백팩</h3>
+            <p>중앙도서관 3층 · 2024.01.15</p>
+        </div>
+    </div>
+
+    <div class="section-title">
+        추천 매칭 결과
+    </div>
+
+    <div class="recommend-grid">
+
+        <a th:href="@{/found/detail}" class="recommend-card">
+            <div class="card-img"></div>
+
+            <div class="card-body">
+                <div class="card-title-row">
+                    <div class="card-title">검정 백팩 습득</div>
+                    <span class="status">보관중</span>
+                </div>
+
+                <div class="card-loc">
+                    중앙도서관 1시간 전
+                </div>
+
+                <div class="card-keyword">
+                    📍 색상, 종류, 위치 모두 일치
+                </div>
+
+                <div class="match-row">
+                    <div class="match-bar">
+                        <div class="match-fill green"></div>
+                    </div>
+                    <span class="percent">94%</span>
+                </div>
+            </div>
+        </a>
+
+        <a th:href="@{/found/detail}" class="recommend-card">
+            <div class="card-img"></div>
+
+            <div class="card-body">
+                <div class="card-title-row">
+                    <div class="card-title">노트북 가방 발견</div>
+                    <span class="status">보관중</span>
+                </div>
+
+                <div class="card-loc">
+                    ICT 2관 3시간 전
+                </div>
+
+                <div class="card-keyword">
+                    📍 색상 일치, 위치 근접
+                </div>
+
+                <div class="match-row">
+                    <div class="match-bar">
+                        <div class="match-fill blue"></div>
+                    </div>
+                    <span class="percent blue">87%</span>
+                </div>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="ai-tip">
+        <i class="fa-solid fa-robot"></i>
+        <span>
+            AI 매칭은 위치, 시간, 물건 특징을 종합 분석합니다.
+            매칭률 70% 이상이면 채팅으로 확인해보세요!
+        </span>
+    </div>
+
+</div>
+
+</body>
+</html>

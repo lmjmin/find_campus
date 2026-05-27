@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>화면 설정 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #1d4ed8;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #eef2ff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .nav a:hover {
+            color: #2563eb;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            background: #f5f6fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #e9ecff;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 42px 24px 80px;
+        }
+
+        .page-head {
+            margin-bottom: 28px;
+        }
+
+        .page-head h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .page-head p {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .setting-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 32px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            border: 1px solid #eef2f7;
+        }
+
+        .display-preview {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.2);
+        }
+
+        .preview-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .display-preview h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .display-preview p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .setting-section {
+            padding: 26px 0;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .setting-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: #eff6ff;
+            color: #2563eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+        }
+
+        .section-head h2 {
+            font-size: 19px;
+            color: #111827;
+        }
+
+        .section-desc {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 18px;
+            padding: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-item:hover {
+            background: #ffffff;
+            border-color: #bfdbfe;
+        }
+
+        .option-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .option-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: #ffffff;
+            color: #2563eb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+
+        .option-text strong {
+            display: block;
+            font-size: 15px;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .option-text span {
+            display: block;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .radio {
+            width: 18px;
+            height: 18px;
+            accent-color: #2563eb;
+            flex-shrink: 0;
+        }
+
+        .font-size-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        .size-btn {
+            flex: 1;
+            height: 54px;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #f9fafb;
+            color: #374151;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .size-btn:hover,
+        .size-btn.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .size-small {
+            font-size: 13px;
+        }
+
+        .size-normal {
+            font-size: 15px;
+        }
+
+        .size-large {
+            font-size: 18px;
+        }
+
+        .switch-row {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .switch-item {
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 18px;
+            padding: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .switch-info strong {
+            display: block;
+            font-size: 15px;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+        .switch-info span {
+            display: block;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .switch {
+            position: relative;
+            width: 52px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #d1d5db;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            left: 3px;
+            top: 3px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .switch input:checked + .slider {
+            background: #2563eb;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(22px);
+        }
+
+        .button-area {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .save-btn,
+        .back-btn {
+            height: 52px;
+            border-radius: 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .save-btn {
+            flex: 1;
+            border: none;
+            background: #2563eb;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            width: 170px;
+            background: #ffffff;
+            color: #2563eb;
+            border: 1px solid #dbeafe;
+        }
+
+        .notice-box {
+            margin-top: 24px;
+            background: #eef2ff;
+            color: #3730a3;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            gap: 14px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .notice-box i {
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        body.large-mode {
+            font-size: 18px;
+        }
+
+        body.large-mode .page-head h1 {
+            font-size: 40px;
+        }
+
+        body.large-mode .setting-card,
+        body.large-mode .notice-box {
+            font-size: 17px;
+        }
+
+        body.dark-mode {
+            background: #111827;
+            color: #f9fafb;
+        }
+
+        body.dark-mode header,
+        body.dark-mode .setting-card,
+        body.dark-mode .option-item,
+        body.dark-mode .switch-item {
+            background: #1f2937;
+            border-color: #374151;
+        }
+
+        body.dark-mode .page-head h1,
+        body.dark-mode .section-head h2,
+        body.dark-mode .option-text strong,
+        body.dark-mode .switch-info strong {
+            color: #f9fafb;
+        }
+
+        body.dark-mode .page-head p,
+        body.dark-mode .section-desc,
+        body.dark-mode .option-text span,
+        body.dark-mode .switch-info span {
+            color: #d1d5db;
+        }
+
+        @media (max-width: 800px) {
+            .nav {
+                display: none;
+            }
+
+            .container {
+                padding: 32px 18px 70px;
+            }
+
+            .page-head h1 {
+                font-size: 28px;
+            }
+
+            .setting-card {
+                padding: 24px;
+            }
+
+            .font-size-box {
+                flex-direction: column;
+            }
+
+            .button-area {
+                flex-direction: column;
+            }
+
+            .back-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/map}">지도</a>
+        </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-head">
+        <h1>화면 설정</h1>
+        <p>
+            FindCampus 화면 표시 방식과 글자 크기를 설정할 수 있습니다.
+        </p>
+    </div>
+
+    <div class="setting-card">
+
+        <div class="display-preview">
+            <span class="preview-label">
+                <i class="fa-solid fa-eye"></i>
+                미리보기
+            </span>
+
+            <h2>FindCampus</h2>
+            <p>
+                설정한 화면 모드와 글자 크기가 서비스 화면에 적용되는 모습을 미리 확인할 수 있습니다.
+            </p>
+        </div>
+
+        <section class="setting-section">
+            <div class="section-head">
+                <div class="section-icon">
+                    <i class="fa-solid fa-circle-half-stroke"></i>
+                </div>
+                <h2>화면 모드</h2>
+            </div>
+
+            <p class="section-desc">
+                사용 환경에 맞게 밝은 화면 또는 어두운 화면을 선택할 수 있습니다.
+            </p>
+
+            <div class="option-list">
+                <label class="option-item">
+                    <div class="option-left">
+                        <div class="option-icon">
+                            <i class="fa-regular fa-sun"></i>
+                        </div>
+
+                        <div class="option-text">
+                            <strong>라이트 모드</strong>
+                            <span>밝은 배경으로 기본 화면을 표시합니다.</span>
+                        </div>
+                    </div>
+
+                    <input type="radio" name="theme" value="light" class="radio" checked>
+                </label>
+
+                <label class="option-item">
+                    <div class="option-left">
+                        <div class="option-icon">
+                            <i class="fa-regular fa-moon"></i>
+                        </div>
+
+                        <div class="option-text">
+                            <strong>다크 모드</strong>
+                            <span>어두운 배경으로 눈의 피로를 줄입니다.</span>
+                        </div>
+                    </div>
+
+                    <input type="radio" name="theme" value="dark" class="radio">
+                </label>
+            </div>
+        </section>
+
+        <section class="setting-section">
+            <div class="section-head">
+                <div class="section-icon">
+                    <i class="fa-solid fa-text-height"></i>
+                </div>
+                <h2>글자 크기</h2>
+            </div>
+
+            <p class="section-desc">
+                목록, 게시글, 안내 문구의 글자 크기를 조절할 수 있습니다.
+            </p>
+
+            <div class="font-size-box">
+                <button type="button" class="size-btn size-small" data-size="small">
+                    작게
+                </button>
+
+                <button type="button" class="size-btn size-normal active" data-size="normal">
+                    보통
+                </button>
+
+                <button type="button" class="size-btn size-large" data-size="large">
+                    크게
+                </button>
+            </div>
+        </section>
+
+        <section class="setting-section">
+            <div class="section-head">
+                <div class="section-icon">
+                    <i class="fa-solid fa-universal-access"></i>
+                </div>
+                <h2>접근성 설정</h2>
+            </div>
+
+            <p class="section-desc">
+                서비스를 더 편하게 사용할 수 있도록 보조 기능을 설정할 수 있습니다.
+            </p>
+
+            <div class="switch-row">
+                <div class="switch-item">
+                    <div class="switch-info">
+                        <strong>화면 크게 보기</strong>
+                        <span>전체 화면의 글자와 UI 크기를 크게 표시합니다.</span>
+                    </div>
+
+                    <label class="switch">
+                        <input type="checkbox" id="largeModeSwitch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="switch-item">
+                    <div class="switch-info">
+                        <strong>애니메이션 줄이기</strong>
+                        <span>화면 전환이나 hover 효과를 줄여 더 안정적으로 표시합니다.</span>
+                    </div>
+
+                    <label class="switch">
+                        <input type="checkbox" id="reduceMotionSwitch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div class="button-area">
+            <a th:href="@{/mypage/setting}" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                설정으로
+            </a>
+
+            <button type="button" class="save-btn" id="saveBtn">
+                <i class="fa-solid fa-check"></i>
+                설정 저장
+            </button>
+        </div>
+
+    </div>
+
+    <div class="notice-box">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>
+            현재 화면은 프론트 화면 구현용입니다.
+            실제 사용자별 설정 저장은 DB 테이블 또는 세션, localStorage 방식으로 연결할 수 있습니다.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const themeRadios = document.querySelectorAll("input[name='theme']");
+        const sizeButtons = document.querySelectorAll(".size-btn");
+        const largeModeSwitch = document.getElementById("largeModeSwitch");
+        const reduceMotionSwitch = document.getElementById("reduceMotionSwitch");
+        const saveBtn = document.getElementById("saveBtn");
+
+        themeRadios.forEach(function (radio) {
+            radio.addEventListener("change", function () {
+                if (radio.value === "dark") {
+                    document.body.classList.add("dark-mode");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                }
+            });
+        });
+
+        sizeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                sizeButtons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                if (button.dataset.size === "large") {
+                    document.body.classList.add("large-mode");
+                    largeModeSwitch.checked = true;
+                } else {
+                    document.body.classList.remove("large-mode");
+                    largeModeSwitch.checked = false;
+                }
+            });
+        });
+
+        largeModeSwitch.addEventListener("change", function () {
+            if (largeModeSwitch.checked) {
+                document.body.classList.add("large-mode");
+
+                sizeButtons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+
+                document.querySelector(".size-large").classList.add("active");
+            } else {
+                document.body.classList.remove("large-mode");
+
+                sizeButtons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+
+                document.querySelector(".size-normal").classList.add("active");
+            }
+        });
+
+        reduceMotionSwitch.addEventListener("change", function () {
+            if (reduceMotionSwitch.checked) {
+                document.body.style.setProperty("--transition-speed", "0s");
+                alert("애니메이션 줄이기 설정이 켜졌습니다.");
+            }
+        });
+
+        saveBtn.addEventListener("click", function () {
+            alert("화면 설정이 저장되었습니다.");
+        });
+    });
+</script>
+
+</body>
+
+</html>
