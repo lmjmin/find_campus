@@ -490,7 +490,7 @@
                 </form>
             </div>
 
-            <a th:href="@{/chat/room/1}" class="room-item active">
+            <a th:href="@{/chat/room}" class="room-item active">
                 <div class="small-avatar">김</div>
 
                 <div class="room-content">
@@ -503,7 +503,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/chat/room/2}" class="room-item">
+            <a th:href="@{/chat/room}" class="room-item">
                 <div class="small-avatar">송</div>
 
                 <div class="room-content">
@@ -516,7 +516,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/chat/room/3}" class="room-item">
+            <a th:href="@{/chat/room}" class="room-item">
                 <div class="small-avatar">이</div>
 
                 <div class="room-content">
@@ -568,7 +568,7 @@
                     </div>
                 </div>
 
-                <a th:href="@{/found/detail/1}" class="view-btn">
+                <a th:href="@{/found/detail}" class="view-btn">
                     보기
                 </a>
 
@@ -666,7 +666,7 @@
 
             <div class="input-area">
 
-                <form th:action="@{/chat/room/1/message}" method="post" class="message-form">
+                <form th:action="@{/chat/room}" method="get" class="message-form">
 
                     <button type="button" class="icon-btn">
                         <i class="fa-solid fa-plus"></i>

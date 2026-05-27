@@ -38,7 +38,6 @@
             height: 100%;
             margin: 0 auto;
             padding: 0 24px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -48,7 +47,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-
             font-size: 22px;
             font-weight: 800;
             color: #1d4ed8;
@@ -59,17 +57,26 @@
             height: 36px;
             border-radius: 12px;
             background: #eef2ff;
-
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .back-link {
-            color: #2563eb;
-            font-size: 14px;
-            font-weight: 700;
-        }
+        .header-actions {
+    		display: flex;
+    		align-items: center;
+		}
+
+		.back-link {
+    		color: #4f46e5;
+    		font-size: 14px;
+    		font-weight: 700;
+    		transition: .2s;
+		}
+
+		.back-link:hover {
+    		opacity: .7;
+		}
 
         .container {
             max-width: 1120px;
@@ -83,23 +90,15 @@
             gap: 28px;
         }
 
-        .left-area,
-        .right-area {
-            min-width: 0;
-        }
-
         .image-box {
             height: 420px;
             border-radius: 26px;
             background: #dfe5f5;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
-            color: #4f46e5;
+            color: #ef4444;
             font-size: 86px;
-
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
@@ -109,13 +108,10 @@
             position: absolute;
             top: 18px;
             left: 18px;
-
             padding: 8px 13px;
             border-radius: 999px;
-
             background: #ef4444;
             color: white;
-
             font-size: 13px;
             font-weight: 800;
         }
@@ -143,13 +139,11 @@
             width: 38px;
             height: 38px;
             border-radius: 14px;
-            background: #eef2ff;
-
+            background: #fee2e2;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            color: #2563eb;
+            color: #ef4444;
             flex-shrink: 0;
         }
 
@@ -176,9 +170,8 @@
         .tag {
             padding: 8px 12px;
             border-radius: 999px;
-            background: #eef2ff;
-            color: #3730a3;
-
+            background: #fee2e2;
+            color: #b91c1c;
             font-size: 13px;
             font-weight: 700;
         }
@@ -187,12 +180,10 @@
             display: inline-block;
             padding: 8px 13px;
             border-radius: 999px;
-            background: #fef3c7;
-            color: #d97706;
-
+            background: #dbeafe;
+            color: #2563eb;
             font-size: 13px;
             font-weight: 800;
-
             margin-bottom: 16px;
         }
 
@@ -239,13 +230,11 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: #4f46e5;
-            color: white;
-
+            background: #fee2e2;
+            color: #dc2626;
             display: flex;
             align-items: center;
             justify-content: center;
-
             font-weight: 800;
         }
 
@@ -263,10 +252,8 @@
         .warning-card {
             background: #fff7ed;
             color: #c2410c;
-
             display: flex;
             gap: 12px;
-
             font-size: 14px;
             line-height: 1.6;
             box-shadow: none;
@@ -282,21 +269,16 @@
         .chat-btn {
             width: 100%;
             height: 60px;
-
             border: none;
             border-radius: 18px;
-
-            background: linear-gradient(135deg, #4f46e5, #1e3a8a);
+            background: linear-gradient(135deg, #ef4444, #991b1b);
             color: white;
-
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-
             font-size: 16px;
             font-weight: 800;
-
             cursor: pointer;
         }
 
@@ -311,11 +293,9 @@
             border-radius: 16px;
             border: 1px solid #d1d5db;
             background: #ffffff;
-
             font-size: 14px;
             font-weight: 800;
             color: #4b5563;
-
             cursor: pointer;
         }
 
@@ -331,6 +311,10 @@
             .title {
                 font-size: 28px;
             }
+
+            .back-link {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -338,20 +322,31 @@
 <body>
 
 <header>
+
     <div class="header-inner">
 
         <a th:href="@{/}" class="logo">
+
             <span class="logo-icon">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
             </span>
+
             FindCampus
+
         </a>
 
-        <a th:href="@{/lost/list}" class="back-link">
-            분실물 목록으로
-        </a>
+        <div class="header-actions">
+
+            <a th:href="@{/lost/list}" class="back-link">
+
+                분실물 목록으로
+
+            </a>
+
+        </div>
 
     </div>
+
 </header>
 
 <div class="container">
@@ -374,7 +369,7 @@
 
                     <div class="info-text">
                         <strong>분실 위치</strong>
-                        <span>중앙도서관 3층 열람실 앞</span>
+                        <span>중앙도서관 2층 열람실 앞</span>
                     </div>
                 </div>
 
@@ -385,7 +380,7 @@
 
                     <div class="info-text">
                         <strong>분실 시간</strong>
-                        <span>2026.05.09 오후 2:00 ~ 3:00</span>
+                        <span>2026.05.19 오후 2:00 ~ 3:00</span>
                     </div>
                 </div>
 
@@ -396,16 +391,15 @@
 
                     <div class="info-text">
                         <strong>카테고리</strong>
-                        <span>가방 / 백팩</span>
+                        <span>가방 / 노트북 가방</span>
                     </div>
                 </div>
 
                 <div class="tag-list">
                     <span class="tag">#검정색</span>
-                    <span class="tag">#백팩</span>
+                    <span class="tag">#노트북가방</span>
                     <span class="tag">#맥북 포함</span>
                     <span class="tag">#파란 키링</span>
-                    <span class="tag">#15인치 수납가능</span>
                 </div>
 
             </div>
@@ -414,22 +408,23 @@
 
         <div class="right-area">
 
-            <span class="status">보관중</span>
+            <span class="status">찾는중</span>
 
             <h1 class="title">검정 노트북 가방</h1>
 
             <div class="date">
-                2026년 5월 9일 오후 2:30 게시
+                2026년 5월 19일 오후 2:30 게시
             </div>
 
             <div class="desc-card">
                 <div class="section-title">상세 설명</div>
 
                 <p class="description">
-                    검정색 노트북 백팩으로 내부에 맥북 프로 13인치, 충전기,
-                    노트와 필기구가 들어있습니다. 가방 앞면 지퍼에 파란색 열쇠고리가
-                    달려 있으며, 오른쪽 측면에 음료 포켓이 있습니다.
-                    찾아주시면 감사히 사례하겠습니다. 꼭 연락 부탁드립니다.
+                    검정색 노트북 가방을 분실했습니다.
+                    안에는 맥북 프로 13인치, 충전기, 노트와 필기구가 들어있습니다.
+                    가방 앞쪽 지퍼에 파란색 키링이 달려 있고,
+                    오른쪽 측면에는 물병을 넣는 작은 포켓이 있습니다.
+                    비슷한 물건을 보셨거나 보관 중이라면 채팅으로 연락해주세요.
                 </p>
             </div>
 
@@ -441,7 +436,7 @@
                     </div>
 
                     <div>
-                        <div class="writer-name">김동명 (23120030)</div>
+                        <div class="writer-name">김분실 (23120030)</div>
                         <div class="writer-school">동명대학교 컴퓨터공학과</div>
                     </div>
 
@@ -459,10 +454,10 @@
 
             <div class="button-area">
 
-                <button type="button" class="chat-btn">
+                <a th:href="@{/chat/rooms}" class="chat-btn">
                     <i class="fa-regular fa-comment"></i>
-                    채팅으로 수령 협의하기
-                </button>
+                    채팅으로 제보하기
+                </a>
 
                 <div class="sub-actions">
                     <button type="button" class="sub-btn">

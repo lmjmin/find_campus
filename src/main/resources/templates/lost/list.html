@@ -84,7 +84,30 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            color: #4b5563;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 999px;
+            background: #f5f6fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #e9ecff;
+            transform: translateY(-1px);
+        }
+
+        .icon-btn i {
+            font-size: 18px;
         }
 
         .container {
@@ -386,12 +409,17 @@
             <a th:href="@{/lost/list}" class="active">분실물</a>
             <a th:href="@{/found/list}">습득물</a>
             <a th:href="@{/search}">검색</a>
-            <a th:href="@{/guide}">서비스안내</a>
+            <a th:href="@{/map}">지도</a>
         </nav>
 
         <div class="user-menu">
-            <i class="fa-regular fa-bell"></i>
-            <i class="fa-solid fa-circle-user"></i>
+            <a th:href="@{/notification}" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
         </div>
 
     </div>
@@ -479,7 +507,7 @@
 
         <div class="item-grid">
 
-            <a th:href="@{/lost/detail/1}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-wait">보관중</span>
                     <i class="fa-solid fa-briefcase"></i>
@@ -497,7 +525,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail/2}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-find">찾는중</span>
                     <i class="fa-solid fa-id-card"></i>
@@ -515,7 +543,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail/3}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-wait">보관중</span>
                     <i class="fa-solid fa-headphones"></i>
@@ -533,7 +561,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail/4}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-done">반환완료</span>
                     <i class="fa-solid fa-wallet"></i>
@@ -551,7 +579,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail/5}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-wait">보관중</span>
                     <i class="fa-regular fa-credit-card"></i>
@@ -569,7 +597,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail/6}" class="item-card">
+            <a th:href="@{/lost/detail}" class="item-card">
                 <div class="item-img">
                     <span class="badge status-wait">보관중</span>
                     <i class="fa-solid fa-umbrella"></i>

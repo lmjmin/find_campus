@@ -37,7 +37,7 @@
         }
 
         .header-inner {
-            max-width: 1180px;
+            max-width: 1200px;
             height: 100%;
             margin: 0 auto;
             padding: 0 24px;
@@ -78,6 +78,36 @@
         .nav a:hover,
         .nav a.active {
             color: #2563eb;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 999px;
+            background: #f5f6fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #4f46e5;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #e9ecff;
+            transform: translateY(-1px);
+        }
+
+        .icon-btn i {
+            font-size: 18px;
         }
 
         .container {
@@ -142,6 +172,10 @@
 
             font-size: 14px;
             font-weight: 800;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .stats {
@@ -245,20 +279,35 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 22px;
+            gap: 16px;
         }
 
         .section-head h2 {
             font-size: 24px;
         }
 
+        .write-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
         .write-btn {
             padding: 11px 16px;
             border-radius: 14px;
-            background: #2563eb;
             color: white;
 
             font-size: 14px;
             font-weight: 800;
+        }
+
+        .write-lost {
+            background: #ef4444;
+        }
+
+        .write-found {
+            background: #2563eb;
         }
 
         .tabs {
@@ -435,6 +484,11 @@
             .layout {
                 grid-template-columns: 1fr;
             }
+
+            .section-head {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 650px) {
@@ -449,6 +503,16 @@
 
             .stats {
                 grid-template-columns: 1fr;
+            }
+
+            .write-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .write-btn {
+                width: 100%;
+                text-align: center;
             }
 
             .post-card {
@@ -483,9 +547,18 @@
             <a th:href="@{/lost/list}">분실물</a>
             <a th:href="@{/found/list}">습득물</a>
             <a th:href="@{/search}">검색</a>
-            <a th:href="@{/chat/rooms}">채팅</a>
-            <a th:href="@{/mypage}" class="active">마이페이지</a>
+            <a th:href="@{/map}">지도</a>
         </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
 
     </div>
 </header>
@@ -510,7 +583,8 @@
 
         </div>
 
-        <a href="#" class="edit-btn">
+        <a th:href="@{/mypage/edit}" class="edit-btn">
+            <i class="fa-solid fa-pen"></i>
             정보 수정
         </a>
 
@@ -574,22 +648,22 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a href="#" class="menu-item">
+            <a th:href="@{/notification}" class="menu-item">
                 <div class="menu-left">
                     <div class="menu-icon">
                         <i class="fa-regular fa-bell"></i>
                     </div>
 
                     <div class="menu-text">
-                        <strong>알림 설정</strong>
-                        <span>알림 받을 항목 설정</span>
+                        <strong>알림</strong>
+                        <span>새 알림과 공지 확인</span>
                     </div>
                 </div>
 
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a href="#" class="menu-item">
+            <a th:href="@{/recommend}" class="menu-item">
                 <div class="menu-left">
                     <div class="menu-icon">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -604,7 +678,7 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a href="#" class="menu-item">
+            <a th:href="@{/mypage/setting/privacy}" class="menu-item">
                 <div class="menu-left">
                     <div class="menu-icon">
                         <i class="fa-solid fa-shield-halved"></i>
@@ -619,7 +693,7 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a href="#" class="menu-item">
+            <a th:href="@{/mypage/setting}" class="menu-item">
                 <div class="menu-left">
                     <div class="menu-icon">
                         <i class="fa-solid fa-gear"></i>
@@ -646,9 +720,15 @@
             <div class="section-head">
                 <h2>내 등록글 관리</h2>
 
-                <a th:href="@{/lost/write}" class="write-btn">
-                    새 게시글 등록
-                </a>
+                <div class="write-actions">
+                    <a th:href="@{/lost/write}" class="write-btn write-lost">
+                        분실물 등록
+                    </a>
+
+                    <a th:href="@{/found/write}" class="write-btn write-found">
+                        습득물 등록
+                    </a>
+                </div>
             </div>
 
             <div class="tabs">
