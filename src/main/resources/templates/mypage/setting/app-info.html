@@ -8,405 +8,8 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        header {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-inner {
-            max-width: 1200px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 22px;
-            font-weight: 800;
-            color: #1d4ed8;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: #eef2ff;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav {
-            display: flex;
-            gap: 30px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .nav a:hover {
-            color: #2563eb;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .icon-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            background: #f5f6fb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: #4f46e5;
-            transition: 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #e9ecff;
-            transform: translateY(-1px);
-        }
-
-        .container {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: 42px 24px 80px;
-        }
-
-        .page-head {
-            margin-bottom: 28px;
-        }
-
-        .page-head h1 {
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
-
-        .page-head p {
-            color: #6b7280;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .app-card {
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 34px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-            border: 1px solid #eef2f7;
-            margin-bottom: 24px;
-        }
-
-        .app-main {
-            text-align: center;
-            padding: 20px 0 34px;
-            border-bottom: 1px solid #eef2f7;
-        }
-
-        .app-logo {
-            width: 96px;
-            height: 96px;
-            border-radius: 30px;
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            margin: 0 auto 20px;
-
-            color: white;
-            font-size: 42px;
-            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.25);
-        }
-
-        .app-main h2 {
-            font-size: 28px;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .app-main p {
-            font-size: 14px;
-            color: #6b7280;
-            line-height: 1.6;
-        }
-
-        .version-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            margin-top: 16px;
-            padding: 8px 14px;
-
-            border-radius: 999px;
-            background: #eef2ff;
-            color: #3730a3;
-
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .info-section {
-            padding: 26px 0;
-            border-bottom: 1px solid #eef2f7;
-        }
-
-        .info-section:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        .section-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 14px;
-            background: #eff6ff;
-            color: #2563eb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            flex-shrink: 0;
-        }
-
-        .section-title h3 {
-            font-size: 19px;
-            color: #111827;
-        }
-
-        .info-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .info-row {
-            min-height: 58px;
-            padding: 16px 18px;
-
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-        }
-
-        .info-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            color: #374151;
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .info-label i {
-            color: #4f46e5;
-        }
-
-        .info-value {
-            color: #6b7280;
-            font-size: 14px;
-            text-align: right;
-            line-height: 1.5;
-        }
-
-        .description-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            padding: 20px;
-
-            color: #4b5563;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .tech-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .tech-item {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 16px;
-
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .tech-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 14px;
-            background: #eef2ff;
-            color: #4f46e5;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            flex-shrink: 0;
-        }
-
-        .tech-text strong {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 4px;
-            color: #111827;
-        }
-
-        .tech-text span {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .license-box {
-            background: #eef2ff;
-            color: #3730a3;
-            border-radius: 18px;
-            padding: 20px;
-
-            display: flex;
-            gap: 14px;
-
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .license-box i {
-            margin-top: 3px;
-            flex-shrink: 0;
-        }
-
-        .button-area {
-            margin-top: 28px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .back-btn,
-        .home-btn {
-            height: 52px;
-            border-radius: 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .back-btn {
-            width: 170px;
-            background: #ffffff;
-            color: #2563eb;
-            border: 1px solid #dbeafe;
-        }
-
-        .home-btn {
-            flex: 1;
-            background: #2563eb;
-            color: #ffffff;
-        }
-
-        @media (max-width: 800px) {
-            .nav {
-                display: none;
-            }
-
-            .container {
-                padding: 32px 18px 70px;
-            }
-
-            .page-head h1 {
-                font-size: 28px;
-            }
-
-            .app-card {
-                padding: 24px;
-            }
-
-            .tech-list {
-                grid-template-columns: 1fr;
-            }
-
-            .info-row {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .info-value {
-                text-align: left;
-            }
-
-            .button-area {
-                flex-direction: column;
-            }
-
-            .back-btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
 </head>
 
 <body>
@@ -443,16 +46,20 @@
 
 <div class="container">
 
+    <a th:href="@{/mypage/setting}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        설정으로 돌아가기
+    </a>
+
     <div class="page-head">
         <h1>앱 정보</h1>
-        <p>
-            FindCampus 서비스 정보와 개발 환경, 버전 정보를 확인할 수 있습니다.
-        </p>
+        <p>FindCampus 서비스 정보와 버전 정보를 확인할 수 있습니다.</p>
     </div>
 
     <div class="app-card">
 
-        <section class="app-main">
+        <div class="app-main">
+
             <div class="app-logo">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
             </div>
@@ -460,163 +67,222 @@
             <h2>FindCampus</h2>
 
             <p>
-                동명대학교 캠퍼스 분실물·습득물 통합 관리 서비스
+                동명대학교 캠퍼스 안에서 발생하는 분실물과 습득물을
+                더 쉽고 빠르게 확인할 수 있도록 만든 서비스입니다.
             </p>
 
             <div class="version-badge">
                 <i class="fa-solid fa-code-branch"></i>
                 Version 1.0.0
             </div>
-        </section>
 
-        <section class="info-section">
+        </div>
+
+        <div class="info-section">
+
             <div class="section-title">
                 <div class="section-icon">
                     <i class="fa-solid fa-circle-info"></i>
                 </div>
-                <h3>서비스 소개</h3>
-            </div>
 
-            <div class="description-box">
-                FindCampus는 동명대학교 학생들이 캠퍼스 안에서 잃어버린 물건을 빠르게 찾고,
-                습득한 물건을 쉽게 등록할 수 있도록 만든 분실물 관리 서비스입니다.
-                분실물 등록, 습득물 등록, 검색, 지도, 채팅, AI 유사물건 추천 기능을 통해
-                분실물 반환 과정을 더 편리하게 만드는 것을 목표로 합니다.
-            </div>
-        </section>
-
-        <section class="info-section">
-            <div class="section-title">
-                <div class="section-icon">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
-                <h3>기본 정보</h3>
+                <h3>서비스 정보</h3>
             </div>
 
             <div class="info-list">
 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fa-solid fa-mobile-screen"></i>
+                        <i class="fa-solid fa-tag"></i>
                         서비스명
                     </div>
-                    <div class="info-value">FindCampus</div>
+
+                    <div class="info-value">
+                        FindCampus
+                    </div>
                 </div>
 
                 <div class="info-row">
                     <div class="info-label">
                         <i class="fa-solid fa-school"></i>
-                        대상 학교
+                        서비스 대상
                     </div>
-                    <div class="info-value">동명대학교</div>
+
+                    <div class="info-value">
+                        동명대학교 구성원
+                    </div>
                 </div>
 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fa-solid fa-layer-group"></i>
-                        서비스 유형
+                        <i class="fa-solid fa-location-dot"></i>
+                        서비스 범위
                     </div>
-                    <div class="info-value">분실물·습득물 관리 서비스</div>
-                </div>
 
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-solid fa-calendar-days"></i>
-                        개발 버전
+                    <div class="info-value">
+                        동명대학교 캠퍼스 내 분실물·습득물 관리
                     </div>
-                    <div class="info-value">1.0.0</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-solid fa-user-group"></i>
-                        개발 목적
-                    </div>
-                    <div class="info-value">졸업작품 프로젝트</div>
                 </div>
 
             </div>
-        </section>
 
-        <section class="info-section">
+        </div>
+
+        <div class="info-section">
+
             <div class="section-title">
                 <div class="section-icon">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <i class="fa-solid fa-align-left"></i>
                 </div>
+
+                <h3>서비스 소개</h3>
+            </div>
+
+            <div class="description-box">
+                FindCampus는 동명대학교 캠퍼스 안에서 발생하는 분실물과 습득물을
+                사용자가 쉽게 등록하고 확인할 수 있도록 만든 서비스입니다.
+                물건명, 카테고리, 위치, 날짜 정보를 기준으로 분실물과 습득물을 확인할 수 있으며,
+                유사 물건 추천 기능을 통해 사용자가 잃어버린 물건을 더 빠르게 찾을 수 있도록 돕습니다.
+            </div>
+
+        </div>
+
+        <div class="info-section">
+
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+
                 <h3>주요 기능</h3>
             </div>
 
-            <div class="info-list">
+            <div class="feature-grid">
 
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        분실물 등록
+                <div class="feature-card">
+                    <div class="feature-icon lost">
+                        <i class="fa-solid fa-briefcase"></i>
                     </div>
-                    <div class="info-value">잃어버린 물건 정보를 등록하고 관리</div>
+
+                    <div class="feature-text">
+                        <strong>분실물 등록</strong>
+                        <span>잃어버린 물건의 위치, 시간, 특징을 등록합니다.</span>
+                    </div>
                 </div>
 
-                <div class="info-row">
-                    <div class="info-label">
+                <div class="feature-card">
+                    <div class="feature-icon found">
                         <i class="fa-solid fa-box-open"></i>
-                        습득물 등록
                     </div>
-                    <div class="info-value">주운 물건 정보를 등록하고 보관 위치 안내</div>
+
+                    <div class="feature-text">
+                        <strong>습득물 확인</strong>
+                        <span>등록된 습득물을 확인하고 수령 절차를 진행합니다.</span>
+                    </div>
                 </div>
 
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        통합 검색
-                    </div>
-                    <div class="info-value">물건명, 장소, 카테고리 기준 검색</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-solid fa-map-location-dot"></i>
-                        캠퍼스 지도
-                    </div>
-                    <div class="info-value">분실·습득 위치 기반 정보 확인</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fa-regular fa-comments"></i>
-                        채팅
-                    </div>
-                    <div class="info-value">게시글 작성자와 실시간 대화</div>
-                </div>
-
-                <div class="info-row">
-                    <div class="info-label">
+                <div class="feature-card">
+                    <div class="feature-icon blue">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        AI 추천
                     </div>
-                    <div class="info-value">유사한 분실물·습득물 매칭 추천</div>
+
+                    <div class="feature-text">
+                        <strong>AI 유사 물건 추천</strong>
+                        <span>분실물과 습득물 정보를 비교해 유사 물건을 확인합니다.</span>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon yellow">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+
+                    <div class="feature-text">
+                        <strong>캠퍼스 위치 검색</strong>
+                        <span>동명대학교 건물과 장소 기준으로 물건을 검색합니다.</span>
+                    </div>
                 </div>
 
             </div>
-        </section>
 
-        <section class="info-section">
+        </div>
+
+        <div class="info-section">
+
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </div>
+
+                <h3>상태 안내</h3>
+            </div>
+
+            <div class="status-list">
+
+                <div class="status-card">
+                    <div class="status-pill status-received">
+                        접수중
+                    </div>
+
+                    <p>
+                        분실물 또는 습득물이 등록되어 확인이 필요한 상태입니다.
+                    </p>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-pill status-storage">
+                        보관중
+                    </div>
+
+                    <p>
+                        습득물이 지정된 장소에 보관되어 있는 상태입니다.
+                    </p>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-pill status-returned">
+                        반환완료
+                    </div>
+
+                    <p>
+                        본인 확인 후 물건이 사용자에게 반환된 상태입니다.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="info-section">
+
             <div class="section-title">
                 <div class="section-icon">
                     <i class="fa-solid fa-code"></i>
                 </div>
-                <h3>개발 환경</h3>
+
+                <h3>개발 정보</h3>
             </div>
 
             <div class="tech-list">
 
                 <div class="tech-item">
                     <div class="tech-icon">
-                        <i class="fa-brands fa-java"></i>
+                        <i class="fa-solid fa-leaf"></i>
                     </div>
 
                     <div class="tech-text">
                         <strong>Spring Boot</strong>
-                        <span>백엔드 서버</span>
+                        <span>웹 서버 및 화면 라우팅</span>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <div class="tech-text">
+                        <strong>Thymeleaf</strong>
+                        <span>HTML 템플릿 화면 구성</span>
                     </div>
                 </div>
 
@@ -627,56 +293,51 @@
 
                     <div class="tech-text">
                         <strong>Oracle DB</strong>
-                        <span>데이터베이스</span>
+                        <span>분실물·습득물 데이터 관리 예정</span>
                     </div>
                 </div>
 
                 <div class="tech-item">
                     <div class="tech-icon">
-                        <i class="fa-solid fa-file-code"></i>
+                        <i class="fa-solid fa-palette"></i>
                     </div>
 
                     <div class="tech-text">
-                        <strong>Thymeleaf</strong>
-                        <span>서버 템플릿</span>
-                    </div>
-                </div>
-
-                <div class="tech-item">
-                    <div class="tech-icon">
-                        <i class="fa-solid fa-link"></i>
-                    </div>
-
-                    <div class="tech-text">
-                        <strong>MyBatis</strong>
-                        <span>SQL 매핑</span>
+                        <strong>HTML / CSS</strong>
+                        <span>사용자 화면 UI 구성</span>
                     </div>
                 </div>
 
             </div>
-        </section>
 
-        <section class="info-section">
+        </div>
+
+        <div class="info-section">
+
             <div class="section-title">
                 <div class="section-icon">
-                    <i class="fa-regular fa-file-lines"></i>
+                    <i class="fa-solid fa-file-lines"></i>
                 </div>
-                <h3>오픈소스 및 라이선스</h3>
+
+                <h3>라이선스 및 안내</h3>
             </div>
 
             <div class="license-box">
-                <i class="fa-solid fa-circle-info"></i>
+                <i class="fa-solid fa-circle-exclamation"></i>
+
                 <div>
-                    본 화면은 Font Awesome 아이콘 CDN을 사용하고 있습니다.
-                    실제 배포 시에는 사용한 라이브러리, 이미지, 지도 API, AI API 등의 라이선스를 확인한 뒤
-                    오픈소스 라이선스 고지 화면을 별도로 정리하는 것이 좋습니다.
+                    본 화면은 FindCampus 졸업작품 프로젝트의 서비스 정보 페이지입니다.
+                    실제 서비스 적용 시 학교 인증, 관리자 승인, 신고 처리, 개인정보 보호 정책 등이
+                    함께 적용되어야 합니다.
                 </div>
             </div>
-        </section>
+
+        </div>
 
     </div>
 
-    <div class="button-area">
+    <div class="bottom-area">
+
         <a th:href="@{/mypage/setting}" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
             설정으로
@@ -686,6 +347,7 @@
             <i class="fa-solid fa-house"></i>
             메인으로 이동
         </a>
+
     </div>
 
 </div>
