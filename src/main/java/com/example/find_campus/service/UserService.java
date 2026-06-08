@@ -1,8 +1,10 @@
 package com.example.find_campus.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.find_campus.config.PasswordConfig;
 import com.example.find_campus.dao.IUserDao;
 import com.example.find_campus.dto.JoinDto;
 import com.example.find_campus.dto.LoginDto;
@@ -13,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
+	
+	private final PasswordEncoder passwordEncoder;
     private final IUserDao userDao;
 
     @Transactional
@@ -33,13 +36,13 @@ public class UserService {
 
         UserDto userDto = new UserDto();
         userDto.setLoginId(joinDto.getLoginId());
-        userDto.setPassword(joinDto.getPassword());
+        joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
         userDto.setUserName(joinDto.getUserName());
         userDto.setStudentNo(joinDto.getStudentNo());
         userDto.setPhone(joinDto.getPhone());
         userDto.setEmail(joinDto.getEmail());
 
-        int result = userDao.insertUser(userDto);
+        int result = userDao.insertUser(joinDto);
 
         if (result != 1) {
             throw new IllegalStateException("회원가입 처리 중 오류가 발생했습니다.");
