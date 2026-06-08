@@ -76,6 +76,29 @@ public class TestController {
     }
 
     // =========================
+    // CHAT
+    // =========================
+
+    // 채팅방 목록
+    @GetMapping("/chat/rooms")
+    public String chatRooms() {
+        return "chat/rooms";
+    }
+
+    // 채팅방 상세 기본 주소
+    @GetMapping("/chat/room")
+    public String chatRoom() {
+        return "chat/room";
+    }
+
+    // 채팅방 상세 주소
+    @GetMapping("/chat/room/{id}")
+    public String chatRoomById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("roomId", id);
+        return "chat/room";
+    }
+
+    // =========================
     // REPORT
     // =========================
 

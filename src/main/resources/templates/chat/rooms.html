@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>채팅 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/chat.css}">
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-inner">
+
+        <a th:href="@{/}" class="logo">
+
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+
+            FindCampus
+
+        </a>
+
+        <nav class="nav">
+
+            <a th:href="@{/lost/list}">
+                분실물
+            </a>
+
+            <a th:href="@{/found/list}">
+                습득물
+            </a>
+
+            <a th:href="@{/search}">
+                검색
+            </a>
+
+            <a th:href="@{/chat/rooms}">
+                채팅
+            </a>
+
+            <a th:href="@{/map}">
+                지도
+            </a>
+
+        </nav>
+
+        <div class="auth">
+
+            <a th:href="@{/notification}" class="header-icon">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+
+            <a th:href="@{/mypage}" class="header-icon">
+                <i class="fa-solid fa-user"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="chat-main">
+
+    <section class="chat-container">
+
+        <aside class="chat-sidebar">
+
+            <div class="chat-search-area">
+
+                <div class="chat-search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input type="text" placeholder="채팅 검색...">
+
+                    <button type="button" class="chat-filter-btn">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="chat-room-list">
+
+                <a th:href="@{/chat/room/1}" class="chat-room-item active">
+
+                    <div class="chat-avatar avatar-blue">
+                        김
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>김동명</strong>
+                            <span class="chat-time recent">방금 전</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 컴퓨터공학과</span>
+                            <span class="unread-dot"></span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/2}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-yellow">
+                        이
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>이민주</strong>
+                            <span class="chat-time">14:47</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 컴퓨터공학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/3}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-pink">
+                        박
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>박창용</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/4}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-gray">
+                        최
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>최수상</strong>
+                            <span class="chat-time">21:32</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 정보보호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/5}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-purple">
+                        장
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>장연옥</strong>
+                            <span class="chat-time">23:58</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 뷰티케어학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/6}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-green">
+                        n
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>name</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/7}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-navy">
+                        n
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>name</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                            <i class="fa-regular fa-bell-slash mute-icon"></i>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/8}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-black">
+                        n
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>name</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/9}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-mint">
+                        n
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>name</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+                <a th:href="@{/chat/room/10}" class="chat-room-item">
+
+                    <div class="chat-avatar avatar-red">
+                        n
+                    </div>
+
+                    <div class="chat-room-info">
+
+                        <div class="chat-room-top">
+                            <strong>name</strong>
+                            <span class="chat-time">19:00</span>
+                        </div>
+
+                        <div class="chat-room-bottom">
+                            <span>동명대학교 간호학과</span>
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </aside>
+
+        <section class="chat-empty-panel">
+
+            <div class="chat-empty-content">
+
+                <div class="chat-empty-icon">
+                    <i class="fa-regular fa-comment-dots"></i>
+                </div>
+
+                <h2>
+                    채팅방을 선택하세요
+                </h2>
+
+                <p>
+                    왼쪽 목록에서 채팅방을 선택하면 대화를 볼 수 있습니다.
+                </p>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

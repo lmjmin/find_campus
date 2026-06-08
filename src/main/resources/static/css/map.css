@@ -17,8 +17,8 @@
     --found-deep: #1d4ed8;
     --found-light: #eef2ff;
 
-    --status-received-bg: #dbeafe;
-    --status-received-text: #2563eb;
+    --status-received-bg: #f3e8ff;
+    --status-received-text: #7e22ce;
 
     --status-storage-bg: #fef3c7;
     --status-storage-text: #d97706;
@@ -182,7 +182,7 @@ header {
 }
 
 .filter-tag {
-    border: none;
+    border: 1.5px solid transparent;
     padding: 8px 13px;
     border-radius: 999px;
 
@@ -201,13 +201,15 @@ header {
 }
 
 .tag-lost {
-    background: #fee2e2;
+    background: #ffffff;
     color: var(--lost-deep);
+    border-color: var(--lost-main);
 }
 
 .tag-found {
-    background: #dbeafe;
+    background: #ffffff;
     color: var(--found-main);
+    border-color: var(--found-main);
 }
 
 .tag-received {
@@ -811,6 +813,219 @@ header {
     margin-bottom: 6px;
 }
 
+/* =========================
+   Kakao Custom Marker
+========================= */
+
+.fc-item-marker {
+    position: relative;
+    width: 150px;
+    height: 82px;
+    pointer-events: none;
+}
+
+.fc-item-pin {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #ffffff;
+    font-size: 15px;
+
+    border: 3px solid #ffffff;
+    box-shadow:
+        0 7px 16px rgba(15, 23, 42, 0.26),
+        0 0 0 5px rgba(37, 99, 235, 0.12);
+
+    transform: translateX(-50%);
+}
+
+.fc-item-pin::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+
+    width: 11px;
+    height: 11px;
+
+    background: inherit;
+    transform: translateX(-50%) rotate(45deg);
+
+    border-right: 3px solid #ffffff;
+    border-bottom: 3px solid #ffffff;
+    border-radius: 2px;
+}
+
+.fc-item-label {
+    position: absolute;
+    left: 50%;
+    bottom: 45px;
+
+    width: 150px;
+    padding: 7px 10px;
+
+    border-radius: 12px;
+    background: #ffffff;
+
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    transform: translateX(-50%);
+}
+
+.fc-item-label span {
+    font-size: 10px;
+    font-weight: 900;
+    color: #6b7280;
+}
+
+.fc-item-label strong {
+    font-size: 12px;
+    font-weight: 900;
+    color: #111827;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fc-item-label em {
+    font-style: normal;
+    font-size: 11px;
+    color: #6b7280;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fc-marker-lost .fc-item-pin {
+    background: var(--lost-main);
+    box-shadow:
+        0 7px 16px rgba(239, 68, 68, 0.28),
+        0 0 0 5px rgba(239, 68, 68, 0.14);
+}
+
+.fc-marker-found .fc-item-pin {
+    background: var(--found-main);
+    box-shadow:
+        0 7px 16px rgba(37, 99, 235, 0.28),
+        0 0 0 5px rgba(37, 99, 235, 0.14);
+}
+
+.fc-marker-storage .fc-item-pin {
+    background: #f59e0b;
+    box-shadow:
+        0 7px 16px rgba(245, 158, 11, 0.28),
+        0 0 0 5px rgba(245, 158, 11, 0.16);
+}
+
+.fc-marker-returned .fc-item-pin {
+    background: #16a34a;
+    box-shadow:
+        0 7px 16px rgba(22, 163, 74, 0.28),
+        0 0 0 5px rgba(22, 163, 74, 0.14);
+}
+
+/* =========================
+   Current Location Marker
+========================= */
+
+.fc-current-location-overlay {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    pointer-events: none;
+}
+
+.fc-current-pulse {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    width: 58px;
+    height: 58px;
+    border-radius: 999px;
+
+    background: rgba(37, 99, 235, 0.22);
+    transform: translate(-50%, -50%);
+
+    animation: currentPulse 1.6s ease-out infinite;
+}
+
+.fc-current-dot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 3px solid #ffffff;
+    box-shadow:
+        0 7px 16px rgba(37, 99, 235, 0.35),
+        0 0 0 4px rgba(37, 99, 235, 0.18);
+
+    transform: translate(-50%, -50%);
+}
+
+.fc-current-dot i {
+    font-size: 13px;
+}
+
+.fc-current-label {
+    position: absolute;
+    left: 50%;
+    top: 58px;
+
+    transform: translateX(-50%);
+
+    padding: 6px 10px;
+    border-radius: 999px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 11px;
+    font-weight: 900;
+    white-space: nowrap;
+
+    box-shadow: 0 7px 16px rgba(37, 99, 235, 0.24);
+}
+
+@keyframes currentPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.72);
+        opacity: 0.9;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.25);
+        opacity: 0;
+    }
+}
+
 @media (max-width: 1000px) {
     .map-page {
         grid-template-columns: 1fr;
@@ -847,5 +1062,26 @@ header {
     .map-toolbar {
         right: 16px;
         top: 300px;
+    }
+
+    .fc-item-marker {
+        width: 132px;
+        height: 76px;
+    }
+
+    .fc-item-pin {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .fc-item-label {
+        width: 132px;
+        bottom: 41px;
+        padding: 6px 9px;
+    }
+
+    .fc-item-label strong {
+        font-size: 11px;
     }
 }
