@@ -9,6 +9,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 
@@ -40,6 +41,10 @@
 
             <a th:href="@{/search}">
                 검색
+            </a>
+
+            <a th:href="@{/chat/rooms}">
+                채팅
             </a>
 
             <a th:href="@{/map}">
@@ -74,311 +79,321 @@
 
 <main>
 
-<section class="hero">
+    <section class="hero">
 
-<div>
+        <div>
 
-<span class="hero-badge">
+            <span class="hero-badge">
+                동명대학교 학생 전용 서비스
+            </span>
 
-동명대학교 학생 전용 서비스
+            <h1>
+                잃어버린 물건을<br>
+                찾아드립니다
+            </h1>
 
-</span>
+            <p>
+                분실물과 습득물을 연결하는 스마트 분실물 서비스입니다.<br>
+                캠퍼스 안에서 잃어버린 물건을 빠르게 검색하고 등록할 수 있습니다.
+            </p>
 
-<h1>
+            <form
+                    th:action="@{/search}"
+                    method="get"
+                    class="search-box">
 
-잃어버린 물건을<br>
-찾아드립니다
+                <i class="fa-solid fa-magnifying-glass"></i>
 
-</h1>
+                <input
+                        type="text"
+                        name="keyword"
+                        placeholder="분실물 또는 습득물을 검색하세요...">
 
-<p>
+                <button type="submit">
+                    검색
+                </button>
 
-분실물과 습득물을 연결하는 스마트 분실물 서비스입니다.<br>
-캠퍼스 안에서 잃어버린 물건을 빠르게 검색하고 등록할 수 있습니다.
+            </form>
 
-</p>
+        </div>
 
-<form
-th:action="@{/search}"
-method="get"
-class="search-box">
+        <div class="hero-visual">
+            <i class="fa-solid fa-box-open"></i>
+        </div>
 
-<i class="fa-solid fa-magnifying-glass"></i>
+    </section>
 
-<input
-type="text"
-name="keyword"
-placeholder="분실물 또는 습득물을 검색하세요...">
 
-<button type="submit">
+    <section class="stats">
 
-검색
+        <div class="stat-card">
 
-</button>
+            <span>분실물</span>
 
-</form>
+            <strong>1,234건</strong>
 
-</div>
+        </div>
 
-<div class="hero-visual">
+        <div class="stat-card">
 
-<i class="fa-solid fa-box-open"></i>
+            <span>습득물</span>
 
-</div>
+            <strong>987건</strong>
 
-</section>
+        </div>
 
+        <div class="stat-card">
 
-<section class="stats">
+            <span>반환 완료</span>
 
-<div class="stat-card">
+            <strong>456건</strong>
 
-<span>분실물</span>
+        </div>
 
-<strong>1,234건</strong>
+    </section>
 
-</div>
 
-<div class="stat-card">
+    <section class="quick-section">
 
-<span>습득물</span>
+        <div class="section-title">
 
-<strong>987건</strong>
+            <h2>
+                빠른 메뉴
+            </h2>
 
-</div>
+        </div>
 
-<div class="stat-card">
+        <div class="quick-grid">
 
-<span>반환 완료</span>
+            <a th:href="@{/lost/write}" class="quick-card">
 
-<strong>456건</strong>
+                <div class="quick-icon">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
 
-</div>
+                <h3>
+                    분실물 등록
+                </h3>
 
-</section>
+                <p>
+                    잃어버린 물건을 등록합니다.
+                </p>
 
+            </a>
 
-<section class="quick-section">
 
-<div class="section-title">
+            <a th:href="@{/map}" class="quick-card">
 
-<h2>
+                <div class="quick-icon">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                </div>
 
-빠른 메뉴
+                <h3>
+                    캠퍼스 지도
+                </h3>
 
-</h2>
+                <p>
+                    건물 위치 기반 조회
+                </p>
 
-</div>
+            </a>
 
-<div class="quick-grid">
 
-<a th:href="@{/chat/rooms}" class="quick-card">
+            <a th:href="@{/recommend}" class="quick-card">
 
-<div class="quick-icon">
+                <div class="quick-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
 
-<i class="fa-solid fa-comments"></i>
+                <h3>
+                    유사 물건 추천
+                </h3>
 
-</div>
+                <p>
+                    AI 유사 추천
+                </p>
 
-<h3>
+            </a>
 
-실시간 채팅
+        </div>
 
-</h3>
+    </section>
 
-<p>
 
-분실자와 습득자가 대화합니다.
+    <section class="list-wrap">
 
-</p>
+        <div class="list-box">
 
-</a>
+            <div class="list-head">
 
+                <h2>
+                    최근 분실물
+                </h2>
 
-<a th:href="@{/map}" class="quick-card">
+                <a th:href="@{/lost/list}">
+                    더보기
+                </a>
 
-<div class="quick-icon">
+            </div>
 
-<i class="fa-solid fa-map-location-dot"></i>
+            <a th:href="@{/lost/detail}" class="item">
 
-</div>
+                <div>
 
-<h3>
+                    <h3>
+                        검정 노트북 가방
+                    </h3>
 
-캠퍼스 지도
+                    <p>
+                        대학본관 · 2026.01.15
+                    </p>
 
-</h3>
+                </div>
 
-<p>
+                <span class="status green">
+                    반환완료
+                </span>
 
-건물 위치 기반 조회
+            </a>
 
-</p>
+        </div>
 
-</a>
 
+        <div class="list-box">
 
-<a th:href="@{/recommend}" class="quick-card">
+            <div class="list-head">
 
-<div class="quick-icon">
+                <h2>
+                    최근 습득물
+                </h2>
 
-<i class="fa-solid fa-wand-magic-sparkles"></i>
+                <a th:href="@{/found/list}">
+                    더보기
+                </a>
 
-</div>
+            </div>
 
-<h3>
+            <a th:href="@{/found/detail}" class="item">
 
-유사 물건 추천
+                <div>
 
-</h3>
+                    <h3>
+                        학생증
+                    </h3>
 
-<p>
+                    <p>
+                        중앙도서관 · 2026.01.15
+                    </p>
 
-AI 유사 추천
+                </div>
 
-</p>
+                <span class="status yellow">
+                    보관중
+                </span>
 
-</a>
+            </a>
 
-</div>
+        </div>
 
-</section>
+    </section>
 
 
-<section class="list-wrap">
+    <section class="cta">
 
-<div class="list-box">
+        <a th:href="@{/lost/write}" class="cta-lost">
 
-<div class="list-head">
+            <i class="fa-solid fa-pen"></i>
 
-<h2>
+            분실물 등록
 
-최근 분실물
+        </a>
 
-</h2>
 
-<a th:href="@{/lost/list}">
+        <a th:href="@{/found/write}" class="cta-found">
 
-더보기
+            <i class="fa-solid fa-box"></i>
 
-</a>
+            습득물 등록
 
-</div>
+        </a>
 
-<a th:href="@{/lost/detail}" class="item">
 
-<div>
+        <a th:href="@{/search}" class="cta-search">
 
-<h3>
+            <i class="fa-solid fa-magnifying-glass"></i>
 
-검정 노트북 가방
+            검색하기
 
-</h3>
+        </a>
 
-<p>
+    </section>
 
-대학본관 · 2026.01.15
 
-</p>
+    <section class="home-support-section">
 
-</div>
+        <div class="home-support-bar">
 
-<span class="status green">
+            <div class="home-support-left">
 
-반환완료
+                <div class="home-support-badge">
+                    <i class="fa-solid fa-circle-info"></i>
+                    분실물 문의 안내
+                </div>
 
-</span>
+                <div class="home-support-title">
+                    분실물 관련 문의가 있나요?
+                </div>
 
-</a>
+                <div class="home-support-desc">
+                    실제 보관 및 반환은 교내 담당 부서 또는 지정 보관처를 통해 이루어집니다.
+                    문의사항이 있다면 학생장학봉사팀으로 연락해 주세요.
+                </div>
 
-</div>
+            </div>
 
+            <div class="home-support-right">
 
-<div class="list-box">
+                <div class="home-support-info-title">
+                    문의처 정보
+                </div>
 
-<div class="list-head">
+                <div class="home-support-info-list">
 
-<h2>
+                    <div class="home-support-info-item">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <span>학생장학봉사팀</span>
+                    </div>
 
-최근 습득물
+                    <div class="home-support-info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>051-629-0514</span>
+                    </div>
 
-</h2>
+                    <div class="home-support-info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>동명대학교 학생복지관</span>
+                    </div>
 
-<a th:href="@{/found/list}">
+                </div>
 
-더보기
+            </div>
 
-</a>
+        </div>
 
-</div>
+    </section>
 
-<a th:href="@{/found/detail}" class="item">
 
-<div>
+    <footer>
+        FindCampus · 동명대학교
 
-<h3>
+        <span class="footer-divider">
+            |
+        </span>
 
-학생증
-
-</h3>
-
-<p>
-
-중앙도서관 · 2026.01.15
-
-</p>
-
-</div>
-
-<span class="status yellow">
-
-보관중
-
-</span>
-
-</a>
-
-</div>
-
-</section>
-
-
-<section class="cta">
-
-<a th:href="@{/lost/write}" class="cta-lost">
-
-<i class="fa-solid fa-pen"></i>
-
-분실물 등록
-
-</a>
-
-
-<a th:href="@{/found/write}" class="cta-found">
-
-<i class="fa-solid fa-box"></i>
-
-습득물 등록
-
-</a>
-
-
-<a th:href="@{/search}" class="cta-search">
-
-<i class="fa-solid fa-magnifying-glass"></i>
-
-검색하기
-
-</a>
-
-</section>
-
-
-<footer>
-
-FindCampus · 동명대학교
-
-</footer>
+        <a th:href="@{/admin/login}" class="admin-footer-link">
+            관리자
+        </a>
+    </footer>
 
 </main>
 

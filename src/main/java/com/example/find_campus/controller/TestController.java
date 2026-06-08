@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TestController {
@@ -13,7 +14,9 @@ public class TestController {
         return "index";
     }
 
+    // =========================
     // USER
+    // =========================
     @GetMapping("/login")
     public String login() {
         return "user/login";
@@ -24,7 +27,9 @@ public class TestController {
         return "user/join";
     }
 
+    // =========================
     // LOST
+    // =========================
     @GetMapping("/lost/list")
     public String lostList() {
         return "lost/list";
@@ -41,12 +46,14 @@ public class TestController {
     }
 
     @GetMapping("/lost/detail/{id}")
-    public String lostDetailById(@PathVariable Long id, Model model) {
+    public String lostDetailById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("lostId", id);
         return "lost/detail";
     }
 
+    // =========================
     // FOUND
+    // =========================
     @GetMapping("/found/list")
     public String foundList() {
         return "found/list";
@@ -63,47 +70,112 @@ public class TestController {
     }
 
     @GetMapping("/found/detail/{id}")
-    public String foundDetailById(@PathVariable Long id, Model model) {
+    public String foundDetailById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("foundId", id);
         return "found/detail";
     }
 
-    // SEARCH
-    @GetMapping("/search")
-    public String search() {
-        return "search/search";
-    }
-
-    // RECOMMEND
-    @GetMapping({"/recommend", "/recommend/list"})
-    public String recommendList() {
-        return "recommend/list";
-    }
-
-    // MAP
-    @GetMapping("/map")
-    public String map() {
-        return "map/map";
-    }
-
+    // =========================
     // CHAT
+    // =========================
+
+    // 채팅방 목록
     @GetMapping("/chat/rooms")
     public String chatRooms() {
         return "chat/rooms";
     }
 
+    // 채팅방 상세 기본 주소
     @GetMapping("/chat/room")
     public String chatRoom() {
         return "chat/room";
     }
 
+    // 채팅방 상세 주소
     @GetMapping("/chat/room/{id}")
-    public String chatRoomById(@PathVariable Long id, Model model) {
+    public String chatRoomById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("roomId", id);
         return "chat/room";
     }
 
+    // =========================
+    // REPORT
+    // =========================
+
+    // lost/detail.html, found/detail.html에서 신고하기 버튼 누르면 이동
+    @GetMapping("/report/write")
+    public String reportWrite(@RequestParam(value = "type", required = false) String type,
+                              @RequestParam(value = "id", required = false) Long id,
+                              Model model) {
+        model.addAttribute("reportType", type);
+        model.addAttribute("targetId", id);
+        return "report/write";
+    }
+
+    // =========================
+    // MATCH
+    // =========================
+
+    // found/detail.html에서 "내 물건 같아요, 수령 신청하기" 버튼 누르면 여기로 이동
+    @GetMapping("/match/select-lost")
+    public String selectLost() {
+        return "match/select-lost";
+    }
+
+    // 나중에 foundId를 붙여서 이동할 때 사용할 수 있는 주소
+    @GetMapping("/match/select-lost/{foundId}")
+    public String selectLostByFoundId(@PathVariable("foundId") Long foundId, Model model) {
+        model.addAttribute("foundId", foundId);
+        return "match/select-lost";
+    }
+
+    // select-lost.html에서 분실글 선택 후 유사도 결과 페이지로 이동
+    @GetMapping("/match/result")
+    public String matchResult(@RequestParam(value = "foundId", required = false) Long foundId,
+                              @RequestParam(value = "lostId", required = false) Long lostId,
+                              Model model) {
+        model.addAttribute("foundId", foundId);
+        model.addAttribute("lostId", lostId);
+        return "match/result";
+    }
+
+    // result.html에서 보관 장소 확인하기 버튼 누르면 이동
+    @GetMapping("/match/storage-guide")
+    public String storageGuide(@RequestParam(value = "foundId", required = false) Long foundId,
+                               @RequestParam(value = "lostId", required = false) Long lostId,
+                               Model model) {
+        model.addAttribute("foundId", foundId);
+        model.addAttribute("lostId", lostId);
+        return "match/storage-guide";
+    }
+
+    // =========================
+    // SEARCH
+    // =========================
+    @GetMapping("/search")
+    public String search() {
+        return "search/search";
+    }
+
+    // =========================
+    // RECOMMEND
+    // =========================
+    @GetMapping({"/recommend", "/recommend/list"})
+    public String recommendList() {
+        return "recommend/list";
+    }
+
+    // =========================
+    // MAP
+    // =========================
+    @GetMapping("/map")
+    public String map() {
+        return "map/map";
+    }
+
+    // =========================
     // MYPAGE
+    // =========================
     @GetMapping("/mypage")
     public String mypage() {
         return "mypage/mypage";
@@ -129,7 +201,9 @@ public class TestController {
         return "mypage/privacy";
     }
 
+    // =========================
     // MYPAGE SETTING
+    // =========================
     @GetMapping("/mypage/setting/notice")
     public String notice() {
         return "mypage/setting/notice";
@@ -170,24 +244,70 @@ public class TestController {
         return "mypage/setting/app-info";
     }
 
+    // =========================
     // ADMIN
-    @GetMapping("/admin/items")
-    public String adminItemList() {
-        return "admin/item-list";
+    // =========================
+
+    // 관리자 로그인 화면
+    @GetMapping("/admin/login")
+    public String adminLogin() {
+        return "admin/login";
     }
 
-    @GetMapping("/admin/categories")
-    public String adminCategoryList() {
-        return "admin/category-list";
+    // 관리자 대시보드
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard() {
+        return "admin/dashboard";
     }
 
+    // 사용자 관리
+    @GetMapping("/admin/users")
+    public String adminUserList() {
+        return "admin/user-list";
+    }
+
+    // 분실물 관리
+    @GetMapping("/admin/lost")
+    public String adminLostList() {
+        return "admin/lost-list";
+    }
+
+    // 습득물 관리
+    @GetMapping("/admin/found")
+    public String adminFoundList() {
+        return "admin/found-list";
+    }
+
+    // 보관 장소 관리
+    @GetMapping("/admin/storage")
+    public String adminStorageList() {
+        return "admin/storage-list";
+    }
+
+    // 위치 관리
     @GetMapping("/admin/locations")
     public String adminLocationList() {
         return "admin/location-list";
     }
 
+    // 카테고리 관리
+    @GetMapping("/admin/categories")
+    public String adminCategoryList() {
+        return "admin/category-list";
+    }
+
+    // 신고 관리
     @GetMapping("/admin/reports")
     public String adminReportList() {
         return "admin/report-list";
+    }
+
+    /*
+     * 예전 관리자 통합 물품 관리 주소.
+     * 혹시 기존에 /admin/items로 연결한 버튼이 있으면 깨지지 않게 유지.
+     */
+    @GetMapping("/admin/items")
+    public String adminItemList() {
+        return "admin/item-list";
     }
 }

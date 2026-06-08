@@ -8,484 +8,8 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        header {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-inner {
-            max-width: 1200px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 22px;
-            font-weight: 800;
-            color: #1d4ed8;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: #eef2ff;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav {
-            display: flex;
-            gap: 30px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .nav a:hover {
-            color: #2563eb;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .icon-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            background: #f5f6fb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: #4f46e5;
-            transition: 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #e9ecff;
-            transform: translateY(-1px);
-        }
-
-        .container {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: 38px 24px 80px;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            color: #2563eb;
-            font-size: 14px;
-            font-weight: 800;
-
-            margin-bottom: 24px;
-        }
-
-        .page-head {
-            margin-bottom: 26px;
-        }
-
-        .page-head h1 {
-            font-size: 34px;
-            margin-bottom: 10px;
-            color: #111827;
-        }
-
-        .page-head p {
-            color: #6b7280;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .profile-summary {
-            background: linear-gradient(135deg, #6366f1, #3730a3);
-            color: #ffffff;
-            border-radius: 26px;
-            padding: 30px;
-            margin-bottom: 26px;
-
-            display: flex;
-            align-items: center;
-            gap: 22px;
-
-            box-shadow: 0 14px 30px rgba(79, 70, 229, 0.18);
-        }
-
-        .avatar {
-            width: 86px;
-            height: 86px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 34px;
-            font-weight: 900;
-            flex-shrink: 0;
-        }
-
-        .profile-info h2 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .profile-info p {
-            color: #e0e7ff;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .edit-card {
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 32px;
-            border: 1px solid #eef2f7;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        }
-
-        .section {
-            padding: 28px 0;
-            border-bottom: 1px solid #eef2f7;
-        }
-
-        .section:first-child {
-            padding-top: 0;
-        }
-
-        .section:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .section-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 14px;
-            background: #eff6ff;
-            color: #2563eb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .section-title h2 {
-            font-size: 19px;
-            color: #111827;
-            margin-bottom: 5px;
-        }
-
-        .section-title p {
-            font-size: 14px;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-size: 14px;
-            font-weight: 800;
-            color: #374151;
-        }
-
-        .required {
-            color: #ef4444;
-        }
-
-        .input,
-        .select {
-            width: 100%;
-            height: 52px;
-            border: 1px solid #e5e7eb;
-            border-radius: 15px;
-            background: #f9fafb;
-            outline: none;
-            padding: 0 16px;
-
-            font-size: 14px;
-            color: #111827;
-        }
-
-        .input:focus,
-        .select:focus {
-            border-color: #2563eb;
-            background: #ffffff;
-        }
-
-        .input[readonly] {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-
-        .help-text {
-            font-size: 12px;
-            color: #9ca3af;
-            line-height: 1.5;
-        }
-
-        .auth-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            padding: 20px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-        }
-
-        .auth-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .auth-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 16px;
-            background: #dcfce7;
-            color: #16a34a;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .auth-text strong {
-            display: block;
-            font-size: 15px;
-            color: #111827;
-            margin-bottom: 5px;
-        }
-
-        .auth-text span {
-            display: block;
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        .auth-btn {
-            height: 42px;
-            padding: 0 16px;
-            border: none;
-            border-radius: 13px;
-            background: #2563eb;
-            color: #ffffff;
-
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .password-box {
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            border-radius: 18px;
-            padding: 20px;
-            margin-top: 18px;
-        }
-
-        .password-box-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #9a3412;
-            font-size: 15px;
-            font-weight: 800;
-            margin-bottom: 14px;
-        }
-
-        .toggle-password-btn {
-            height: 46px;
-            padding: 0 18px;
-            border: 1px solid #fed7aa;
-            border-radius: 14px;
-            background: #ffffff;
-            color: #9a3412;
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .password-fields {
-            display: none;
-            margin-top: 18px;
-        }
-
-        .password-fields.active {
-            display: grid;
-        }
-
-        .notice-box {
-            background: #eef2ff;
-            color: #3730a3;
-            border-radius: 18px;
-            padding: 18px 20px;
-            margin-top: 24px;
-
-            display: flex;
-            gap: 14px;
-
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .notice-box i {
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
-
-        .button-area {
-            margin-top: 30px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .cancel-btn,
-        .save-btn {
-            height: 54px;
-            border-radius: 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .cancel-btn {
-            width: 180px;
-            background: #ffffff;
-            color: #2563eb;
-            border: 1px solid #dbeafe;
-        }
-
-        .save-btn {
-            flex: 1;
-            border: none;
-            background: #2563eb;
-            color: #ffffff;
-            cursor: pointer;
-            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
-        }
-
-        @media (max-width: 800px) {
-            .nav {
-                display: none;
-            }
-
-            .container {
-                padding: 30px 18px 70px;
-            }
-
-            .page-head h1 {
-                font-size: 28px;
-            }
-
-            .profile-summary {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .edit-card {
-                padding: 24px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .auth-box {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .auth-btn {
-                width: 100%;
-            }
-
-            .button-area {
-                flex-direction: column;
-            }
-
-            .cancel-btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
 </head>
 
 <body>
@@ -520,14 +44,14 @@
     </div>
 </header>
 
-<div class="container">
+<div class="container edit-container">
 
     <a th:href="@{/mypage}" class="back-link">
         <i class="fa-solid fa-arrow-left"></i>
         마이페이지로 돌아가기
     </a>
 
-    <div class="page-head">
+    <div class="page-head edit-page-head">
         <h1>정보 수정</h1>
         <p>내 계정 정보, 학교 인증 정보, 비밀번호를 수정할 수 있습니다.</p>
     </div>
@@ -548,8 +72,8 @@
 
         <div class="edit-card">
 
-            <section class="section">
-                <div class="section-head">
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
                     <div class="section-icon">
                         <i class="fa-solid fa-user"></i>
                     </div>
@@ -606,8 +130,8 @@
                 </div>
             </section>
 
-            <section class="section">
-                <div class="section-head">
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
                     <div class="section-icon">
                         <i class="fa-solid fa-school"></i>
                     </div>
@@ -673,8 +197,8 @@
                 </div>
             </section>
 
-            <section class="section">
-                <div class="section-head">
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
                     <div class="section-icon">
                         <i class="fa-solid fa-lock"></i>
                     </div>
@@ -728,8 +252,8 @@
                 </div>
             </section>
 
-            <section class="section">
-                <div class="section-head">
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
                     <div class="section-icon">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>

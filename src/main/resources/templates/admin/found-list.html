@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>신고 관리 | FindCampus Admin</title>
+    <title>습득물 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Font Awesome -->
@@ -66,7 +66,7 @@
                     분실물 관리
                 </a>
 
-                <a th:href="@{/admin/found}" class="side-link">
+                <a th:href="@{/admin/found}" class="side-link active">
                     <i class="fa-solid fa-box-open"></i>
                     습득물 관리
                 </a>
@@ -86,7 +86,7 @@
                     카테고리 관리
                 </a>
 
-                <a th:href="@{/admin/reports}" class="side-link active">
+                <a th:href="@{/admin/reports}" class="side-link">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     신고 관리
                 </a>
@@ -101,11 +101,11 @@
 
             <div class="page-title-wrap">
                 <h1 class="page-title">
-                    신고 관리
+                    습득물 관리
                 </h1>
 
                 <p class="page-desc">
-                    사용자 신고 내역을 확인하고 게시글 숨김, 처리 완료, 무시 처리를 할 수 있습니다.
+                    사용자가 등록한 습득물 게시글과 보관 상태를 관리할 수 있습니다.
                 </p>
             </div>
 
@@ -115,53 +115,53 @@
 
                 <div class="summary-card">
                     <div class="summary-top">
-                        <div class="summary-label">전체 신고</div>
+                        <div class="summary-label">전체 습득물</div>
                         <div class="summary-icon total">
-                            <i class="fa-solid fa-flag"></i>
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">86<span>건</span></div>
+                    <div class="summary-sub">등록된 전체 습득물</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">접수중</div>
+                        <div class="summary-icon waiting">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">12<span>건</span></div>
+                    <div class="summary-sub">보관 처리 전 상태</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">보관중</div>
+                        <div class="summary-icon storage">
+                            <i class="fa-solid fa-box-archive"></i>
                         </div>
                     </div>
 
                     <div class="summary-count">18<span>건</span></div>
-                    <div class="summary-sub">접수된 전체 신고</div>
+                    <div class="summary-sub">지정 장소에 보관 중</div>
                 </div>
 
 
                 <div class="summary-card">
                     <div class="summary-top">
-                        <div class="summary-label">미처리 신고</div>
-                        <div class="summary-icon waiting">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
-                    <div class="summary-sub">관리자 확인 필요</div>
-                </div>
-
-
-                <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">처리 완료</div>
+                        <div class="summary-label">반환완료</div>
                         <div class="summary-icon done">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
                     </div>
 
-                    <div class="summary-count">12<span>건</span></div>
-                    <div class="summary-sub">확인 후 처리 완료</div>
-                </div>
-
-
-                <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">숨김 처리</div>
-                        <div class="summary-icon hidden">
-                            <i class="fa-solid fa-eye-slash"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
-                    <div class="summary-sub">신고로 인해 숨김 처리</div>
+                    <div class="summary-count">56<span>건</span></div>
+                    <div class="summary-sub">분실자에게 반환 완료</div>
                 </div>
 
             </section>
@@ -174,22 +174,26 @@
 
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="신고 사유, 게시글 제목, 신고자로 검색">
+                        <input type="text" placeholder="물품명, 작성자, 습득 위치로 검색">
                     </div>
 
                     <div class="filter-actions">
 
                         <select class="filter-select">
-                            <option>구분 전체</option>
-                            <option>분실물</option>
-                            <option>습득물</option>
+                            <option>카테고리 전체</option>
+                            <option>전자기기</option>
+                            <option>지갑/카드</option>
+                            <option>의류</option>
+                            <option>가방</option>
+                            <option>기타</option>
                         </select>
 
                         <select class="filter-select">
                             <option>상태 전체</option>
-                            <option>미처리</option>
-                            <option>처리완료</option>
-                            <option>무시</option>
+                            <option>접수중</option>
+                            <option>보관중</option>
+                            <option>반환완료</option>
+                            <option>숨김</option>
                         </select>
 
                         <button type="button" class="search-btn">
@@ -203,29 +207,31 @@
             </section>
 
 
-            <!-- 신고 목록 -->
+            <!-- 습득물 목록 -->
             <section class="table-panel">
 
                 <div class="table-head">
                     <h2 class="table-title">
-                        신고 목록
+                        습득물 목록
                     </h2>
 
                     <div class="table-count">
-                        총 18건
+                        총 86건
                     </div>
                 </div>
 
-                <table class="report-table">
+                <table class="found-table">
 
                     <thead>
                     <tr>
                         <th>번호</th>
                         <th>구분</th>
-                        <th>신고 대상</th>
-                        <th>신고 사유</th>
-                        <th>신고자</th>
-                        <th>신고일</th>
+                        <th>물품명</th>
+                        <th>카테고리</th>
+                        <th>습득 위치</th>
+                        <th>보관 장소</th>
+                        <th>작성자</th>
+                        <th>등록일</th>
                         <th>상태</th>
                         <th>관리</th>
                     </tr>
@@ -237,24 +243,28 @@
                         <td>1</td>
 
                         <td>
-                            <span class="type-badge lost">분실물</span>
+                            <span class="type-badge found">습득물</span>
                         </td>
 
                         <td>
-                            <div class="report-title">검정 노트북 가방</div>
-                            <div class="report-desc">허위 게시글로 의심된다는 신고가 접수되었습니다.</div>
+                            <div class="item-name">학생증</div>
+                            <div class="item-desc">동명대학교 학생증입니다. 이름 일부 확인 가능.</div>
                         </td>
 
                         <td>
-                            <span class="reason-badge">허위 게시글</span>
+                            <span class="category-badge">지갑/카드</span>
                         </td>
+
+                        <td>중앙도서관</td>
+
+                        <td>학생지원팀</td>
 
                         <td>김민주</td>
 
                         <td>2026.05.30</td>
 
                         <td>
-                            <span class="status-badge waiting">미처리</span>
+                            <span class="status-badge storage">보관중</span>
                         </td>
 
                         <td>
@@ -263,12 +273,12 @@
                                     상세
                                 </button>
 
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
+                                <button type="button" class="action-btn done-btn">
+                                    반환완료
                                 </button>
 
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
+                                <button type="button" class="action-btn hide-btn">
+                                    숨김
                                 </button>
                             </div>
                         </td>
@@ -283,20 +293,24 @@
                         </td>
 
                         <td>
-                            <div class="report-title">학생증</div>
-                            <div class="report-desc">개인정보가 노출되어 있다는 신고가 접수되었습니다.</div>
+                            <div class="item-name">무선 이어폰</div>
+                            <div class="item-desc">흰색 무선 이어폰 한쪽과 케이스가 함께 있습니다.</div>
                         </td>
 
                         <td>
-                            <span class="reason-badge">개인정보 노출</span>
+                            <span class="category-badge">전자기기</span>
                         </td>
+
+                        <td>ICT관</td>
+
+                        <td>ICT관 행정실</td>
 
                         <td>이시현</td>
 
-                        <td>2026.05.30</td>
+                        <td>2026.05.29</td>
 
                         <td>
-                            <span class="status-badge waiting">미처리</span>
+                            <span class="status-badge done">반환완료</span>
                         </td>
 
                         <td>
@@ -308,10 +322,6 @@
                                 <button type="button" class="action-btn hide-btn">
                                     숨김
                                 </button>
-
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
-                                </button>
                             </div>
                         </td>
                     </tr>
@@ -321,24 +331,28 @@
                         <td>3</td>
 
                         <td>
-                            <span class="type-badge lost">분실물</span>
+                            <span class="type-badge found">습득물</span>
                         </td>
 
                         <td>
-                            <div class="report-title">파란색 지갑</div>
-                            <div class="report-desc">같은 내용의 게시글이 여러 번 등록되었다는 신고입니다.</div>
+                            <div class="item-name">검정 우산</div>
+                            <div class="item-desc">손잡이에 흰색 스티커가 붙어있는 검정 우산입니다.</div>
                         </td>
 
                         <td>
-                            <span class="reason-badge">중복 게시글</span>
+                            <span class="category-badge">기타</span>
                         </td>
+
+                        <td>대학본관</td>
+
+                        <td>대학본관 경비실</td>
 
                         <td>박지훈</td>
 
-                        <td>2026.05.29</td>
+                        <td>2026.05.28</td>
 
                         <td>
-                            <span class="status-badge done">처리완료</span>
+                            <span class="status-badge waiting">접수중</span>
                         </td>
 
                         <td>
@@ -347,8 +361,12 @@
                                     상세
                                 </button>
 
-                                <button type="button" class="action-btn process-btn">
-                                    완료
+                                <button type="button" class="action-btn done-btn">
+                                    보관처리
+                                </button>
+
+                                <button type="button" class="action-btn hide-btn">
+                                    숨김
                                 </button>
                             </div>
                         </td>
@@ -363,26 +381,34 @@
                         </td>
 
                         <td>
-                            <div class="report-title">회색 파우치</div>
-                            <div class="report-desc">신고 확인 결과 문제가 없는 게시글로 판단되었습니다.</div>
+                            <div class="item-name">회색 파우치</div>
+                            <div class="item-desc">화장품이 들어있는 작은 회색 파우치입니다.</div>
                         </td>
 
                         <td>
-                            <span class="reason-badge">부적절한 내용</span>
+                            <span class="category-badge">기타</span>
                         </td>
+
+                        <td>학생복지관</td>
+
+                        <td>학생지원팀</td>
 
                         <td>최유림</td>
 
-                        <td>2026.05.28</td>
+                        <td>2026.05.27</td>
 
                         <td>
-                            <span class="status-badge ignore">무시</span>
+                            <span class="status-badge hidden">숨김</span>
                         </td>
 
                         <td>
                             <div class="action-group">
                                 <button type="button" class="action-btn detail-btn">
                                     상세
+                                </button>
+
+                                <button type="button" class="action-btn restore-btn">
+                                    복구
                                 </button>
                             </div>
                         </td>

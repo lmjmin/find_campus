@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>신고 관리 | FindCampus Admin</title>
+    <title>사용자 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Font Awesome -->
@@ -56,7 +56,7 @@
                     대시보드
                 </a>
 
-                <a th:href="@{/admin/users}" class="side-link">
+                <a th:href="@{/admin/users}" class="side-link active">
                     <i class="fa-solid fa-users"></i>
                     사용자 관리
                 </a>
@@ -86,7 +86,7 @@
                     카테고리 관리
                 </a>
 
-                <a th:href="@{/admin/reports}" class="side-link active">
+                <a th:href="@{/admin/reports}" class="side-link">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     신고 관리
                 </a>
@@ -101,11 +101,11 @@
 
             <div class="page-title-wrap">
                 <h1 class="page-title">
-                    신고 관리
+                    사용자 관리
                 </h1>
 
                 <p class="page-desc">
-                    사용자 신고 내역을 확인하고 게시글 숨김, 처리 완료, 무시 처리를 할 수 있습니다.
+                    가입한 사용자의 상태를 확인하고 계정을 관리할 수 있습니다.
                 </p>
             </div>
 
@@ -114,54 +114,27 @@
             <section class="summary-grid">
 
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">전체 신고</div>
-                        <div class="summary-icon total">
-                            <i class="fa-solid fa-flag"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">18<span>건</span></div>
-                    <div class="summary-sub">접수된 전체 신고</div>
+                    <div class="summary-label">전체 사용자</div>
+                    <div class="summary-count">86<span>명</span></div>
+                    <div class="summary-sub">가입된 전체 계정</div>
                 </div>
 
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">미처리 신고</div>
-                        <div class="summary-icon waiting">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
-                    <div class="summary-sub">관리자 확인 필요</div>
+                    <div class="summary-label">정상 사용자</div>
+                    <div class="summary-count">81<span>명</span></div>
+                    <div class="summary-sub">현재 서비스 이용 가능</div>
                 </div>
 
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">처리 완료</div>
-                        <div class="summary-icon done">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">12<span>건</span></div>
-                    <div class="summary-sub">확인 후 처리 완료</div>
+                    <div class="summary-label">정지 사용자</div>
+                    <div class="summary-count">3<span>명</span></div>
+                    <div class="summary-sub">관리자에 의해 이용 제한</div>
                 </div>
 
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">숨김 처리</div>
-                        <div class="summary-icon hidden">
-                            <i class="fa-solid fa-eye-slash"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
-                    <div class="summary-sub">신고로 인해 숨김 처리</div>
+                    <div class="summary-label">오늘 가입</div>
+                    <div class="summary-count">2<span>명</span></div>
+                    <div class="summary-sub">오늘 새로 가입한 사용자</div>
                 </div>
 
             </section>
@@ -174,28 +147,20 @@
 
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="신고 사유, 게시글 제목, 신고자로 검색">
+                        <input type="text" placeholder="이름, 아이디, 이메일로 검색">
                     </div>
 
                     <div class="filter-actions">
-
-                        <select class="filter-select">
-                            <option>구분 전체</option>
-                            <option>분실물</option>
-                            <option>습득물</option>
-                        </select>
-
                         <select class="filter-select">
                             <option>상태 전체</option>
-                            <option>미처리</option>
-                            <option>처리완료</option>
-                            <option>무시</option>
+                            <option>정상</option>
+                            <option>정지</option>
+                            <option>인증대기</option>
                         </select>
 
                         <button type="button" class="search-btn">
                             검색
                         </button>
-
                     </div>
 
                 </div>
@@ -203,29 +168,27 @@
             </section>
 
 
-            <!-- 신고 목록 -->
+            <!-- 사용자 목록 -->
             <section class="table-panel">
 
                 <div class="table-head">
                     <h2 class="table-title">
-                        신고 목록
+                        사용자 목록
                     </h2>
 
                     <div class="table-count">
-                        총 18건
+                        총 86명
                     </div>
                 </div>
 
-                <table class="report-table">
+                <table class="user-table">
 
                     <thead>
                     <tr>
-                        <th>번호</th>
-                        <th>구분</th>
-                        <th>신고 대상</th>
-                        <th>신고 사유</th>
-                        <th>신고자</th>
-                        <th>신고일</th>
+                        <th>사용자</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>가입일</th>
                         <th>상태</th>
                         <th>관리</th>
                     </tr>
@@ -234,69 +197,25 @@
                     <tbody>
 
                     <tr>
-                        <td>1</td>
-
                         <td>
-                            <span class="type-badge lost">분실물</span>
+                            <div class="user-name">이민주</div>
+                            <div class="user-id">user_001</div>
+                        </td>
+
+                        <td class="email-text">
+                            minju@example.com
                         </td>
 
                         <td>
-                            <div class="report-title">검정 노트북 가방</div>
-                            <div class="report-desc">허위 게시글로 의심된다는 신고가 접수되었습니다.</div>
+                            <span class="role-badge user">사용자</span>
                         </td>
 
                         <td>
-                            <span class="reason-badge">허위 게시글</span>
-                        </td>
-
-                        <td>김민주</td>
-
-                        <td>2026.05.30</td>
-
-                        <td>
-                            <span class="status-badge waiting">미처리</span>
+                            2026.05.01
                         </td>
 
                         <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>2</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="report-title">학생증</div>
-                            <div class="report-desc">개인정보가 노출되어 있다는 신고가 접수되었습니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="reason-badge">개인정보 노출</span>
-                        </td>
-
-                        <td>이시현</td>
-
-                        <td>2026.05.30</td>
-
-                        <td>
-                            <span class="status-badge waiting">미처리</span>
+                            <span class="status-badge active">정상</span>
                         </td>
 
                         <td>
@@ -305,12 +224,8 @@
                                     상세
                                 </button>
 
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
+                                <button type="button" class="action-btn stop-btn">
+                                    정지
                                 </button>
                             </div>
                         </td>
@@ -318,27 +233,25 @@
 
 
                     <tr>
-                        <td>3</td>
-
                         <td>
-                            <span class="type-badge lost">분실물</span>
+                            <div class="user-name">이승현</div>
+                            <div class="user-id">user_002</div>
+                        </td>
+
+                        <td class="email-text">
+                            sihyeon@example.com
                         </td>
 
                         <td>
-                            <div class="report-title">파란색 지갑</div>
-                            <div class="report-desc">같은 내용의 게시글이 여러 번 등록되었다는 신고입니다.</div>
+                            <span class="role-badge user">사용자</span>
                         </td>
 
                         <td>
-                            <span class="reason-badge">중복 게시글</span>
+                            2026.05.03
                         </td>
 
-                        <td>박지훈</td>
-
-                        <td>2026.05.29</td>
-
                         <td>
-                            <span class="status-badge done">처리완료</span>
+                            <span class="status-badge active">정상</span>
                         </td>
 
                         <td>
@@ -347,8 +260,8 @@
                                     상세
                                 </button>
 
-                                <button type="button" class="action-btn process-btn">
-                                    완료
+                                <button type="button" class="action-btn stop-btn">
+                                    정지
                                 </button>
                             </div>
                         </td>
@@ -356,27 +269,97 @@
 
 
                     <tr>
-                        <td>4</td>
-
                         <td>
-                            <span class="type-badge found">습득물</span>
+                            <div class="user-name">박지훈</div>
+                            <div class="user-id">user_003</div>
+                        </td>
+
+                        <td class="email-text">
+                            jihoon@example.com
                         </td>
 
                         <td>
-                            <div class="report-title">회색 파우치</div>
-                            <div class="report-desc">신고 확인 결과 문제가 없는 게시글로 판단되었습니다.</div>
+                            <span class="role-badge user">사용자</span>
                         </td>
 
                         <td>
-                            <span class="reason-badge">부적절한 내용</span>
+                            2026.05.10
                         </td>
 
-                        <td>최유림</td>
-
-                        <td>2026.05.28</td>
+                        <td>
+                            <span class="status-badge suspended">정지</span>
+                        </td>
 
                         <td>
-                            <span class="status-badge ignore">무시</span>
+                            <div class="action-group">
+                                <button type="button" class="action-btn detail-btn">
+                                    상세
+                                </button>
+
+                                <button type="button" class="action-btn restore-btn">
+                                    해제
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <div class="user-name">최유림</div>
+                            <div class="user-id">user_004</div>
+                        </td>
+
+                        <td class="email-text">
+                            yurim@example.com
+                        </td>
+
+                        <td>
+                            <span class="role-badge user">사용자</span>
+                        </td>
+
+                        <td>
+                            2026.05.14
+                        </td>
+
+                        <td>
+                            <span class="status-badge waiting">인증대기</span>
+                        </td>
+
+                        <td>
+                            <div class="action-group">
+                                <button type="button" class="action-btn detail-btn">
+                                    상세
+                                </button>
+
+                                <button type="button" class="action-btn stop-btn">
+                                    정지
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <div class="user-name">관리자</div>
+                            <div class="user-id">admin</div>
+                        </td>
+
+                        <td class="email-text">
+                            admin@findcampus.com
+                        </td>
+
+                        <td>
+                            <span class="role-badge admin">관리자</span>
+                        </td>
+
+                        <td>
+                            2026.04.20
+                        </td>
+
+                        <td>
+                            <span class="status-badge active">정상</span>
                         </td>
 
                         <td>

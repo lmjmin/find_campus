@@ -8,297 +8,8 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        header {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-inner {
-            max-width: 1200px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 22px;
-            font-weight: 800;
-            color: #1d4ed8;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: #eef2ff;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav {
-            display: flex;
-            gap: 30px;
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .nav a:hover {
-            color: #2563eb;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .icon-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 999px;
-            background: #f5f6fb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: #4f46e5;
-            transition: 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #e9ecff;
-            transform: translateY(-1px);
-        }
-
-        .container {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: 42px 24px 80px;
-        }
-
-        .page-head {
-            margin-bottom: 28px;
-        }
-
-        .page-head h1 {
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
-
-        .page-head p {
-            color: #6b7280;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .policy-card {
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 32px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-            border: 1px solid #eef2f7;
-        }
-
-        .policy-summary {
-            background: #eef2ff;
-            color: #3730a3;
-            border-radius: 20px;
-            padding: 20px;
-            display: flex;
-            gap: 14px;
-            line-height: 1.6;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .policy-summary i {
-            margin-top: 3px;
-            flex-shrink: 0;
-        }
-
-        .policy-section {
-            padding: 24px 0;
-            border-bottom: 1px solid #eef2f7;
-        }
-
-        .policy-section:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .section-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 12px;
-            background: #eff6ff;
-            color: #2563eb;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            flex-shrink: 0;
-        }
-
-        .section-title h2 {
-            font-size: 19px;
-            color: #111827;
-        }
-
-        .policy-section p {
-            color: #4b5563;
-            font-size: 14px;
-            line-height: 1.8;
-            margin-bottom: 12px;
-        }
-
-        .policy-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .policy-list li {
-            position: relative;
-            padding-left: 18px;
-            color: #4b5563;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        .policy-list li::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            background: #2563eb;
-            border-radius: 999px;
-
-            position: absolute;
-            left: 0;
-            top: 9px;
-        }
-
-        .warning-box {
-            background: #fff7ed;
-            border: 1px solid #fed7aa;
-            color: #9a3412;
-            border-radius: 18px;
-            padding: 18px;
-            display: flex;
-            gap: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-top: 16px;
-        }
-
-        .warning-box i {
-            margin-top: 3px;
-            flex-shrink: 0;
-        }
-
-        .bottom-area {
-            margin-top: 28px;
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .back-btn,
-        .home-btn {
-            height: 52px;
-            border-radius: 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .back-btn {
-            width: 170px;
-            background: #ffffff;
-            color: #2563eb;
-            border: 1px solid #dbeafe;
-        }
-
-        .home-btn {
-            flex: 1;
-            background: #2563eb;
-            color: #ffffff;
-        }
-
-        @media (max-width: 800px) {
-            .nav {
-                display: none;
-            }
-
-            .container {
-                padding: 32px 18px 70px;
-            }
-
-            .page-head h1 {
-                font-size: 28px;
-            }
-
-            .policy-card {
-                padding: 24px;
-            }
-
-            .bottom-area {
-                flex-direction: column;
-            }
-
-            .back-btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
 </head>
 
 <body>
@@ -333,7 +44,7 @@
     </div>
 </header>
 
-<div class="container">
+<div class="container policy-container">
 
     <div class="page-head">
         <h1>운영정책</h1>
@@ -349,6 +60,7 @@
             <div>
                 FindCampus는 동명대학교 구성원이 분실물과 습득물을 쉽고 안전하게 공유할 수 있도록 돕는 서비스입니다.
                 모든 사용자는 정확한 정보를 작성하고, 타인의 개인정보와 권리를 침해하지 않아야 합니다.
+                실제 물건 수령은 유사도 결과만으로 확정되지 않으며, 보관처 확인과 본인 확인 절차를 거쳐야 합니다.
             </div>
         </div>
 
@@ -366,7 +78,9 @@
             </p>
 
             <ul class="policy-list">
-                <li>물건 이름, 색상, 특징, 분실 또는 습득 장소를 최대한 자세히 작성합니다.</li>
+                <li>물건 이름, 색상, 카테고리, 분실 또는 습득 장소를 최대한 정확하게 작성합니다.</li>
+                <li>분실물 글에는 본인 확인에 도움이 되는 특징을 작성할 수 있습니다.</li>
+                <li>습득물 글은 도용 방지를 위해 모든 세부 특징을 공개하지 않을 수 있습니다.</li>
                 <li>타인의 개인정보가 포함된 사진은 필요한 부분을 가린 후 등록합니다.</li>
                 <li>장난성 글, 허위 글, 광고성 글은 관리자에 의해 제한될 수 있습니다.</li>
             </ul>
@@ -375,21 +89,114 @@
         <section class="policy-section">
             <div class="section-title">
                 <div class="section-icon">
-                    <i class="fa-solid fa-comments"></i>
+                    <i class="fa-solid fa-hand-holding-heart"></i>
                 </div>
-                <h2>채팅 이용 기준</h2>
+                <h2>수령 신청 기준</h2>
             </div>
 
             <p>
-                채팅 기능은 분실물 반환과 확인을 위한 목적으로만 사용해야 합니다.
-                상대방에게 불쾌감을 주는 말이나 서비스 목적과 관련 없는 대화는 제한될 수 있습니다.
+                사용자는 본인의 물건으로 보이는 습득물을 발견한 경우 수령 신청을 진행할 수 있습니다.
+                수령 신청은 반드시 본인이 등록한 분실물 글을 기준으로 진행해야 합니다.
             </p>
 
             <ul class="policy-list">
-                <li>분실물 확인에 필요한 내용만 정중하게 대화합니다.</li>
-                <li>욕설, 비방, 협박, 반복 메시지는 금지됩니다.</li>
-                <li>개인 연락처 교환은 신중하게 진행해야 합니다.</li>
+                <li>수령 신청 전 분실물 글을 먼저 등록해야 합니다.</li>
+                <li>습득물 상세 페이지에서 본인의 분실물 글을 선택해 신청합니다.</li>
+                <li>선택한 분실물 글과 습득물 글의 정보가 유사도 확인에 사용됩니다.</li>
+                <li>타인의 습득물을 본인 물건처럼 허위로 신청해서는 안 됩니다.</li>
+                <li>허위 신청이 반복될 경우 수령 신청 제한 또는 계정 이용 제한이 적용될 수 있습니다.</li>
             </ul>
+
+            <div class="info-box">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    수령 신청 기능은 물건 도용을 줄이기 위한 절차입니다.
+                    단순히 습득물 게시글을 보고 바로 수령하는 방식이 아니라,
+                    분실자가 작성한 분실글과 습득물 정보를 비교한 뒤 보관처 확인으로 이어지도록 설계합니다.
+                </div>
+            </div>
+        </section>
+
+        <section class="policy-section">
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                </div>
+                <h2>유사도 확인 기준</h2>
+            </div>
+
+            <p>
+                AI 추천과 유사도 확인은 분실물과 습득물을 연결하기 위한 보조 기능입니다.
+                물건명, 카테고리, 위치, 시간, 특징 등을 참고하여 유사 가능성을 보여줍니다.
+            </p>
+
+            <ul class="policy-list">
+                <li>유사도 결과는 수령 가능성을 판단하는 참고 자료입니다.</li>
+                <li>유사도가 높더라도 실제 물건 확인 없이 수령이 확정되지 않습니다.</li>
+                <li>습득자가 공개하지 않은 세부 특징은 보관처 확인 단계에서 활용될 수 있습니다.</li>
+                <li>유사도 결과가 낮더라도 관리자의 판단이나 추가 확인이 필요할 수 있습니다.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
+                <h2>보관 및 반환 기준</h2>
+            </div>
+
+            <p>
+                습득물은 가능한 경우 유실물 센터 또는 학교 지정 보관처에 맡기는 것을 원칙으로 합니다.
+                실제 물건 수령은 보관처에서 본인 확인 후 진행됩니다.
+            </p>
+
+            <ul class="policy-list">
+                <li>습득자는 물건을 안전한 보관처에 인계하는 것을 권장합니다.</li>
+                <li>보관중인 물건은 보관 장소 안내 페이지에서 확인할 수 있습니다.</li>
+                <li>분실자는 학생증 등 본인 확인 수단을 지참해야 합니다.</li>
+                <li>물건의 세부 특징, 구성품, 흠집, 기기명 등은 본인 확인에 사용될 수 있습니다.</li>
+                <li>반환이 완료된 게시글은 반환완료 상태로 표시합니다.</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <div class="section-title">
+                <div class="section-icon">
+                    <i class="fa-solid fa-tags"></i>
+                </div>
+                <h2>상태 표시 기준</h2>
+            </div>
+
+            <p>
+                게시글 상태는 사용자가 물건의 진행 상황을 쉽게 이해할 수 있도록 표시됩니다.
+                상태는 서비스 운영 기준과 실제 보관 상황에 따라 변경될 수 있습니다.
+            </p>
+
+            <div class="status-guide">
+
+                <div class="status-card">
+                    <span class="status-badge status-received">접수중</span>
+                    <p>
+                        분실자가 글을 등록했지만 아직 보관처 확인이 완료되지 않은 상태입니다.
+                    </p>
+                </div>
+
+                <div class="status-card">
+                    <span class="status-badge status-storage">보관중</span>
+                    <p>
+                        물건이 유실물 센터 또는 지정 보관처에 보관되어 있는 상태입니다.
+                    </p>
+                </div>
+
+                <div class="status-card">
+                    <span class="status-badge status-returned">반환완료</span>
+                    <p>
+                        본인 확인 후 물건이 주인에게 반환된 상태입니다.
+                    </p>
+                </div>
+
+            </div>
         </section>
 
         <section class="policy-section">
@@ -408,6 +215,7 @@
             <ul class="policy-list">
                 <li>학생증, 신분증, 카드번호 등은 그대로 노출하지 않습니다.</li>
                 <li>타인의 개인정보를 허락 없이 게시하지 않습니다.</li>
+                <li>연락처, 주소, 학번 등 개인정보는 필요한 범위 내에서만 사용합니다.</li>
                 <li>개인정보가 포함된 게시글은 관리자 판단에 따라 수정 또는 삭제될 수 있습니다.</li>
             </ul>
         </section>
@@ -426,16 +234,18 @@
 
             <ul class="policy-list">
                 <li>허위 분실물 또는 허위 습득물 게시글 작성</li>
+                <li>타인의 물건을 본인 물건처럼 허위로 수령 신청하는 행위</li>
+                <li>유사도 확인 또는 수령 신청 절차를 악용하는 행위</li>
                 <li>광고, 홍보, 스팸성 게시글 작성</li>
                 <li>타인을 사칭하거나 부정확한 정보를 반복 등록하는 행위</li>
-                <li>욕설, 비방, 혐오 표현, 협박성 메시지 전송</li>
-                <li>분실물을 돌려주지 않거나 부당한 대가를 요구하는 행위</li>
+                <li>분실물을 반환하지 않거나 부당한 대가를 요구하는 행위</li>
+                <li>타인의 개인정보를 무단으로 수집하거나 공개하는 행위</li>
             </ul>
 
             <div class="warning-box">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 <div>
-                    위반 행위가 확인될 경우 게시글 삭제, 채팅 제한, 계정 이용 제한 등의 조치가 이루어질 수 있습니다.
+                    위반 행위가 확인될 경우 게시글 삭제, 수령 신청 제한, 계정 이용 제한 등의 조치가 이루어질 수 있습니다.
                 </div>
             </div>
         </section>
@@ -455,6 +265,7 @@
 
             <ul class="policy-list">
                 <li>신고된 게시글은 관리자 검토 후 숨김 또는 삭제될 수 있습니다.</li>
+                <li>허위 수령 신청이 의심되는 경우 신청이 제한될 수 있습니다.</li>
                 <li>반복적으로 정책을 위반한 사용자는 서비스 이용이 제한될 수 있습니다.</li>
                 <li>분실물 반환 과정에서 발생한 개인 간 분쟁은 당사자 간 확인이 필요합니다.</li>
             </ul>

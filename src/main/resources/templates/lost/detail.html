@@ -8,315 +8,8 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        header {
-            height: 72px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .header-inner {
-            max-width: 1120px;
-            height: 100%;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 22px;
-            font-weight: 800;
-            color: #1d4ed8;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: #eef2ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-actions {
-    		display: flex;
-    		align-items: center;
-		}
-
-		.back-link {
-    		color: #4f46e5;
-    		font-size: 14px;
-    		font-weight: 700;
-    		transition: .2s;
-		}
-
-		.back-link:hover {
-    		opacity: .7;
-		}
-
-        .container {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
-        }
-
-        .detail-layout {
-            display: grid;
-            grid-template-columns: 420px 1fr;
-            gap: 28px;
-        }
-
-        .image-box {
-            height: 420px;
-            border-radius: 26px;
-            background: #dfe5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ef4444;
-            font-size: 86px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        }
-
-        .type-badge {
-            position: absolute;
-            top: 18px;
-            left: 18px;
-            padding: 8px 13px;
-            border-radius: 999px;
-            background: #ef4444;
-            color: white;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .info-card {
-            margin-top: 22px;
-            background: #ffffff;
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        }
-
-        .info-row {
-            display: flex;
-            gap: 14px;
-            padding: 17px 0;
-            border-bottom: 1px solid #eef2f7;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 14px;
-            background: #fee2e2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ef4444;
-            flex-shrink: 0;
-        }
-
-        .info-text strong {
-            display: block;
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 6px;
-        }
-
-        .info-text span {
-            font-size: 15px;
-            color: #1f2937;
-            line-height: 1.5;
-        }
-
-        .tag-list {
-            margin-top: 18px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag {
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: #fee2e2;
-            color: #b91c1c;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 8px 13px;
-            border-radius: 999px;
-            background: #dbeafe;
-            color: #2563eb;
-            font-size: 13px;
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-
-        .title {
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
-
-        .date {
-            color: #9ca3af;
-            font-size: 14px;
-            margin-bottom: 28px;
-        }
-
-        .desc-card,
-        .writer-card,
-        .warning-card {
-            background: #ffffff;
-            border-radius: 22px;
-            padding: 26px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-            margin-bottom: 22px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 16px;
-        }
-
-        .description {
-            color: #4b5563;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-
-        .writer {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #fee2e2;
-            color: #dc2626;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-        }
-
-        .writer-name {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .writer-school {
-            font-size: 14px;
-            color: #6b7280;
-        }
-
-        .warning-card {
-            background: #fff7ed;
-            color: #c2410c;
-            display: flex;
-            gap: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-            box-shadow: none;
-            border: 1px solid #fed7aa;
-        }
-
-        .button-area {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-
-        .chat-btn {
-            width: 100%;
-            height: 60px;
-            border: none;
-            border-radius: 18px;
-            background: linear-gradient(135deg, #ef4444, #991b1b);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .sub-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .sub-btn {
-            height: 52px;
-            border-radius: 16px;
-            border: 1px solid #d1d5db;
-            background: #ffffff;
-            font-size: 14px;
-            font-weight: 800;
-            color: #4b5563;
-            cursor: pointer;
-        }
-
-        @media (max-width: 900px) {
-            .detail-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .image-box {
-                height: 320px;
-            }
-
-            .title {
-                font-size: 28px;
-            }
-
-            .back-link {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/lost.css}">
 </head>
 
 <body>
@@ -338,9 +31,7 @@
         <div class="header-actions">
 
             <a th:href="@{/lost/list}" class="back-link">
-
                 분실물 목록으로
-
             </a>
 
         </div>
@@ -395,6 +86,17 @@
                     </div>
                 </div>
 
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>본인 확인 특징</strong>
+                        <span>검정색, 파란 키링, 내부 맥북 포함</span>
+                    </div>
+                </div>
+
                 <div class="tag-list">
                     <span class="tag">#검정색</span>
                     <span class="tag">#노트북가방</span>
@@ -408,9 +110,12 @@
 
         <div class="right-area">
 
-            <span class="status">찾는중</span>
+            <span class="status status-storage">보관중</span>
+            <!-- 반환완료 상태로 보여야 하면 위 줄을 아래처럼 바꾸면 됨
+            <span class="status status-returned">반환완료</span>
+            -->
 
-            <h1 class="title">검정 노트북 가방</h1>
+            <h1 class="title">검정 노트북 가방을 잃어버렸어요</h1>
 
             <div class="date">
                 2026년 5월 19일 오후 2:30 게시
@@ -424,7 +129,7 @@
                     안에는 맥북 프로 13인치, 충전기, 노트와 필기구가 들어있습니다.
                     가방 앞쪽 지퍼에 파란색 키링이 달려 있고,
                     오른쪽 측면에는 물병을 넣는 작은 포켓이 있습니다.
-                    비슷한 물건을 보셨거나 보관 중이라면 채팅으로 연락해주세요.
+                    비슷한 습득물이 있다면 유사 습득물 목록을 확인한 뒤 수령 신청을 진행할 수 있습니다.
                 </p>
             </div>
 
@@ -443,30 +148,61 @@
                 </div>
             </div>
 
+            <div class="match-guide-card">
+
+                <div class="match-guide-title">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>유사 습득물 확인 안내</span>
+                </div>
+
+                <div class="match-steps">
+
+                    <div class="match-step">
+                        <strong>1. 유사 습득물 확인</strong>
+                        작성한 물건명, 위치, 시간, 특징을 기준으로 비슷한 습득물을 확인합니다.
+                    </div>
+
+                    <div class="match-step">
+                        <strong>2. 수령 신청</strong>
+                        내 물건으로 보이는 습득물이 있으면 본인 확인 정보를 바탕으로 신청합니다.
+                    </div>
+
+                    <div class="match-step">
+                        <strong>3. 관리자 승인</strong>
+                        관리자 확인 후 승인된 경우 지정 보관 장소에서 수령합니다.
+                    </div>
+
+                </div>
+
+            </div>
+
             <div class="warning-card">
                 <i class="fa-solid fa-triangle-exclamation"></i>
 
                 <span>
-                    개인정보 보호를 위해 채팅을 통해 연락하세요.
-                    직접적인 연락처 교환은 신중하게 결정하세요.
+                    채팅 기능은 사용하지 않습니다.
+                    유사한 습득물이 있더라도 바로 수령할 수 없으며,
+                    본인 확인과 관리자 승인 절차를 거쳐야 합니다.
                 </span>
             </div>
 
             <div class="button-area">
 
-                <a th:href="@{/chat/rooms}" class="chat-btn">
-                    <i class="fa-regular fa-comment"></i>
-                    채팅으로 제보하기
+                <a th:href="@{/found/list}" class="match-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    유사 습득물 확인하기
                 </a>
 
                 <div class="sub-actions">
-                    <button type="button" class="sub-btn">
-                        수정
-                    </button>
+                    <a th:href="@{/lost/list}" class="sub-btn">
+                        <i class="fa-solid fa-list"></i>
+                        목록으로
+                    </a>
 
-                    <button type="button" class="sub-btn">
+                    <a th:href="@{/report/write(type='lost', id=${lostId})}" class="sub-btn">
+                        <i class="fa-regular fa-flag"></i>
                         신고
-                    </button>
+                    </a>
                 </div>
 
             </div>

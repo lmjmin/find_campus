@@ -1,332 +1,468 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>카테고리 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .admin-layout {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-        }
-
-        .sidebar {
-            background: #111827;
-            color: white;
-            padding: 28px 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 36px;
-        }
-
-        .logo span {
-            color: #60a5fa;
-        }
-
-        .menu-title {
-            font-size: 13px;
-            color: #9ca3af;
-            margin-bottom: 14px;
-        }
-
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .menu a {
-            padding: 14px 16px;
-            border-radius: 14px;
-            color: #d1d5db;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .menu a:hover,
-        .menu a.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .main {
-            padding: 34px;
-        }
-
-        .topbar {
-            height: 64px;
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 0 24px;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .topbar h1 {
-            font-size: 24px;
-        }
-
-        .add-btn {
-            padding: 12px 16px;
-            border-radius: 14px;
-            background: #2563eb;
-            color: white;
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 26px;
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-        }
-
-        .card-head {
-            margin-bottom: 22px;
-        }
-
-        .card-head h2 {
-            font-size: 22px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #f8fafc;
-            color: #4b5563;
-            font-size: 14px;
-            text-align: left;
-            padding: 16px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #eef2f7;
-            font-size: 14px;
-            color: #374151;
-        }
-
-        .badge {
-            padding: 7px 11px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            display: inline-block;
-        }
-
-        .active-yn {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-
-        .inactive-yn {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            border: none;
-            border-radius: 10px;
-            padding: 8px 11px;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .edit {
-            background: #eef2ff;
-            color: #3730a3;
-        }
-
-        .delete {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        @media (max-width: 900px) {
-            .admin-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-            .card {
-                overflow-x: auto;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
 
-<div class="admin-layout">
+<div class="admin-page">
 
-    <aside class="sidebar">
-        <div class="logo">FindCampus <span>Admin</span></div>
+    <!-- 상단바 -->
+    <header class="admin-header">
 
-        <div class="menu-title">메뉴</div>
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            <span>FindCampus Admin</span>
+        </a>
 
-        <nav class="menu">
-            <a th:href="@{/admin/dashboard}">
-                <i class="fa-solid fa-chart-line"></i> 대시보드
-            </a>
-            <a th:href="@{/admin/users}">
-                <i class="fa-solid fa-users"></i> 사용자 관리
-            </a>
-            <a th:href="@{/admin/items}">
-                <i class="fa-solid fa-box"></i> 분실물/습득물 관리
-            </a>
-            <a th:href="@{/admin/storages}">
-                <i class="fa-solid fa-warehouse"></i> 보관 장소 관리
-            </a>
-            <a th:href="@{/admin/locations}">
-                <i class="fa-solid fa-location-dot"></i> 위치 관리
-            </a>
-            <a th:href="@{/admin/categories}" class="active">
-                <i class="fa-solid fa-tags"></i> 카테고리 관리
-            </a>
-            <a th:href="@{/admin/reports}">
-                <i class="fa-solid fa-triangle-exclamation"></i> 신고 관리
-            </a>
-        </nav>
-    </aside>
+        <div class="admin-header-right">
+            <span>
+                <i class="fa-regular fa-user"></i>
+                관리자
+            </span>
 
-    <main class="main">
-
-        <div class="topbar">
-            <h1>카테고리 관리</h1>
-            <a href="#" class="add-btn">
-                <i class="fa-solid fa-plus"></i>
-                카테고리 추가
+            <a th:href="@{/admin/login}" class="logout-btn">
+                로그아웃
             </a>
         </div>
 
-        <section class="card">
+    </header>
 
-            <div class="card-head">
-                <h2>목록</h2>
+
+    <div class="admin-layout">
+
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+
+            <div class="sidebar-title">
+                메뉴
             </div>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>카테고리명</th>
-                    <th>설명</th>
-                    <th>사용 여부</th>
-                    <th>게시글 수</th>
-                    <th>생성/수정일</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
+            <nav class="side-menu">
 
-                <tbody>
-                <tr>
-                    <td>지갑</td>
-                    <td>지갑, 카드지갑, 현금 관련 물품</td>
-                    <td><span class="badge active-yn">사용</span></td>
-                    <td>128개</td>
-                    <td>2026.05.01</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn edit">수정</button>
-                            <button class="btn delete">삭제</button>
+                <a th:href="@{/admin/dashboard}" class="side-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    대시보드
+                </a>
+
+                <a th:href="@{/admin/users}" class="side-link">
+                    <i class="fa-solid fa-users"></i>
+                    사용자 관리
+                </a>
+
+                <a th:href="@{/admin/lost}" class="side-link">
+                    <i class="fa-solid fa-circle-question"></i>
+                    분실물 관리
+                </a>
+
+                <a th:href="@{/admin/found}" class="side-link">
+                    <i class="fa-solid fa-box-open"></i>
+                    습득물 관리
+                </a>
+
+                <a th:href="@{/admin/storage}" class="side-link">
+                    <i class="fa-solid fa-warehouse"></i>
+                    보관 장소 관리
+                </a>
+
+                <a th:href="@{/admin/locations}" class="side-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    위치 관리
+                </a>
+
+                <a th:href="@{/admin/categories}" class="side-link active">
+                    <i class="fa-solid fa-tags"></i>
+                    카테고리 관리
+                </a>
+
+                <a th:href="@{/admin/reports}" class="side-link">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    신고 관리
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- 본문 -->
+        <main class="admin-content">
+
+            <div class="page-title-wrap">
+                <h1 class="page-title">
+                    카테고리 관리
+                </h1>
+
+                <p class="page-desc">
+                    분실물과 습득물 등록 시 선택할 수 있는 물품 카테고리를 관리합니다.
+                </p>
+            </div>
+
+
+            <!-- 요약 카드 -->
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">전체 카테고리</div>
+                        <div class="summary-icon total">
+                            <i class="fa-solid fa-tags"></i>
                         </div>
-                    </td>
-                </tr>
+                    </div>
 
-                <tr>
-                    <td>전자기기</td>
-                    <td>휴대폰, 이어폰, 노트북, 충전기 등</td>
-                    <td><span class="badge active-yn">사용</span></td>
-                    <td>32개</td>
-                    <td>2026.04.29</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn edit">수정</button>
-                            <button class="btn delete">삭제</button>
+                    <div class="summary-count">8<span>개</span></div>
+                    <div class="summary-sub">등록된 전체 카테고리</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">사용중</div>
+                        <div class="summary-icon active">
+                            <i class="fa-solid fa-circle-check"></i>
                         </div>
-                    </td>
-                </tr>
+                    </div>
 
-                <tr>
-                    <td>가방</td>
-                    <td>백팩, 크로스백, 노트북 가방 등</td>
-                    <td><span class="badge active-yn">사용</span></td>
-                    <td>87개</td>
-                    <td>2026.04.20</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn edit">수정</button>
-                            <button class="btn delete">삭제</button>
+                    <div class="summary-count">7<span>개</span></div>
+                    <div class="summary-sub">게시글 등록 시 선택 가능</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">등록 게시글</div>
+                        <div class="summary-icon item">
+                            <i class="fa-solid fa-box"></i>
                         </div>
-                    </td>
-                </tr>
+                    </div>
 
-                <tr>
-                    <td>기타</td>
-                    <td>분류되지 않은 물품</td>
-                    <td><span class="badge inactive-yn">미사용</span></td>
-                    <td>12개</td>
-                    <td>2026.04.12</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn edit">수정</button>
-                            <button class="btn delete">삭제</button>
+                    <div class="summary-count">128<span>건</span></div>
+                    <div class="summary-sub">카테고리가 지정된 게시글</div>
+                </div>
+
+            </section>
+
+
+            <section class="manage-grid">
+
+                <!-- 카테고리 등록 -->
+                <div class="form-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            카테고리 등록
+                        </h2>
+                    </div>
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label for="categoryName">카테고리명</label>
+                            <input
+                                    type="text"
+                                    id="categoryName"
+                                    placeholder="예: 전자기기">
                         </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
 
-        </section>
+                        <div class="form-group">
+                            <label for="categoryIcon">아이콘</label>
+                            <select id="categoryIcon">
+                                <option>전자기기</option>
+                                <option>지갑/카드</option>
+                                <option>의류</option>
+                                <option>가방</option>
+                                <option>도서</option>
+                                <option>기타</option>
+                            </select>
+                        </div>
 
-    </main>
+                        <div class="form-group">
+                            <label for="categoryStatus">사용 여부</label>
+                            <select id="categoryStatus">
+                                <option>사용중</option>
+                                <option>사용안함</option>
+                            </select>
+
+                            <p class="form-help">
+                                사용중인 카테고리만 분실물/습득물 등록 화면에서 선택할 수 있도록 처리할 예정입니다.
+                            </p>
+                        </div>
+
+                        <button type="button" class="submit-btn">
+                            카테고리 등록
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 카테고리 목록 -->
+                <div class="table-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            카테고리 목록
+                        </h2>
+                    </div>
+
+                    <div class="filter-bar">
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="카테고리명으로 검색">
+                        </div>
+
+                        <select class="filter-select">
+                            <option>상태 전체</option>
+                            <option>사용중</option>
+                            <option>사용안함</option>
+                        </select>
+
+                    </div>
+
+                    <table class="category-table">
+
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>카테고리</th>
+                            <th>등록 게시글</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr>
+                            <td>1</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </span>
+                                    전자기기
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">34건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>2</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </span>
+                                    지갑/카드
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">28건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>3</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-shirt"></i>
+                                    </span>
+                                    의류
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">19건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>4</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-bag-shopping"></i>
+                                    </span>
+                                    가방
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">16건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>5</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-book"></i>
+                                    </span>
+                                    도서
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">8건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>6</td>
+
+                            <td>
+                                <div class="category-name">
+                                    <span class="category-icon">
+                                        <i class="fa-solid fa-ellipsis"></i>
+                                    </span>
+                                    기타
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">23건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge inactive">사용안함</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn restore-btn">
+                                        사용
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </div>
 
 </body>
+
 </html>

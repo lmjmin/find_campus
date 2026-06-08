@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>위치 관리 | FindCampus Admin</title>
+    <title>보관 장소 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Font Awesome -->
@@ -71,12 +71,12 @@
                     습득물 관리
                 </a>
 
-                <a th:href="@{/admin/storage}" class="side-link">
+                <a th:href="@{/admin/storage}" class="side-link active">
                     <i class="fa-solid fa-warehouse"></i>
                     보관 장소 관리
                 </a>
 
-                <a th:href="@{/admin/locations}" class="side-link active">
+                <a th:href="@{/admin/locations}" class="side-link">
                     <i class="fa-solid fa-location-dot"></i>
                     위치 관리
                 </a>
@@ -101,11 +101,11 @@
 
             <div class="page-title-wrap">
                 <h1 class="page-title">
-                    위치 관리
+                    보관 장소 관리
                 </h1>
 
                 <p class="page-desc">
-                    분실물과 습득물 등록 시 선택할 수 있는 교내 위치 정보를 관리합니다.
+                    습득물을 실제로 보관하는 교내 보관처를 등록하고 관리합니다.
                 </p>
             </div>
 
@@ -115,14 +115,14 @@
 
                 <div class="summary-card">
                     <div class="summary-top">
-                        <div class="summary-label">전체 위치</div>
+                        <div class="summary-label">전체 보관처</div>
                         <div class="summary-icon total">
-                            <i class="fa-solid fa-location-dot"></i>
+                            <i class="fa-solid fa-warehouse"></i>
                         </div>
                     </div>
 
-                    <div class="summary-count">15<span>곳</span></div>
-                    <div class="summary-sub">등록된 전체 위치</div>
+                    <div class="summary-count">7<span>곳</span></div>
+                    <div class="summary-sub">등록된 전체 보관 장소</div>
                 </div>
 
 
@@ -134,21 +134,21 @@
                         </div>
                     </div>
 
-                    <div class="summary-count">14<span>곳</span></div>
-                    <div class="summary-sub">게시글 등록 시 선택 가능</div>
+                    <div class="summary-count">6<span>곳</span></div>
+                    <div class="summary-sub">현재 선택 가능한 보관처</div>
                 </div>
 
 
                 <div class="summary-card">
                     <div class="summary-top">
-                        <div class="summary-label">건물 위치</div>
-                        <div class="summary-icon building">
-                            <i class="fa-solid fa-building"></i>
+                        <div class="summary-label">보관중 물품</div>
+                        <div class="summary-icon storage">
+                            <i class="fa-solid fa-box-archive"></i>
                         </div>
                     </div>
 
-                    <div class="summary-count">11<span>곳</span></div>
-                    <div class="summary-sub">건물 단위 등록 위치</div>
+                    <div class="summary-count">18<span>건</span></div>
+                    <div class="summary-sub">전체 보관처 기준 보관중</div>
                 </div>
 
             </section>
@@ -156,56 +156,63 @@
 
             <section class="manage-grid">
 
-                <!-- 위치 등록 -->
+                <!-- 보관 장소 등록 -->
                 <div class="form-panel">
 
                     <div class="panel-head">
                         <h2 class="panel-title">
-                            위치 등록
+                            보관 장소 등록
                         </h2>
                     </div>
 
                     <div class="form-body">
 
                         <div class="form-group">
-                            <label for="locationName">위치명</label>
+                            <label for="storageName">보관 장소명</label>
                             <input
                                     type="text"
-                                    id="locationName"
-                                    placeholder="예: 중앙도서관">
+                                    id="storageName"
+                                    placeholder="예: 학생지원팀">
                         </div>
 
                         <div class="form-group">
-                            <label for="locationType">위치 유형</label>
-                            <select id="locationType">
-                                <option>건물</option>
-                                <option>야외</option>
-                                <option>기타</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="detailLocation">상세 설명</label>
+                            <label for="buildingName">건물명</label>
                             <input
                                     type="text"
-                                    id="detailLocation"
-                                    placeholder="예: 중앙도서관 1층 로비">
+                                    id="buildingName"
+                                    placeholder="예: 학생복지관">
                         </div>
 
                         <div class="form-group">
-                            <label for="locationStatus">사용 여부</label>
-                            <select id="locationStatus">
+                            <label for="storageLocation">상세 위치</label>
+                            <input
+                                    type="text"
+                                    id="storageLocation"
+                                    placeholder="예: 학생복지관 1층">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storagePhone">연락처</label>
+                            <input
+                                    type="text"
+                                    id="storagePhone"
+                                    placeholder="예: 051-629-0514">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storageStatus">사용 여부</label>
+                            <select id="storageStatus">
                                 <option>사용중</option>
                                 <option>사용안함</option>
                             </select>
 
                             <p class="form-help">
-                                사용중인 위치만 분실물/습득물 등록 화면에서 선택할 수 있도록 처리할 예정입니다.
+                                사용중인 보관 장소만 습득물 등록 시 선택할 수 있도록 처리할 예정입니다.
                             </p>
                         </div>
 
                         <button type="button" class="submit-btn">
-                            위치 등록
+                            보관 장소 등록
                         </button>
 
                     </div>
@@ -213,12 +220,12 @@
                 </div>
 
 
-                <!-- 위치 목록 -->
+                <!-- 보관 장소 목록 -->
                 <div class="table-panel">
 
                     <div class="panel-head">
                         <h2 class="panel-title">
-                            위치 목록
+                            보관 장소 목록
                         </h2>
                     </div>
 
@@ -226,15 +233,8 @@
 
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="위치명, 설명으로 검색">
+                            <input type="text" placeholder="보관 장소명, 건물명으로 검색">
                         </div>
-
-                        <select class="filter-select">
-                            <option>유형 전체</option>
-                            <option>건물</option>
-                            <option>야외</option>
-                            <option>기타</option>
-                        </select>
 
                         <select class="filter-select">
                             <option>상태 전체</option>
@@ -244,14 +244,14 @@
 
                     </div>
 
-                    <table class="location-table">
+                    <table class="storage-table">
 
                         <thead>
                         <tr>
                             <th>번호</th>
-                            <th>위치명</th>
-                            <th>유형</th>
-                            <th>등록 게시글</th>
+                            <th>보관 장소</th>
+                            <th>연락처</th>
+                            <th>보관중</th>
                             <th>상태</th>
                             <th>관리</th>
                         </tr>
@@ -263,16 +263,14 @@
                             <td>1</td>
 
                             <td>
-                                <div class="location-name">중앙도서관</div>
-                                <div class="location-desc">중앙도서관 전체 및 열람실 주변</div>
+                                <div class="storage-name">학생지원팀</div>
+                                <div class="storage-desc">학생복지관 1층</div>
                             </td>
 
-                            <td>
-                                <span class="type-badge building">건물</span>
-                            </td>
+                            <td>051-629-0514</td>
 
                             <td>
-                                <span class="count-badge">21건</span>
+                                <span class="count-badge">8건</span>
                             </td>
 
                             <td>
@@ -297,16 +295,14 @@
                             <td>2</td>
 
                             <td>
-                                <div class="location-name">대학본관</div>
-                                <div class="location-desc">대학본관 로비, 강의실, 행정실 주변</div>
+                                <div class="storage-name">대학본관 경비실</div>
+                                <div class="storage-desc">대학본관 1층 입구</div>
                             </td>
 
-                            <td>
-                                <span class="type-badge building">건물</span>
-                            </td>
+                            <td>051-629-0001</td>
 
                             <td>
-                                <span class="count-badge">18건</span>
+                                <span class="count-badge">4건</span>
                             </td>
 
                             <td>
@@ -331,47 +327,11 @@
                             <td>3</td>
 
                             <td>
-                                <div class="location-name">ICT관</div>
-                                <div class="location-desc">ICT관 강의실, 복도, 행정실 주변</div>
+                                <div class="storage-name">ICT관 행정실</div>
+                                <div class="storage-desc">ICT관 2층</div>
                             </td>
 
-                            <td>
-                                <span class="type-badge building">건물</span>
-                            </td>
-
-                            <td>
-                                <span class="count-badge">12건</span>
-                            </td>
-
-                            <td>
-                                <span class="status-badge active">사용중</span>
-                            </td>
-
-                            <td>
-                                <div class="action-group">
-                                    <button type="button" class="action-btn edit-btn">
-                                        수정
-                                    </button>
-
-                                    <button type="button" class="action-btn stop-btn">
-                                        중지
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <td>4</td>
-
-                            <td>
-                                <div class="location-name">운동장</div>
-                                <div class="location-desc">운동장 및 야외 체육시설 주변</div>
-                            </td>
-
-                            <td>
-                                <span class="type-badge outdoor">야외</span>
-                            </td>
+                            <td>051-629-0002</td>
 
                             <td>
                                 <span class="count-badge">5건</span>
@@ -396,19 +356,17 @@
 
 
                         <tr>
-                            <td>5</td>
+                            <td>4</td>
 
                             <td>
-                                <div class="location-name">기타</div>
-                                <div class="location-desc">정확한 위치를 선택하기 어려운 경우</div>
+                                <div class="storage-name">중앙도서관 안내데스크</div>
+                                <div class="storage-desc">중앙도서관 1층</div>
                             </td>
 
-                            <td>
-                                <span class="type-badge etc">기타</span>
-                            </td>
+                            <td>051-629-0003</td>
 
                             <td>
-                                <span class="count-badge">3건</span>
+                                <span class="count-badge">1건</span>
                             </td>
 
                             <td>
