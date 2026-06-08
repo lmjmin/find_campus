@@ -14,35 +14,7 @@
 
 <body>
 
-<header>
-    <div class="header-inner">
-
-        <a th:href="@{/}" class="logo">
-            <span class="logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
-            FindCampus
-        </a>
-
-        <nav class="nav">
-            <a th:href="@{/lost/list}">분실물</a>
-            <a th:href="@{/found/list}">습득물</a>
-            <a th:href="@{/search}">검색</a>
-            <a th:href="@{/map}">지도</a>
-        </nav>
-
-        <div class="user-menu">
-            <a th:href="@{/notification}" class="icon-btn">
-                <i class="fa-regular fa-bell"></i>
-            </a>
-
-            <a th:href="@{/mypage}" class="icon-btn">
-                <i class="fa-solid fa-user"></i>
-            </a>
-        </div>
-
-    </div>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container policy-container">
 

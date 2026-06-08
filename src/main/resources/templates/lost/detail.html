@@ -14,31 +14,7 @@
 
 <body>
 
-<header>
-
-    <div class="header-inner">
-
-        <a th:href="@{/}" class="logo">
-
-            <span class="logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
-
-            FindCampus
-
-        </a>
-
-        <div class="header-actions">
-
-            <a th:href="@{/lost/list}" class="back-link">
-                분실물 목록으로
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
 

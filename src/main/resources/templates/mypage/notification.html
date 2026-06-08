@@ -3,242 +3,189 @@
 
 <head>
 
-<meta charset="UTF-8">
-<title>알림 | FindCampus</title>
+    <meta charset="UTF-8">
+    <title>알림 | FindCampus</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet" th:href="@{/css/common.css}">
-<link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
 
 </head>
 
 <body>
 
-<header>
-
-<div class="header-inner">
-
-<a th:href="@{/}" class="logo">
-
-<div class="logo-icon">
-<i class="fa-solid fa-magnifying-glass-location"></i>
-</div>
-
-FindCampus
-
-</a>
-
-<nav class="nav">
-
-<a th:href="@{/lost/list}">
-분실물
-</a>
-
-<a th:href="@{/found/list}">
-습득물
-</a>
-
-<a th:href="@{/search}">
-검색
-</a>
-
-<a th:href="@{/map}">
-지도
-</a>
-
-</nav>
-
-<div class="auth">
-
-<a th:href="@{/notification}"
-class="header-icon">
-
-<i class="fa-regular fa-bell"></i>
-
-</a>
-
-<a th:href="@{/mypage}"
-class="header-icon">
-
-<i class="fa-solid fa-user"></i>
-
-</a>
-
-</div>
-
-</div>
-
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container notification-container">
 
-<div class="page-head notification-page-head">
+    <div class="page-head notification-page-head">
 
-<div class="page-title notification-page-title">
-알림
-</div>
+        <div class="page-title notification-page-title">
+            알림
+        </div>
 
-<a href="#" class="read-all">
-모두 읽음
-</a>
+        <a href="#" class="read-all">
+            모두 읽음
+        </a>
 
-</div>
+    </div>
 
-<div class="summary">
+    <div class="summary">
 
-<div class="summary-icon">
-<i class="fa-regular fa-bell"></i>
-</div>
+        <div class="summary-icon">
+            <i class="fa-regular fa-bell"></i>
+        </div>
 
-<div>
+        <div>
 
-<div class="summary-title">
-읽지 않은 알림 3개
-</div>
+            <div class="summary-title">
+                읽지 않은 알림 3개
+            </div>
 
-<div class="summary-desc">
-새로운 알림을 확인하세요
-</div>
+            <div class="summary-desc">
+                새로운 알림을 확인하세요
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="notify-list">
+    <div class="notify-list">
 
-<div class="notify-card">
+        <div class="notify-card">
 
-<div class="notify-icon ai">
-<i class="fa-solid fa-wand-magic-sparkles"></i>
-</div>
+            <div class="notify-icon ai">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
 
-<div class="notify-content">
+            <div class="notify-content">
 
-<div class="notify-title">
-AI 매칭 알림
-</div>
+                <div class="notify-title">
+                    AI 매칭 알림
+                </div>
 
-<div class="notify-text">
-검정 노트북 가방과 유사도 94%의 습득물이 발견되었습니다.
-</div>
+                <div class="notify-text">
+                    검정 노트북 가방과 유사도 94%의 습득물이 발견되었습니다.
+                </div>
 
-<div class="notify-meta">
-방금
-<div class="dot"></div>
-</div>
+                <div class="notify-meta">
+                    방금
+                    <div class="dot"></div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="notify-card">
+        <div class="notify-card">
 
-<div class="notify-icon claim">
-<i class="fa-solid fa-hand-holding-heart"></i>
-</div>
+            <div class="notify-icon claim">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
 
-<div class="notify-content">
+            <div class="notify-content">
 
-<div class="notify-title">
-수령 신청 접수
-</div>
+                <div class="notify-title">
+                    수령 신청 접수
+                </div>
 
-<div class="notify-text">
-내가 등록한 습득물에 대해 수령 신청이 접수되었습니다. 관리자 확인 후 처리됩니다.
-</div>
+                <div class="notify-text">
+                    내가 등록한 습득물에 대해 수령 신청이 접수되었습니다. 관리자 확인 후 처리됩니다.
+                </div>
 
-<div class="notify-meta">
-10분 전
-<div class="dot"></div>
-</div>
+                <div class="notify-meta">
+                    10분 전
+                    <div class="dot"></div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="notify-card">
+        <div class="notify-card">
 
-<div class="notify-icon storage">
-<i class="fa-solid fa-building-columns"></i>
-</div>
+            <div class="notify-icon storage">
+                <i class="fa-solid fa-building-columns"></i>
+            </div>
 
-<div class="notify-content">
+            <div class="notify-content">
 
-<div class="notify-title">
-보관 장소 안내
-</div>
+                <div class="notify-title">
+                    보관 장소 안내
+                </div>
 
-<div class="notify-text">
-에어팟 프로가 학생장학봉사팀 분실물 센터에 보관 중입니다.
-</div>
+                <div class="notify-text">
+                    에어팟 프로가 학생장학봉사팀 분실물 센터에 보관 중입니다.
+                </div>
 
-<div class="notify-meta">
-30분 전
-<div class="dot"></div>
-</div>
+                <div class="notify-meta">
+                    30분 전
+                    <div class="dot"></div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="notify-card">
+        <div class="notify-card">
 
-<div class="notify-icon done">
-<i class="fa-solid fa-circle-check"></i>
-</div>
+            <div class="notify-icon done">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
 
-<div class="notify-content">
+            <div class="notify-content">
 
-<div class="notify-title">
-반환 완료
-</div>
+                <div class="notify-title">
+                    반환 완료
+                </div>
 
-<div class="notify-text">
-분실물이 반환 완료 처리되었습니다.
-</div>
+                <div class="notify-text">
+                    분실물이 반환 완료 처리되었습니다.
+                </div>
 
-<div class="notify-meta">
-1시간 전
-<div class="dot"></div>
-</div>
+                <div class="notify-meta">
+                    1시간 전
+                    <div class="dot"></div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="notify-card">
+        <div class="notify-card">
 
-<div class="notify-icon notice">
-<i class="fa-solid fa-circle-info"></i>
-</div>
+            <div class="notify-icon notice">
+                <i class="fa-solid fa-circle-info"></i>
+            </div>
 
-<div class="notify-content">
+            <div class="notify-content">
 
-<div class="notify-title">
-서비스 공지
-</div>
+                <div class="notify-title">
+                    서비스 공지
+                </div>
 
-<div class="notify-text">
-5월 20일 서버 점검 예정입니다.
-</div>
+                <div class="notify-text">
+                    5월 20일 서버 점검 예정입니다.
+                </div>
 
-<div class="notify-meta">
-어제
-</div>
+                <div class="notify-meta">
+                    어제
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<div class="bottom">
-최근 7일간 알림이 표시됩니다
-</div>
+    <div class="bottom">
+        최근 7일간 알림이 표시됩니다
+    </div>
 
 </div>
 
