@@ -12,4 +12,4 @@ public class JoinDto {
     private String studentNo;
     private String phone;
     private String email;
-}
+}	
