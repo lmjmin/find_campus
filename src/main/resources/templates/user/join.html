@@ -219,6 +219,15 @@
             font-weight:700;
         }
 
+        .error-message{
+            display:none;
+            margin-top:16px;
+            color:#dc2626;
+            font-size:14px;
+            font-weight:700;
+            text-align:center;
+        }
+
         @media(max-width:900px){
 
             .join-container{
@@ -276,8 +285,7 @@
             학교 이메일 또는 학번으로 가입할 수 있습니다.
         </div>
 
-        <!-- 지금은 화면 이동용. 실제 회원가입 DB 저장은 나중에 연결 -->
-        <form th:action="@{/}" method="get">
+        <form id="joinForm">
 
             <div class="input-group">
 
@@ -288,7 +296,8 @@
                     <i class="fa-solid fa-user"></i>
 
                     <input type="text"
-                           name="name"
+                           id="userName"
+                           name="userName"
                            placeholder="이름을 입력하세요">
 
                 </div>
@@ -304,6 +313,7 @@
                     <i class="fa-solid fa-id-card"></i>
 
                     <input type="text"
+                           id="studentNo"
                            name="studentNo"
                            placeholder="예: 23120030">
 
@@ -320,6 +330,7 @@
                     <i class="fa-solid fa-envelope"></i>
 
                     <input type="email"
+                           id="email"
                            name="email"
                            placeholder="tongmyong@tu.ac.kr">
 
@@ -336,6 +347,7 @@
                     <i class="fa-solid fa-lock"></i>
 
                     <input type="password"
+                           id="password"
                            name="password"
                            placeholder="8자 이상 입력하세요">
 
@@ -352,6 +364,7 @@
                     <i class="fa-solid fa-lock"></i>
 
                     <input type="password"
+                           id="passwordCheck"
                            name="passwordCheck"
                            placeholder="비밀번호를 다시 입력하세요">
 
@@ -369,6 +382,8 @@
 
             </div>
 
+            <p id="joinError" class="error-message"></p>
+
             <button type="submit" class="join-btn">
                 회원가입 완료
             </button>
@@ -385,6 +400,65 @@
     </div>
 
 </div>
+
+<script>
+    const joinForm = document.getElementById("joinForm");
+    const joinError = document.getElementById("joinError");
+
+    joinForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const userName = document.getElementById("userName").value.trim();
+        const studentNo = document.getElementById("studentNo").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const passwordCheck = document.getElementById("passwordCheck").value.trim();
+        const agree = document.getElementById("agree").checked;
+
+        joinError.style.display = "none";
+        joinError.textContent = "";
+
+        if (!agree) {
+            joinError.style.display = "block";
+            joinError.textContent = "이용약관 및 개인정보처리방침에 동의해 주세요.";
+            return;
+        }
+
+        const joinData = {
+            loginId: studentNo,
+            password: password,
+            passwordCheck: passwordCheck,
+            userName: userName,
+            studentNo: studentNo,
+            phone: "",
+            email: email
+        };
+
+        try {
+            const response = await fetch("/api/join", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(joinData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(result.message);
+                location.href = "/login";
+            } else {
+                joinError.style.display = "block";
+                joinError.textContent = result.message;
+            }
+
+        } catch (error) {
+            joinError.style.display = "block";
+            joinError.textContent = "회원가입 요청 중 오류가 발생했습니다.";
+        }
+    });
+</script>
 
 </body>
 </html>

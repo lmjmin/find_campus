@@ -1,8 +1,8 @@
 package com.example.find_campus.dto;
 
-import lombok.Data;
-
 import java.util.Date;
+
+import lombok.Data;
 
 @Data
 public class UserDto {
