@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.IUserDao">
+
+    <select id="countByLoginId" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE LOGIN_ID = #{loginId}
+    </select>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <insert id="insertUser" parameterType="com.example.find_campus.dto.JoinDto">
+        INSERT INTO USERS (
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT
+        ) VALUES (
+            SEQ_USER_ID.NEXTVAL,
+            #{loginId},
+            #{password},
+            #{userName},
+            #{studentNo},
+            #{phone},
+            #{email},
+            'USER',
+            'ACTIVE',
+            SYSDATE
+        )
+    </insert>
+
+</mapper>
