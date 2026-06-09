@@ -25,7 +25,7 @@
 
     <div class="page-head edit-page-head">
         <h1>정보 수정</h1>
-        <p>내 계정 정보, 학교 인증 정보, 비밀번호를 수정할 수 있습니다.</p>
+        <p>내 계정 정보, 학교 정보, 비밀번호를 수정할 수 있습니다.</p>
     </div>
 
     <div class="profile-summary">
@@ -35,7 +35,7 @@
             <h2>김동명</h2>
             <p>
                 tongmyong@tu.ac.kr<br>
-                동명대학교 컴퓨터공학과
+                동명대학교
             </p>
         </div>
     </div>
@@ -59,17 +59,6 @@
                 <div class="form-grid">
 
                     <div class="form-group">
-                        <label for="loginId">아이디</label>
-                        <input type="text"
-                               id="loginId"
-                               name="loginId"
-                               class="input"
-                               value="student01"
-                               readonly>
-                        <p class="help-text">아이디는 변경할 수 없습니다.</p>
-                    </div>
-
-                    <div class="form-group">
                         <label for="name">이름 <span class="required">*</span></label>
                         <input type="text"
                                id="name"
@@ -89,14 +78,17 @@
                                required>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group full">
                         <label for="phone">전화번호</label>
                         <input type="text"
                                id="phone"
                                name="phone"
                                class="input"
-                               value="010-1234-5678"
+                               value=""
                                placeholder="010-0000-0000">
+                        <p class="help-text">
+                            선택 입력 항목입니다. 전화번호를 추가하면 비밀번호 찾기와 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
+                        </p>
                     </div>
 
                 </div>
@@ -109,8 +101,8 @@
                     </div>
 
                     <div class="section-title">
-                        <h2>학교 인증 정보</h2>
-                        <p>학교, 학번, 학과 정보를 확인하고 인증 상태를 관리합니다.</p>
+                        <h2>학교 정보</h2>
+                        <p>분실물 확인과 교내 사용자 구분에 필요한 정보를 추가할 수 있습니다.</p>
                     </div>
                 </div>
 
@@ -127,45 +119,96 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="studentNo">학번 <span class="required">*</span></label>
+                        <label for="studentNo">학번</label>
                         <input type="text"
                                id="studentNo"
                                name="studentNo"
                                class="input"
                                value="20240001"
-                               required>
+                               readonly>
+                        <p class="help-text">학번은 본인 확인용 정보로 사용되며 변경할 수 없습니다.</p>
                     </div>
 
                     <div class="form-group full">
                         <label for="department">학과</label>
                         <select id="department" name="department" class="select">
-                            <option value="">학과를 선택하세요</option>
-                            <option value="computer" selected>컴퓨터공학과</option>
-                            <option value="ai">인공지능학과</option>
-                            <option value="game">게임공학과</option>
-                            <option value="design">시각디자인학과</option>
-                            <option value="business">경영학과</option>
-                            <option value="etc">기타</option>
+                            <option value="" selected>학과를 선택하세요</option>
+
+                            <option value="간호학과">간호학과</option>
+                            <option value="작업치료학과">작업치료학과</option>
+                            <option value="응급구조학과">응급구조학과</option>
+                            <option value="언어치료청각재활학과">언어치료청각재활학과</option>
+                            <option value="스포츠재활학과">스포츠재활학과</option>
+                            <option value="상담·임상심리학과">상담·임상심리학과</option>
+                            <option value="사회복지학과">사회복지학과</option>
+                            <option value="유아교육과">유아교육과</option>
+
+                            <option value="반려동물보건학과">반려동물보건학과</option>
+                            <option value="애견미용·행동교정학과">애견미용·행동교정학과</option>
+                            <option value="반려동물산업학부">반려동물산업학부</option>
+                            <option value="펫푸드전공">펫푸드전공</option>
+                            <option value="반려동물산업디자인전공">반려동물산업디자인전공</option>
+
+                            <option value="뷰티케어학과">뷰티케어학과</option>
+                            <option value="헤어디자인학과">헤어디자인학과</option>
+                            <option value="메이크업디자인학과">메이크업디자인학과</option>
+                            <option value="패션디자인학과">패션디자인학과</option>
+
+                            <option value="게임공학과">게임공학과</option>
+                            <option value="게임그래픽학과">게임그래픽학과</option>
+                            <option value="컴퓨터공학과">컴퓨터공학과</option>
+                            <option value="인공지능응용학과">인공지능응용학과</option>
+                            <option value="냉동공조공학과">냉동공조공학과</option>
+                            <option value="미래자동차학과">미래자동차학과</option>
+                            <option value="전기제어학부">전기제어학부</option>
+                            <option value="전기에너지전공">전기에너지전공</option>
+                            <option value="자율운항시스템전공">자율운항시스템전공</option>
+                            <option value="항만물류시스템학과">항만물류시스템학과</option>
+
+                            <option value="건축학과">건축학과</option>
+                            <option value="건축공학과">건축공학과</option>
+                            <option value="실내건축학과">실내건축학과</option>
+                            <option value="시각디자인학과">시각디자인학과</option>
+
+                            <option value="경영학과">경영학과</option>
+                            <option value="국제통상물류학과">국제통상물류학과</option>
+                            <option value="호텔조리베이커리학과">호텔조리베이커리학과</option>
+                            <option value="글로벌관광학과">글로벌관광학과</option>
+
+                            <option value="미디어커뮤니케이션학과">미디어커뮤니케이션학과</option>
+                            <option value="광고홍보학과">광고홍보학과</option>
+                            <option value="글로벌문화콘텐츠학과">글로벌문화콘텐츠학과</option>
+                            <option value="웹툰·애니메이션학과">웹툰·애니메이션학과</option>
+
+                            <option value="엔터테인먼트예술학과">엔터테인먼트예술학과</option>
+                            <option value="K-sports태권도학과">K-sports태권도학과</option>
+                            <option value="축구·스포츠산업학과">축구·스포츠산업학과</option>
+                            <option value="레저·승마학과">레저·승마학과</option>
+                            <option value="군사학과">군사학과</option>
+
+                            <option value="복지경영학과">복지경영학과</option>
+                            <option value="선명상치유학과">선명상치유학과</option>
+                            <option value="동양문화학과">동양문화학과</option>
+                            <option value="뷰티산업학과">뷰티산업학과</option>
+                            <option value="한국어교육다문화학과">한국어교육다문화학과</option>
+                            <option value="창업학과">창업학과</option>
+
+                            <option value="학부교양대학">학부교양대학</option>
+                            <option value="Dept. of Global Korean Studies">Dept. of Global Korean Studies</option>
+                            <option value="Dept. of Global Business">Dept. of Global Business</option>
+                            <option value="Dept. of AI&Computer Engineering">Dept. of AI&amp;Computer Engineering</option>
+                            <option value="Dept. of Mechanical and Automotive Engineering">Dept. of Mechanical and Automotive Engineering</option>
+                            <option value="Dept. of Information System and Security">Dept. of Information System and Security</option>
+                            <option value="Dept. of Tech Management and Innovation">Dept. of Tech Management and Innovation</option>
+                            <option value="Dept. of Culture and Design Management">Dept. of Culture and Design Management</option>
+
+                            <option value="기타">기타</option>
                         </select>
+                        <p class="help-text">
+                            선택 입력 항목입니다. 학과 정보를 추가하면 분실물 확인과 교내 사용자 구분에 도움이 됩니다.
+                        </p>
                     </div>
 
-                </div>
-
-                <div class="auth-box" style="margin-top: 18px;">
-                    <div class="auth-left">
-                        <div class="auth-icon">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-
-                        <div class="auth-text">
-                            <strong>학교 이메일 인증 완료</strong>
-                            <span>현재 tongmyong@tu.ac.kr 이메일로 학교 인증이 완료된 상태입니다.</span>
-                        </div>
-                    </div>
-
-                    <button type="button" class="auth-btn" id="authBtn">
-                        재인증하기
-                    </button>
                 </div>
             </section>
 
@@ -257,8 +300,9 @@
             <div class="notice-box">
                 <i class="fa-solid fa-circle-info"></i>
                 <div>
-                    현재 화면은 HTML 화면 구현용입니다.
-                    실제 정보 수정, 학교 인증, 비밀번호 변경은 Controller, DTO, Service, DAO 작업 후 USERS 테이블과 연결하면 됩니다.
+                    전화번호와 학과는 선택 입력 항목입니다.
+                    정보를 추가하면 비밀번호 찾기, 분실물 확인, 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
+                    실제 저장 기능은 Controller, DTO, Service, DAO 작업 후 USERS 테이블과 연결하면 됩니다.
                 </div>
             </div>
 
@@ -284,7 +328,6 @@
     document.addEventListener("DOMContentLoaded", function () {
         const passwordToggleBtn = document.getElementById("passwordToggleBtn");
         const passwordFields = document.getElementById("passwordFields");
-        const authBtn = document.getElementById("authBtn");
 
         const currentPassword = document.getElementById("currentPassword");
         const newPassword = document.getElementById("newPassword");
@@ -301,10 +344,6 @@
                 newPassword.value = "";
                 newPasswordConfirm.value = "";
             }
-        });
-
-        authBtn.addEventListener("click", function () {
-            alert("학교 이메일 인증 기능은 백엔드 연결 후 구현하면 됩니다.");
         });
 
         document.querySelector("form").addEventListener("submit", function (event) {

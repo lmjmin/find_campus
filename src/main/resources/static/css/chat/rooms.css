@@ -1,5 +1,6 @@
 /* =========================
-   Chat Page
+   Chat Rooms Page
+   rooms.html 전용
    헤더는 common.css 사용
 ========================= */
 
@@ -8,7 +9,7 @@ body {
 }
 
 /* =========================
-   Chat Layout
+   Layout
 ========================= */
 
 .chat-main {
@@ -37,16 +38,21 @@ body {
 ========================= */
 
 .chat-sidebar {
+    height: 100%;
+    min-height: 0;
+
     background: #ffffff;
     border-right: 1px solid #e5e8f0;
 
     display: flex;
     flex-direction: column;
 
-    min-width: 0;
+    overflow: hidden;
 }
 
 .chat-search-area {
+    flex-shrink: 0;
+
     padding: 18px;
     border-bottom: 1px solid #eef1f6;
 }
@@ -106,11 +112,12 @@ body {
 }
 
 /* =========================
-   Chat Room List
+   Room List
 ========================= */
 
 .chat-room-list {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
@@ -197,7 +204,7 @@ body {
 }
 
 /* =========================
-   Chat Room Text
+   Room Text
 ========================= */
 
 .chat-room-info {
@@ -278,6 +285,9 @@ body {
 ========================= */
 
 .chat-empty-panel {
+    height: 100%;
+    min-height: 0;
+
     background: #f8faff;
 
     display: flex;
@@ -287,7 +297,11 @@ body {
 
 .chat-empty-content {
     text-align: center;
-    transform: translateY(-10px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .chat-empty-icon {

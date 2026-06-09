@@ -10,18 +10,18 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/chat.css}">
+    <link rel="stylesheet" th:href="@{/css/chat/rooms.css}">
 </head>
 
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<main class="chat-main">
+<main class="chat-list-main">
 
-    <section class="chat-container">
+    <section class="chat-list-container">
 
-        <aside class="chat-sidebar">
+        <aside class="chat-list-sidebar">
 
             <div class="chat-search-area">
 
@@ -42,13 +42,9 @@
             <div class="chat-room-list">
 
                 <a th:href="@{/chat/room/1}" class="chat-room-item active">
-
-                    <div class="chat-avatar avatar-blue">
-                        김
-                    </div>
+                    <div class="chat-avatar avatar-blue">김</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
                             <strong>김동명</strong>
                             <span class="chat-time recent">방금 전</span>
@@ -58,19 +54,13 @@
                             <span>동명대학교 컴퓨터공학과</span>
                             <span class="unread-dot"></span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/2}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-yellow">
-                        이
-                    </div>
+                    <div class="chat-avatar avatar-yellow">이</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
                             <strong>이민주</strong>
                             <span class="chat-time">14:47</span>
@@ -79,19 +69,13 @@
                         <div class="chat-room-bottom">
                             <span>동명대학교 컴퓨터공학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/3}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-pink">
-                        박
-                    </div>
+                    <div class="chat-avatar avatar-pink">박</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
                             <strong>박창용</strong>
                             <span class="chat-time">19:00</span>
@@ -100,19 +84,13 @@
                         <div class="chat-room-bottom">
                             <span>동명대학교 간호학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/4}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-gray">
-                        최
-                    </div>
+                    <div class="chat-avatar avatar-gray">최</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
                             <strong>최수상</strong>
                             <span class="chat-time">21:32</span>
@@ -121,19 +99,13 @@
                         <div class="chat-room-bottom">
                             <span>동명대학교 정보보호학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/5}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-purple">
-                        장
-                    </div>
+                    <div class="chat-avatar avatar-purple">장</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
                             <strong>장연옥</strong>
                             <span class="chat-time">23:58</span>
@@ -142,115 +114,83 @@
                         <div class="chat-room-bottom">
                             <span>동명대학교 뷰티케어학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/6}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-green">
-                        n
-                    </div>
+                    <div class="chat-avatar avatar-green">오</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
-                            <strong>name</strong>
+                            <strong>오지훈</strong>
                             <span class="chat-time">19:00</span>
                         </div>
 
                         <div class="chat-room-bottom">
                             <span>동명대학교 간호학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/7}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-navy">
-                        n
-                    </div>
+                    <div class="chat-avatar avatar-navy">정</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
-                            <strong>name</strong>
-                            <span class="chat-time">19:00</span>
+                            <strong>정다현</strong>
+                            <span class="chat-time">18:42</span>
                         </div>
 
                         <div class="chat-room-bottom">
-                            <span>동명대학교 간호학과</span>
+                            <span>동명대학교 경영학과</span>
                             <i class="fa-regular fa-bell-slash mute-icon"></i>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/8}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-black">
-                        n
-                    </div>
+                    <div class="chat-avatar avatar-black">한</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
-                            <strong>name</strong>
-                            <span class="chat-time">19:00</span>
+                            <strong>한유림</strong>
+                            <span class="chat-time">18:10</span>
                         </div>
 
                         <div class="chat-room-bottom">
-                            <span>동명대학교 간호학과</span>
+                            <span>동명대학교 시각디자인학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/9}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-mint">
-                        n
-                    </div>
+                    <div class="chat-avatar avatar-mint">강</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
-                            <strong>name</strong>
-                            <span class="chat-time">19:00</span>
+                            <strong>강민석</strong>
+                            <span class="chat-time">17:55</span>
                         </div>
 
                         <div class="chat-room-bottom">
-                            <span>동명대학교 간호학과</span>
+                            <span>동명대학교 정보통신공학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
                 <a th:href="@{/chat/room/10}" class="chat-room-item">
-
-                    <div class="chat-avatar avatar-red">
-                        n
-                    </div>
+                    <div class="chat-avatar avatar-red">송</div>
 
                     <div class="chat-room-info">
-
                         <div class="chat-room-top">
-                            <strong>name</strong>
-                            <span class="chat-time">19:00</span>
+                            <strong>송하은</strong>
+                            <span class="chat-time">17:20</span>
                         </div>
 
                         <div class="chat-room-bottom">
-                            <span>동명대학교 간호학과</span>
+                            <span>동명대학교 상담심리학과</span>
                         </div>
-
                     </div>
-
                 </a>
 
             </div>
@@ -265,13 +205,9 @@
                     <i class="fa-regular fa-comment-dots"></i>
                 </div>
 
-                <h2>
-                    채팅방을 선택하세요
-                </h2>
+                <h2>채팅방을 선택하세요</h2>
 
-                <p>
-                    왼쪽 목록에서 채팅방을 선택하면 대화를 볼 수 있습니다.
-                </p>
+                <p>왼쪽 목록에서 채팅방을 선택하면 대화를 볼 수 있습니다.</p>
 
             </div>
 
@@ -282,5 +218,4 @@
 </main>
 
 </body>
-
 </html>
