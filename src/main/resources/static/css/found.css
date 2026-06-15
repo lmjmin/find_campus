@@ -1337,4 +1337,5 @@ body:has(.detail-layout) .button-area {
     .item-grid {
         grid-template-columns: 1fr;
     }
+    
 }

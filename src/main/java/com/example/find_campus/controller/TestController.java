@@ -27,6 +27,20 @@ public class TestController {
         return "user/join";
     }
 
+    // 상대방 공개 프로필 페이지
+    @GetMapping("/profile/{id}")
+    public String userProfile(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("userId", id);
+        return "user/profile";
+    }
+
+    // 혹시 /profile로 들어왔을 때 기본 프로필로 이동
+    @GetMapping("/profile")
+    public String userProfileDefault(Model model) {
+        model.addAttribute("userId", 1L);
+        return "user/profile";
+    }
+
     // =========================
     // LOST
     // =========================
@@ -87,7 +101,8 @@ public class TestController {
 
     // 채팅방 상세 기본 주소
     @GetMapping("/chat/room")
-    public String chatRoom() {
+    public String chatRoom(Model model) {
+        model.addAttribute("roomId", 1L);
         return "chat/room";
     }
 
@@ -101,6 +116,12 @@ public class TestController {
     // =========================
     // REPORT
     // =========================
+
+    // 신고 기본 주소
+    @GetMapping("/report")
+    public String reportDefault() {
+        return "report/write";
+    }
 
     // lost/detail.html, found/detail.html에서 신고하기 버튼 누르면 이동
     @GetMapping("/report/write")

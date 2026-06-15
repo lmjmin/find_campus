@@ -10,7 +10,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/setting/setting.css}">
 </head>
 
 <body>
@@ -58,7 +58,7 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a th:href="@{/notification}" class="side-link">
+            <a th:href="@{/mypage/notification}" class="side-link">
                 <div class="side-left">
                     <div class="side-icon">
                         <i class="fa-regular fa-bell"></i>
@@ -73,7 +73,7 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a th:href="@{/recommend}" class="side-link">
+            <a th:href="@{/recommend/list}" class="side-link">
                 <div class="side-left">
                     <div class="side-icon">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -96,7 +96,7 @@
 
                     <div class="side-text">
                         <strong>개인정보 보호</strong>
-                        <span>정보 공개 범위 설정</span>
+                        <span>개인정보 처리방침 확인</span>
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@
 
             <div class="setting-card">
 
-                <a th:href="@{/notification}" class="setting-row">
+                <a th:href="@{/mypage/notification}" class="setting-row">
                     <div class="setting-left">
                         <div class="setting-icon blue">
                             <i class="fa-regular fa-bell"></i>
@@ -163,7 +163,7 @@
 
                         <div class="setting-text">
                             <strong>개인정보 설정</strong>
-                            <span>게시글 공개 범위 및 검색 허용 설정을 관리합니다.</span>
+                            <span>개인정보 처리방침과 서비스 내 개인정보 기준을 확인합니다.</span>
                         </div>
                     </div>
 
@@ -240,7 +240,7 @@
                     <i class="fa-solid fa-chevron-right arrow"></i>
                 </a>
 
-                <a th:href="@{/report/write}" class="setting-row">
+                <a th:href="@{/report}" class="setting-row">
                     <div class="setting-left">
                         <div class="setting-icon red">
                             <i class="fa-regular fa-flag"></i>

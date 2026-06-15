@@ -5,12 +5,18 @@
 }
 
 :root {
-    --lost-main: #ef4444;
-    --lost-deep: #dc2626;
-    --lost-light: #fff1f2;
-    --lost-soft: #fff7f7;
-    --lost-border: #fecdd3;
-    --lost-text: #991b1b;
+    /* 분실물 포인트 컬러 */
+    --lost-main: #d94b45;
+    --lost-deep: #c43f3a;
+
+    /* 너무 붉지 않은 연한 분실물 배경 */
+    --lost-light: #fff6f6;
+    --lost-soft: #fff8f8;
+    --lost-soft-2: #fffafa;
+
+    --lost-border: #f3d0d0;
+    --lost-border-soft: #f7dddd;
+    --lost-text: #8f2421;
 
     --status-received-bg: #f3e8ff;
     --status-received-text: #7e22ce;
@@ -226,7 +232,7 @@ body:has(.item-grid) .container {
 }
 
 .location-list.open::-webkit-scrollbar-thumb {
-    background: #fecdd3;
+    background: var(--lost-border);
     border-radius: 999px;
 }
 
@@ -274,6 +280,11 @@ body:has(.item-grid) .container {
     color: white;
     font-size: 14px;
     font-weight: 800;
+    box-shadow: 0 8px 18px rgba(217, 75, 69, 0.18);
+}
+
+.write-btn:hover {
+    background: var(--lost-deep);
 }
 
 .toolbar {
@@ -295,6 +306,10 @@ body:has(.item-grid) .container {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.search-box i {
+    color: #111827;
 }
 
 .search-box input {
@@ -339,23 +354,29 @@ body:has(.item-grid) .container {
     transform: translateY(-4px);
 }
 
+/* 목록 카드 상단: 상세 페이지와 통일되는 연한 분실물 배경 */
 .item-img {
     height: 160px;
-    background: #e0e7ff;
+    background: var(--lost-soft);
     position: relative;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: #4f46e5;
+    color: var(--lost-main);
     font-size: 48px;
+}
+
+.item-img i {
+    color: var(--lost-main);
 }
 
 .badge {
     position: absolute;
     top: 14px;
     left: 14px;
+    z-index: 2;
 
     padding: 7px 11px;
     border-radius: 999px;
@@ -409,6 +430,10 @@ body:has(.item-grid) .container {
     gap: 7px;
     font-size: 13px;
     color: var(--text-sub);
+}
+
+.item-meta i {
+    color: #6b7280;
 }
 
 .pagination {
@@ -474,7 +499,7 @@ body:has(.form-card) .container {
     border-radius: 28px;
     padding: 26px;
     margin-bottom: 26px;
-    box-shadow: 0 16px 34px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 16px 34px rgba(217, 75, 69, 0.18);
 }
 
 .flow-title {
@@ -505,7 +530,7 @@ body:has(.form-card) .container {
 
 .flow-title p {
     font-size: 14px;
-    color: #ffe4e6;
+    color: #ffecec;
     line-height: 1.5;
 }
 
@@ -548,7 +573,7 @@ body:has(.form-card) .container {
     display: block;
     font-size: 12px;
     line-height: 1.5;
-    color: #ffe4e6;
+    color: #ffecec;
 }
 
 .form-card {
@@ -602,7 +627,7 @@ body:has(.form-card) .container {
 }
 
 .verify-guide-title i {
-    color: var(--lost-deep);
+    color: var(--lost-main);
 }
 
 .verify-list {
@@ -646,7 +671,7 @@ body:has(.form-card) .section-title:first-of-type {
     height: 38px;
     border-radius: 14px;
     background: var(--lost-light);
-    color: var(--lost-deep);
+    color: var(--lost-main);
 
     display: flex;
     align-items: center;
@@ -717,7 +742,7 @@ body:has(.form-card) .section-title h2 {
 .select:focus,
 .textarea:focus {
     border-color: var(--lost-main);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+    box-shadow: 0 0 0 3px rgba(217, 75, 69, 0.08);
 }
 
 .help-text {
@@ -756,7 +781,7 @@ body:has(.form-card) .section-title h2 {
 }
 
 .category-list input:checked + span {
-    background: var(--lost-deep);
+    background: var(--lost-main);
     color: #ffffff;
 }
 
@@ -791,7 +816,7 @@ body:has(.form-card) .section-title h2 {
 
 .upload-box i {
     font-size: 36px;
-    color: var(--lost-deep);
+    color: var(--lost-main);
     margin-bottom: 14px;
 }
 
@@ -895,21 +920,25 @@ body:has(.detail-layout) .container {
 .image-box {
     height: 420px;
     border-radius: 26px;
-    background: #f3f4f6;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: var(--lost-main);
-    font-size: 86px;
+    background: var(--lost-light);
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
+.main-item-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    font-size: 86px;
+    color: var(--lost-main);
+}
+
 .type-badge {
     position: absolute;
+    z-index: 2;
     top: 18px;
     left: 18px;
     padding: 8px 13px;
@@ -1058,8 +1087,9 @@ body:has(.detail-layout) .section-title {
     color: var(--text-sub);
 }
 
+/* 상세 안내 박스 */
 .match-guide-card {
-    background: var(--lost-light);
+    background: var(--lost-soft);
     border: 1px solid var(--lost-border);
     box-shadow: none;
 }
@@ -1076,7 +1106,7 @@ body:has(.detail-layout) .section-title {
 }
 
 .match-guide-title i {
-    color: var(--lost-deep);
+    color: var(--lost-main);
 }
 
 .match-steps {
@@ -1087,7 +1117,7 @@ body:has(.detail-layout) .section-title {
 
 .match-step {
     background: #ffffff;
-    border: 1px solid var(--lost-border);
+    border: 1px solid var(--lost-border-soft);
     border-radius: 16px;
     padding: 14px;
     font-size: 13px;
@@ -1110,6 +1140,11 @@ body:has(.detail-layout) .section-title {
     line-height: 1.6;
     box-shadow: none;
     border: 1px solid #fed7aa;
+}
+
+.warning-card i {
+    margin-top: 3px;
+    flex-shrink: 0;
 }
 
 body:has(.detail-layout) .button-area {
@@ -1135,6 +1170,7 @@ body:has(.detail-layout) .button-area {
     font-weight: 800;
     cursor: pointer;
     transition: .2s;
+    box-shadow: 0 10px 22px rgba(217, 75, 69, 0.2);
 }
 
 .match-btn:hover {

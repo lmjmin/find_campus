@@ -10,6 +10,98 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/match.css}">
+
+    <style>
+        /* 이 페이지의 지도 마커만 적용 */
+        .storage-guide-marker {
+            position: relative;
+            width: 156px;
+            height: 86px;
+            pointer-events: none;
+        }
+
+        .storage-guide-marker-label {
+            position: absolute;
+            left: 50%;
+            bottom: 48px;
+
+            width: 156px;
+            padding: 8px 11px;
+
+            border-radius: 13px;
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.95);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
+
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+
+            transform: translateX(-50%);
+        }
+
+        .storage-guide-marker-label strong {
+            font-size: 12px;
+            font-weight: 900;
+            color: #111827;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .storage-guide-marker-label span {
+            font-size: 11px;
+            color: #6b7280;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .storage-guide-marker-pin {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+
+            background: #f59e0b;
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+
+            border: 3px solid #ffffff;
+            box-shadow:
+                0 7px 16px rgba(245, 158, 11, 0.30),
+                0 0 0 5px rgba(245, 158, 11, 0.16);
+
+            transform: translateX(-50%);
+        }
+
+        .storage-guide-marker-pin::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -5px;
+
+            width: 11px;
+            height: 11px;
+
+            background: inherit;
+            transform: translateX(-50%) rotate(45deg);
+
+            border-right: 3px solid #ffffff;
+            border-bottom: 3px solid #ffffff;
+            border-radius: 2px;
+        }
+    </style>
 </head>
 
 <body>
@@ -149,30 +241,14 @@
 
             <div class="mini-map">
 
-                <div class="road h1"></div>
-                <div class="road h2"></div>
-                <div class="road v1"></div>
-                <div class="road v2"></div>
-
-                <div class="building main-building">
-                    대학<br>본관
-                </div>
-
-                <div class="building welfare">
-                    학생<br>복지관
-                </div>
-
-                <div class="building library">
-                    중앙<br>도서관
-                </div>
-
-                <div class="pin"></div>
+                <div id="storageGuideKakaoMap"
+                     style="width: 100%; height: 100%; border-radius: inherit;"></div>
 
             </div>
 
             <div class="map-desc">
                 학생복지관 2층 학생장학봉사팀 사무실로 방문해 주세요.
-                추후 카카오맵 API를 연결하면 실제 캠퍼스 지도 기반 위치 안내로 확장할 수 있습니다.
+                실제 수령 시 학생증 또는 본인 확인이 필요합니다.
             </div>
 
         </div>
@@ -260,6 +336,68 @@
     </div>
 
 </div>
+
+<script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052&autoload=false"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mapContainer = document.getElementById("storageGuideKakaoMap");
+
+        if (!mapContainer) {
+            console.error("storageGuideKakaoMap 요소를 찾을 수 없습니다.");
+            return;
+        }
+
+        if (typeof kakao === "undefined" || !kakao.maps) {
+            console.error("카카오맵 SDK를 불러오지 못했습니다.");
+            return;
+        }
+
+        function createStorageMarkerContent() {
+            return (
+                '<div class="storage-guide-marker">' +
+                    '<div class="storage-guide-marker-label">' +
+                        '<strong>학생장학봉사팀 분실물 센터</strong>' +
+                        '<span>학생복지관 2층</span>' +
+                    '</div>' +
+                    '<div class="storage-guide-marker-pin">' +
+                        '<i class="fa-solid fa-building-columns"></i>' +
+                    '</div>' +
+                '</div>'
+            );
+        }
+
+        kakao.maps.load(function () {
+            const storagePosition = new kakao.maps.LatLng(
+                35.12171552247815,
+                129.10320310245282
+            );
+
+            const mapOption = {
+                center: storagePosition,
+                level: 3
+            };
+
+            const map = new kakao.maps.Map(mapContainer, mapOption);
+
+            const storageOverlay = new kakao.maps.CustomOverlay({
+                position: storagePosition,
+                content: createStorageMarkerContent(),
+                xAnchor: 0.5,
+                yAnchor: 1,
+                zIndex: 50
+            });
+
+            storageOverlay.setMap(map);
+
+            setTimeout(function () {
+                map.relayout();
+                map.setCenter(storagePosition);
+            }, 150);
+        });
+    });
+</script>
 
 </body>
 

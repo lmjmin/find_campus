@@ -14,6 +14,10 @@
     align-items: center;
 }
 
+.hero-content {
+    min-width: 0;
+}
+
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -94,6 +98,10 @@
     font-weight: 800;
 
     cursor: pointer;
+}
+
+.search-box button:hover {
+    background: #1d4ed8;
 }
 
 .hero-visual {
@@ -370,239 +378,55 @@
 }
 
 .cta-lost {
-    background: #ef4444;
+    background: #d94b45;
+}
+
+.cta-lost:hover {
+    background: #c43f3a;
 }
 
 .cta-found {
     background: #2563eb;
 }
 
+.cta-found:hover {
+    background: #1d4ed8;
+}
+
 .cta-search {
     background: #111827;
 }
 
-/* =========================
-   홈 하단 문의 바
-   index.html의 home-support-* 클래스 기준
-========================= */
-
-.home-support-section {
-    margin-top: 70px;
-    padding: 0 20px 40px;
-}
-
-.home-support-bar {
-    max-width: 1180px;
-    margin: 0 auto;
-
-    background: linear-gradient(135deg, #4f46e5, #2563eb);
-    color: #ffffff;
-
-    border-radius: 28px;
-    padding: 38px 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 34px;
-
-    box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
-}
-
-.home-support-left {
-    flex: 1;
-    min-width: 0;
-}
-
-.home-support-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 8px 14px;
-    border-radius: 999px;
-
-    background: rgba(255, 255, 255, 0.16);
-    color: #ffffff;
-
-    font-size: 13px;
-    font-weight: 800;
-
-    margin-bottom: 18px;
-}
-
-.home-support-badge i {
-    color: #ffffff;
-}
-
-.home-support-title {
-    font-size: 32px;
-    font-weight: 900;
-    margin-bottom: 14px;
-    line-height: 1.3;
-    letter-spacing: -0.8px;
-    color: #ffffff;
-}
-
-.home-support-desc {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #e0e7ff;
-    word-break: keep-all;
-}
-
-.home-support-right {
-    min-width: 300px;
-
-    background: rgba(255, 255, 255, 0.13);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 22px;
-    padding: 24px;
-
-    backdrop-filter: blur(6px);
-}
-
-.home-support-info-title {
-    font-size: 18px;
-    font-weight: 900;
-    margin-bottom: 18px;
-    color: #ffffff;
-}
-
-.home-support-info-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-.home-support-info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    font-size: 15px;
-    line-height: 1.5;
-    color: #ffffff;
-}
-
-.home-support-info-item i {
-    width: 20px;
-    text-align: center;
-    flex-shrink: 0;
-    color: #ffffff;
+.cta-search:hover {
+    background: #020617;
 }
 
 /* =========================
-   메인 하단 문의 바 - 강제 복구
-   index.html 기존 support-* 클래스 기준
+   Footer
 ========================= */
 
-main .support-bar-section {
-    width: 100%;
-    margin-top: 70px;
-    padding: 0 20px 40px;
-}
+footer {
+    max-width: 1200px;
+    margin: 70px auto 0;
+    padding: 30px 24px 44px;
 
-main .support-bar-section .support-bar {
-    max-width: 1180px;
-    width: 100%;
-    margin: 0 auto;
-
-    background: linear-gradient(135deg, #4f46e5, #2563eb);
-    color: #ffffff;
-
-    border-radius: 28px;
-    padding: 38px 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 34px;
-
-    box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
-}
-
-main .support-bar-section .support-left {
-    flex: 1;
-    min-width: 0;
-}
-
-main .support-bar-section .support-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 8px 14px;
-    border-radius: 999px;
-
-    background: rgba(255, 255, 255, 0.16);
-    color: #ffffff;
-
-    font-size: 13px;
-    font-weight: 800;
-
-    margin-bottom: 18px;
-}
-
-main .support-bar-section .support-badge i {
-    color: #ffffff;
-}
-
-main .support-bar-section .support-title {
-    font-size: 32px;
-    font-weight: 900;
-    margin-bottom: 14px;
-    line-height: 1.3;
-    letter-spacing: -0.8px;
-    color: #ffffff;
-}
-
-main .support-bar-section .support-desc {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #e0e7ff;
-    word-break: keep-all;
-}
-
-main .support-bar-section .support-right {
-    min-width: 300px;
-
-    background: rgba(255, 255, 255, 0.13);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 22px;
-    padding: 24px;
-
-    backdrop-filter: blur(6px);
-}
-
-main .support-bar-section .support-info-title {
-    font-size: 18px;
-    font-weight: 900;
-    margin-bottom: 18px;
-    color: #ffffff;
-}
-
-main .support-bar-section .support-info-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-main .support-bar-section .support-info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    font-size: 15px;
-    line-height: 1.5;
-    color: #ffffff;
-}
-
-main .support-bar-section .support-info-item i {
-    width: 20px;
+    color: #9ca3af;
+    font-size: 14px;
     text-align: center;
-    flex-shrink: 0;
-    color: #ffffff;
+}
+
+.footer-divider {
+    margin: 0 8px;
+    color: #d1d5db;
+}
+
+.admin-footer-link {
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.admin-footer-link:hover {
+    color: #2563eb;
 }
 
 /* =========================
@@ -630,29 +454,6 @@ main .support-bar-section .support-info-item i {
     .cta {
         grid-template-columns: 1fr;
     }
-
-    .home-support-bar,
-    main .support-bar-section .support-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 30px 26px;
-    }
-
-    .home-support-right,
-    main .support-bar-section .support-right {
-        width: 100%;
-        min-width: 0;
-    }
-
-    .home-support-title,
-    main .support-bar-section .support-title {
-        font-size: 27px;
-    }
-
-    .home-support-desc,
-    main .support-bar-section .support-desc {
-        font-size: 15px;
-    }
 }
 
 @media (max-width: 600px) {
@@ -677,31 +478,5 @@ main .support-bar-section .support-info-item i {
 
     .search-box button {
         width: 100%;
-    }
-
-    .home-support-section,
-    main .support-bar-section {
-        padding: 0 16px 30px;
-    }
-
-    .home-support-bar,
-    main .support-bar-section .support-bar {
-        border-radius: 24px;
-    }
-
-    .home-support-title,
-    main .support-bar-section .support-title {
-        font-size: 24px;
-    }
-
-    .home-support-desc,
-    main .support-bar-section .support-desc {
-        font-size: 14px;
-        line-height: 1.7;
-    }
-
-    .home-support-info-item,
-    main .support-bar-section .support-info-item {
-        font-size: 14px;
     }
 }
