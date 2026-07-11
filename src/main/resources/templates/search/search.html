@@ -188,7 +188,7 @@
             </div>
 
             <div class="hero-count">
-                <strong id="resultCount">2</strong>
+                <strong id="resultCount" th:text="${lostCount}">2</strong>
                 <span>검색 결과</span>
             </div>
 
@@ -212,24 +212,24 @@
         </div>
 
         <div class="tab-menu">
-            <button type="button" class="active" data-filter="lost">분실물 (2)</button>
-            <button type="button" data-filter="found">습득물 (2)</button>
+            <button type="button" class="active" data-filter="lost" th:text="|분실물(${lostCount})|">분실물(2)</button>
+            <button type="button" data-filter="found" th:text="|습득물(${foundCount})|">습득물(2)</button>
         </div>
 
         <div class="result-list">
 
-            <a th:href="@{/lost/detail}" class="result-item lost-item">
+            <a th:each="item : ${lostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="result-item lost-item">
                 <div class="thumb">
                     <i class="fa-solid fa-briefcase"></i>
                 </div>
 
                 <div class="result-info">
                     <div class="result-top">
-                        <h3>검정 노트북 가방</h3>
+                        <h3 th:text="${item.title}">sample</h3>
                         <span class="item-type lost">분실물</span>
                     </div>
 
-                    <p>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
                         <i class="fa-solid fa-location-dot"></i>
                         중앙도서관 2층 · 오늘 14:30
                     </p>
@@ -240,18 +240,18 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="result-item found-item hidden">
+            <a th:each="item : ${foundItems}" th:href="@{/found/detail/{id}(id=${item.id})}" class="result-item found-item hidden">
                 <div class="thumb">
                     <i class="fa-solid fa-headphones"></i>
                 </div>
 
                 <div class="result-info">
                     <div class="result-top">
-                        <h3>에어팟 프로</h3>
+                        <h3 th:text="${item.title}">sample</h3>
                         <span class="item-type found">습득물</span>
                     </div>
 
-                    <p>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
                         <i class="fa-solid fa-location-dot"></i>
                         ICT 2관 201호 · 오늘 09:15
                     </p>
@@ -262,7 +262,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/lost/detail}" class="result-item lost-item">
+            <a th:href="@{/lost/detail}" class="result-item lost-item" th:remove="all">
                 <div class="thumb">
                     <i class="fa-solid fa-id-card"></i>
                 </div>
@@ -284,7 +284,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="result-item found-item hidden">
+            <a th:href="@{/found/detail}" class="result-item found-item hidden" th:remove="all">
                 <div class="thumb">
                     <i class="fa-solid fa-wallet"></i>
                 </div>

@@ -4,13 +4,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.find_campus.dto.ItemSearchDto;
+import com.example.find_campus.service.ItemService;
+
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class TestController {
 
+    private final ItemService itemService;
+
     @GetMapping({"/", "/main"})
-    public String main() {
+    public String main(Model model) {
+        ItemSearchDto searchDto = new ItemSearchDto();
+        model.addAttribute("lostCount", itemService.countLostItems(searchDto));
+        model.addAttribute("foundCount", itemService.countFoundItems(searchDto));
+        model.addAttribute("recentLostItems", itemService.findRecentItems("lost", 5));
+        model.addAttribute("recentFoundItems", itemService.findRecentItems("found", 5));
         return "index";
     }
 
@@ -31,7 +45,10 @@ public class TestController {
     // LOST
     // =========================
     @GetMapping("/lost/list")
-    public String lostList() {
+    public String lostList(@ModelAttribute ItemSearchDto searchDto, Model model) {
+        model.addAttribute("items", itemService.findLostItems(searchDto));
+        model.addAttribute("totalCount", itemService.countLostItems(searchDto));
+        model.addAttribute("search", searchDto);
         return "lost/list";
     }
 
@@ -42,11 +59,12 @@ public class TestController {
 
     @GetMapping("/lost/detail")
     public String lostDetail() {
-        return "lost/detail";
+        return "redirect:/lost/list";
     }
 
     @GetMapping("/lost/detail/{id}")
     public String lostDetailById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("item", itemService.findLostItem(id));
         model.addAttribute("lostId", id);
         return "lost/detail";
     }
@@ -55,7 +73,10 @@ public class TestController {
     // FOUND
     // =========================
     @GetMapping("/found/list")
-    public String foundList() {
+    public String foundList(@ModelAttribute ItemSearchDto searchDto, Model model) {
+        model.addAttribute("items", itemService.findFoundItems(searchDto));
+        model.addAttribute("totalCount", itemService.countFoundItems(searchDto));
+        model.addAttribute("search", searchDto);
         return "found/list";
     }
 
@@ -66,11 +87,12 @@ public class TestController {
 
     @GetMapping("/found/detail")
     public String foundDetail() {
-        return "found/detail";
+        return "redirect:/found/list";
     }
 
     @GetMapping("/found/detail/{id}")
     public String foundDetailById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("item", itemService.findFoundItem(id));
         model.addAttribute("foundId", id);
         return "found/detail";
     }
@@ -124,8 +146,15 @@ public class TestController {
 
     // 나중에 foundId를 붙여서 이동할 때 사용할 수 있는 주소
     @GetMapping("/match/select-lost/{foundId}")
-    public String selectLostByFoundId(@PathVariable("foundId") Long foundId, Model model) {
+    public String selectLostByFoundId(@PathVariable("foundId") Long foundId,
+                                      jakarta.servlet.http.HttpSession session,
+                                      Model model) {
+        Long userId = (Long) session.getAttribute("loginUserId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("foundId", foundId);
+        model.addAttribute("lostItems", itemService.findLostItemsByUserId(userId));
         return "match/select-lost";
     }
 
@@ -153,7 +182,12 @@ public class TestController {
     // SEARCH
     // =========================
     @GetMapping("/search")
-    public String search() {
+    public String search(@ModelAttribute ItemSearchDto searchDto, Model model) {
+        model.addAttribute("lostItems", itemService.findLostItems(searchDto));
+        model.addAttribute("foundItems", itemService.findFoundItems(searchDto));
+        model.addAttribute("lostCount", itemService.countLostItems(searchDto));
+        model.addAttribute("foundCount", itemService.countFoundItems(searchDto));
+        model.addAttribute("search", searchDto);
         return "search/search";
     }
 
@@ -177,7 +211,13 @@ public class TestController {
     // MYPAGE
     // =========================
     @GetMapping("/mypage")
-    public String mypage() {
+    public String mypage(jakarta.servlet.http.HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("loginUserId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("lostItems", itemService.findLostItemsByUserId(userId));
+        model.addAttribute("foundItems", itemService.findFoundItemsByUserId(userId));
         return "mypage/mypage";
     }
 
@@ -255,29 +295,9 @@ public class TestController {
     }
 
     // 관리자 대시보드
-    @GetMapping("/admin/dashboard")
-    public String adminDashboard() {
-        return "admin/dashboard";
-    }
-
     // 사용자 관리
-    @GetMapping("/admin/users")
-    public String adminUserList() {
-        return "admin/user-list";
-    }
-
     // 분실물 관리
-    @GetMapping("/admin/lost")
-    public String adminLostList() {
-        return "admin/lost-list";
-    }
-
     // 습득물 관리
-    @GetMapping("/admin/found")
-    public String adminFoundList() {
-        return "admin/found-list";
-    }
-
     // 보관 장소 관리
     @GetMapping("/admin/storage")
     public String adminStorageList() {
@@ -297,11 +317,6 @@ public class TestController {
     }
 
     // 신고 관리
-    @GetMapping("/admin/reports")
-    public String adminReportList() {
-        return "admin/report-list";
-    }
-
     /*
      * 예전 관리자 통합 물품 관리 주소.
      * 혹시 기존에 /admin/items로 연결한 버튼이 있으면 깨지지 않게 유지.

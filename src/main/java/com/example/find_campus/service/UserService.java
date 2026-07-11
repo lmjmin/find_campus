@@ -4,7 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.find_campus.config.PasswordConfig;
 import com.example.find_campus.dao.IUserDao;
 import com.example.find_campus.dto.JoinDto;
 import com.example.find_campus.dto.LoginDto;
@@ -34,13 +33,7 @@ public class UserService {
             }
         }
 
-        UserDto userDto = new UserDto();
-        userDto.setLoginId(joinDto.getLoginId());
         joinDto.setPassword(passwordEncoder.encode(joinDto.getPassword()));
-        userDto.setUserName(joinDto.getUserName());
-        userDto.setStudentNo(joinDto.getStudentNo());
-        userDto.setPhone(joinDto.getPhone());
-        userDto.setEmail(joinDto.getEmail());
 
         int result = userDao.insertUser(joinDto);
 
@@ -69,11 +62,43 @@ public class UserService {
             throw new IllegalArgumentException("사용할 수 없는 계정입니다.");
         }
 
-        if (!loginDto.getPassword().equals(user.getPassword())) {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid login id or password.");
+        }
+        return user;
+    }
+
+
+    @Transactional
+    public void changePassword(Long userId, String currentPassword, String newPassword, String newPasswordConfirm) {
+        if (userId == null) {
+            throw new IllegalArgumentException("???? ?????.");
+        }
+        if (currentPassword == null || currentPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("?? ????? ??? ???.");
+        }
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("? ????? ??? ???.");
+        }
+        if (newPassword.length() < 8) {
+            throw new IllegalArgumentException("? ????? 8? ?? ??? ???.");
+        }
+        if (!newPassword.equals(newPasswordConfirm)) {
+            throw new IllegalArgumentException("? ????? ???? ????.");
         }
 
-        return user;
+        UserDto user = userDao.findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("??? ??? ?? ? ????.");
+        }
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new IllegalArgumentException("?? ????? ???? ????.");
+        }
+
+        int result = userDao.updatePassword(userId, passwordEncoder.encode(newPassword));
+        if (result != 1) {
+            throw new IllegalStateException("???? ?? ? ??? ??????.");
+        }
     }
 
     private void validateJoin(JoinDto joinDto) {

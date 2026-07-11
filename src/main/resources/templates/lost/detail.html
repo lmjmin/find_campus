@@ -110,21 +110,21 @@
 
         <div class="right-area">
 
-            <span class="status status-storage">보관중</span>
+            <span class="status status-storage" th:text="${item.status}">보관중</span>
             <!-- 반환완료 상태로 보여야 하면 위 줄을 아래처럼 바꾸면 됨
             <span class="status status-returned">반환완료</span>
             -->
 
-            <h1 class="title">검정 노트북 가방을 잃어버렸어요</h1>
+            <h1 class="title" th:text="${item.title}">검정 노트북 가방을 잃어버렸어요</h1>
 
-            <div class="date">
+            <div class="date" th:text="${item.createdAt}">
                 2026년 5월 19일 오후 2:30 게시
             </div>
 
             <div class="desc-card">
                 <div class="section-title">상세 설명</div>
 
-                <p class="description">
+                <p class="description" th:text="${item.description}">
                     검정색 노트북 가방을 분실했습니다.
                     안에는 맥북 프로 13인치, 충전기, 노트와 필기구가 들어있습니다.
                     가방 앞쪽 지퍼에 파란색 키링이 달려 있고,
@@ -141,8 +141,8 @@
                     </div>
 
                     <div>
-                        <div class="writer-name">김분실 (23120030)</div>
-                        <div class="writer-school">동명대학교 컴퓨터공학과</div>
+                        <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">김분실 (23120030)</div>
+                        <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
                     </div>
 
                 </div>
