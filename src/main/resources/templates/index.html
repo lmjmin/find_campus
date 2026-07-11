@@ -130,7 +130,7 @@
 
             <span>분실물</span>
 
-            <strong>1,234건</strong>
+            <strong th:text="|${lostCount}건|">0건</strong>
 
         </div>
 
@@ -138,7 +138,7 @@
 
             <span>습득물</span>
 
-            <strong>987건</strong>
+            <strong th:text="|${foundCount}건|">0건</strong>
 
         </div>
 
@@ -146,7 +146,7 @@
 
             <span>반환 완료</span>
 
-            <strong>456건</strong>
+            <strong th:text="|0건|">0건</strong>
 
         </div>
 
@@ -236,21 +236,21 @@
 
             </div>
 
-            <a th:href="@{/lost/detail}" class="item">
+            <a th:each="item : ${recentLostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="item">
 
                 <div>
 
-                    <h3>
+                    <h3 th:text="${item.title}">
                         검정 노트북 가방
                     </h3>
 
-                    <p>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
                         대학본관 · 2026.01.15
                     </p>
 
                 </div>
 
-                <span class="status green">
+                <span class="status green" th:text="${item.status}">
                     반환완료
                 </span>
 
@@ -273,21 +273,21 @@
 
             </div>
 
-            <a th:href="@{/found/detail}" class="item">
+            <a th:each="item : ${recentFoundItems}" th:href="@{/found/detail/{id}(id=${item.id})}" class="item">
 
                 <div>
 
-                    <h3>
+                    <h3 th:text="${item.title}">
                         학생증
                     </h3>
 
-                    <p>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
                         중앙도서관 · 2026.01.15
                     </p>
 
                 </div>
 
-                <span class="status yellow">
+                <span class="status yellow" th:text="${item.status}">
                     보관중
                 </span>
 

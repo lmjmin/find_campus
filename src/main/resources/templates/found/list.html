@@ -167,31 +167,31 @@
 
         </div>
 
-        <div class="result-count">
+        <div class="result-count" th:text="|총 ${totalCount}건의 습득물|">
             총 50건의 습득물
         </div>
 
         <div class="item-grid">
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:each="item : ${items}" th:href="@{/found/detail/{id}(id=${item.id})}" class="item-card">
                 <div class="item-img">
-                    <span class="badge status-storage">보관중</span>
+                    <span class="badge status-storage" th:text="${item.status}">보관중</span>
                     <i class="fa-solid fa-headphones"></i>
                 </div>
 
                 <div class="item-body">
                     <div class="item-type">습득물</div>
-                    <div class="item-title">에어팟 습득</div>
-                    <div class="item-desc">흰색 에어팟 케이스 포함, 보관중</div>
+                    <div class="item-title" th:text="${item.title}">에어팟 습득</div>
+                    <div class="item-desc" th:text="${item.description}">흰색 에어팟 케이스 포함, 보관중</div>
 
                     <div class="item-meta">
-                        <span><i class="fa-solid fa-location-dot"></i> 건축디자인관 6층</span>
-                        <span><i class="fa-regular fa-clock"></i> 오늘 09:15</span>
+                        <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName + ' ' + (item.locationDetail != null ? item.locationDetail : '') : item.locationDetail}"> 건축디자인관 6층</span></span>
+                        <span><i class="fa-regular fa-clock"></i> <span th:text="${item.itemDate}"> 오늘 09:15</span></span>
                     </div>
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:href="@{/found/detail}" class="item-card" th:remove="all">
                 <div class="item-img">
                     <span class="badge status-storage">보관중</span>
                     <i class="fa-solid fa-wallet"></i>
@@ -209,7 +209,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:href="@{/found/detail}" class="item-card" th:remove="all">
                 <div class="item-img">
                     <span class="badge status-storage">보관중</span>
                     <i class="fa-solid fa-umbrella"></i>
@@ -227,7 +227,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:href="@{/found/detail}" class="item-card" th:remove="all">
                 <div class="item-img">
                     <span class="badge status-returned">반환완료</span>
                     <i class="fa-solid fa-glasses"></i>
@@ -245,7 +245,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:href="@{/found/detail}" class="item-card" th:remove="all">
                 <div class="item-img">
                     <span class="badge status-storage">보관중</span>
                     <i class="fa-solid fa-key"></i>
@@ -263,7 +263,7 @@
                 </div>
             </a>
 
-            <a th:href="@{/found/detail}" class="item-card">
+            <a th:href="@{/found/detail}" class="item-card" th:remove="all">
                 <div class="item-img">
                     <span class="badge status-storage">보관중</span>
                     <i class="fa-solid fa-memory"></i>
