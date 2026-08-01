@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.ICommonDao">
+
+    <select id="findCategories" resultType="com.example.find_campus.dto.CategoryDto">
+        SELECT
+            CATEGORY_ID,
+            CATEGORY_NAME,
+            DESCRIPTION,
+            USE_YN,
+            CREATED_AT
+        FROM CATEGORIES
+        WHERE USE_YN = 'Y'
+        ORDER BY CATEGORY_ID
+    </select>
+
+    <select id="findLocations" resultType="com.example.find_campus.dto.LocationDto">
+        SELECT
+            LOCATION_ID,
+            LOCATION_NAME,
+            BUILDING_NAME,
+            FLOOR,
+            DETAIL,
+            LATITUDE,
+            LONGITUDE,
+            USE_YN,
+            CREATED_AT
+        FROM LOCATIONS
+        WHERE USE_YN = 'Y'
+        ORDER BY BUILDING_NAME, FLOOR, LOCATION_NAME
+    </select>
+
+    <select id="findStoragePlaces" resultType="com.example.find_campus.dto.StoragePlaceDto">
+        SELECT
+            S.STORAGE_ID,
+            S.STORAGE_NAME,
+            S.LOCATION_ID,
+            L.LOCATION_NAME,
+            S.MANAGER_NAME,
+            S.PHONE,
+            S.OPERATING_HOURS,
+            S.DESCRIPTION,
+            S.USE_YN,
+            S.CREATED_AT
+        FROM STORAGE_PLACES S
+        LEFT JOIN LOCATIONS L ON L.LOCATION_ID = S.LOCATION_ID
+        WHERE S.USE_YN = 'Y'
+        ORDER BY S.STORAGE_NAME
+    </select>
+
+    <select id="getDashboardStats" resultType="com.example.find_campus.dto.DashboardStatsDto">
+        SELECT
+            (SELECT COUNT(*) FROM USERS WHERE STATUS = 'ACTIVE') AS USER_COUNT,
+            (SELECT COUNT(*) FROM LOST_ITEMS) AS LOST_COUNT,
+            (SELECT COUNT(*) FROM FOUND_ITEMS) AS FOUND_COUNT,
+            (SELECT COUNT(*) FROM REPORTS) AS REPORT_COUNT,
+            (SELECT COUNT(*) FROM REPORTS WHERE STATUS = 'WAITING') AS WAITING_REPORT_COUNT
+        FROM DUAL
+    </select>
+
+</mapper>
