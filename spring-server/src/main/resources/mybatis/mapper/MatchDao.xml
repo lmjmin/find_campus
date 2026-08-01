@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.IMatchDao">
+
+    <sql id="matchSelect">
+        SELECT
+            M.MATCH_ID,
+            M.LOST_ID,
+            M.FOUND_ID,
+            M.MATCH_SCORE,
+            DBMS_LOB.SUBSTR(M.MATCH_REASON, 1000, 1) AS MATCH_REASON,
+            M.MATCH_STATUS,
+            M.CREATED_AT,
+            L.TITLE AS LOST_TITLE,
+            L.ITEM_NAME AS LOST_ITEM_NAME,
+            F.TITLE AS FOUND_TITLE,
+            F.ITEM_NAME AS FOUND_ITEM_NAME,
+            LOC.LOCATION_NAME AS FOUND_LOCATION_NAME,
+            F.FOUND_LOCATION_DETAIL,
+            IMG.IMAGE_URL
+        FROM ITEM_MATCHES M
+        JOIN LOST_ITEMS L ON L.LOST_ID = M.LOST_ID
+        JOIN FOUND_ITEMS F ON F.FOUND_ID = M.FOUND_ID
+        LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
+        LEFT JOIN (
+            SELECT ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+            FROM ITEM_IMAGES
+            WHERE ITEM_TYPE = 'found'
+            GROUP BY ITEM_ID
+        ) IMG ON IMG.ITEM_ID = F.FOUND_ID
+    </sql>
+
+    <select id="findMatchesByLostId" parameterType="long" resultType="com.example.find_campus.dto.MatchViewDto">
+        <include refid="matchSelect" />
+        WHERE M.LOST_ID = #{lostId}
+        ORDER BY M.MATCH_SCORE DESC, M.CREATED_AT DESC
+    </select>
+
+    <select id="findMatchesByUserId" parameterType="long" resultType="com.example.find_campus.dto.MatchViewDto">
+        <include refid="matchSelect" />
+        WHERE L.USER_ID = #{userId}
+        ORDER BY M.CREATED_AT DESC
+    </select>
+
+    <update id="updateMatchStatus">
+        UPDATE ITEM_MATCHES
+        SET MATCH_STATUS = #{status}
+        WHERE MATCH_ID = #{matchId}
+    </update>
+
+</mapper>
