@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>습득물 상세 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/found.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+
+    <div class="detail-layout">
+
+        <div class="left-area">
+
+            <div class="image-box">
+                <span class="type-badge">습득물</span>
+                <i class="fa-solid fa-box-open main-item-icon"></i>
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>습득 위치</strong>
+                        <span>중앙도서관 1층 로비</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>습득 시간</strong>
+                        <span>2026.05.19 오후 2:00 ~ 3:00</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>카테고리</strong>
+                        <span>전자기기 / 에어팟</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>보관 장소</strong>
+                        <span>학생장학봉사팀 분실물 센터</span>
+                    </div>
+                </div>
+
+                <div class="tag-list">
+                    <span class="tag">#전자기기</span>
+                    <span class="tag">#에어팟</span>
+                    <span class="tag">#중앙도서관</span>
+                    <span class="tag">#보관중</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="right-area">
+
+            <span class="status status-storage" th:text="${item.status}">보관중</span>
+            <!-- 반환완료 상태로 보여야 하면 위 줄을 아래처럼 바꾸면 됨
+            <span class="status status-returned">반환완료</span>
+            -->
+
+            <h1 class="title" th:text="${item.title}">중앙도서관에서 에어팟을 습득했어요</h1>
+
+            <div class="date" th:text="${item.createdAt}">
+                2026년 5월 19일 오후 2:30 게시
+            </div>
+
+            <div class="desc-card">
+                <div class="section-title">습득물 설명</div>
+
+                <p class="description" th:text="${item.description}">
+                    중앙도서관 1층 로비 근처에서 에어팟으로 보이는 물건을 습득했습니다.
+                    현재 학생장학봉사팀 분실물 센터에 보관 중입니다.
+                    도용 방지를 위해 세부 특징은 모두 공개하지 않습니다.
+                    본인 물건이라고 생각되면 수령 신청을 진행해 주세요.
+                </p>
+            </div>
+
+            <div class="writer-card">
+                <div class="writer">
+
+                    <div class="avatar">
+                        이
+                    </div>
+
+                    <div>
+                        <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">이습득 (23120030)</div>
+                        <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="claim-guide-card">
+
+                <div class="claim-guide-title">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>수령 신청 안내</span>
+                </div>
+
+                <div class="claim-steps">
+
+                    <div class="claim-step">
+                        <strong>1. 보관 상태 확인</strong>
+                        보관 장소가 있으면 바로 확인하고, 없으면 채팅으로 조율합니다.
+                    </div>
+
+                    <div class="claim-step">
+                        <strong>2. 내 분실글 선택</strong>
+                        내 분실글을 선택해 내 물건인지 비교합니다.
+                    </div>
+
+                    <div class="claim-step">
+                        <strong>3. 수령 방법 확인</strong>
+                        보관처 수령 또는 채팅 약속으로 물건을 찾습니다.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="warning-card notice-card">
+                <i class="fa-solid fa-circle-info"></i>
+
+                <span>
+                    학번과 세부 특징은 공개되지 않습니다.
+                    보관 장소가 없으면 채팅으로 전달 방법을 정해 주세요.
+                </span>
+            </div>
+
+            <div class="button-area">
+
+                <div class="primary-actions">
+
+                    <a th:href="@{/chat/room}" class="chat-btn">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        채팅하기
+                    </a>
+
+                    <a th:href="@{/match/select-lost/{foundId}(foundId=${foundId})}" class="claim-btn">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        내 물건 같아요, 수령 신청하기
+                    </a>
+
+                </div>
+
+                <div class="sub-actions">
+                    <a th:href="@{/found/list}" class="sub-btn">
+                        <i class="fa-solid fa-list"></i>
+                        목록으로
+                    </a>
+
+                    <a th:href="@{/report/write(type='found', id=${foundId})}" class="sub-btn">
+                        <i class="fa-regular fa-flag"></i>
+                        신고
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

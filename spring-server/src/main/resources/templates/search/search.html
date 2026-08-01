@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>통합 검색 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="search-page">
+
+    <aside class="search-filter">
+
+        <div class="filter-head">
+            <div class="filter-head-icon">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+
+            <div>
+                <h2>상세 검색</h2>
+                <p>조건을 선택해 캠퍼스 물건을 찾아보세요.</p>
+            </div>
+        </div>
+
+        <form th:action="@{/search}" method="get" class="filter-form">
+
+            <div class="filter-group">
+                <label for="keyword">키워드</label>
+
+                <div class="filter-input-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="keyword"
+                           type="text"
+                           name="keyword"
+                           placeholder="물건명, 특징을 입력하세요">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label for="category">카테고리</label>
+
+                <select id="category" name="category">
+                    <option value="">전체 카테고리</option>
+                    <option value="전자기기">전자기기</option>
+                    <option value="가방">가방</option>
+                    <option value="지갑">지갑</option>
+                    <option value="신분증">신분증</option>
+                    <option value="열쇠">열쇠</option>
+                    <option value="의류">의류</option>
+                    <option value="도서">도서</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="location">위치</label>
+
+                <select id="location" name="location">
+                    <option value="">전체 위치</option>
+
+                    <option value="대학본관">대학본관</option>
+                    <option value="보건복지관">보건복지관</option>
+                    <option value="건축디자인관">건축디자인관</option>
+                    <option value="대학원">대학원</option>
+                    <option value="건축학습동">건축학습동</option>
+                    <option value="학생회관">학생회관</option>
+                    <option value="동명스터디움">동명스터디움</option>
+                    <option value="학생복지관">학생복지관</option>
+                    <option value="동명생활관 (2호관)">동명생활관(2호관)</option>
+                    <option value="중앙도서관">중앙도서관</option>
+                    <option value="동명관">동명관</option>
+                    <option value="반려동물관">반려동물관</option>
+
+                    <option value="ICT 1관">ICT 1관</option>
+                    <option value="ICT 2관">ICT 2관</option>
+                    <option value="ICT 3관">ICT 3관</option>
+
+                    <option value="교수연구동">교수연구동</option>
+                    <option value="국제대학관">국제대학관</option>
+                    <option value="동명공업고등학교">동명공업고등학교</option>
+                    <option value="Busan International College Office">Busan International College Office</option>
+                    <option value="쉼터">쉼터</option>
+                    <option value="국제산학협력관">국제산학협력관</option>
+                    <option value="가온누리">가온누리</option>
+                    <option value="선당">선당</option>
+                    <option value="Do-ing관">Do-ing관</option>
+
+                    <option value="봉사관">봉사관</option>
+                    <option value="용마광장">용마광장</option>
+                    <option value="제1정문">제1정문</option>
+                    <option value="제2정문">제2정문</option>
+                    <option value="제3정문">제3정문</option>
+
+                    <option value="제1주차장">제1주차장</option>
+                    <option value="제2주차장">제2주차장</option>
+                    <option value="제3주차장">제3주차장</option>
+                    <option value="제5주차장">제5주차장</option>
+
+                    <option value="대운동장 1">대운동장 1</option>
+                    <option value="대운동장 2">대운동장 2</option>
+                    <option value="원형광장">원형광장</option>
+                    <option value="주차관리소">주차관리소</option>
+                    <option value="종합체육시설">종합체육시설</option>
+                    <option value="순환버스 정류장">순환버스 정류장</option>
+                    <option value="마지뜨락">마지뜨락</option>
+                    <option value="분수대">분수대</option>
+                    <option value="학생휴게점(cafe)">학생휴게점(cafe)</option>
+
+                    <option value="동명생활관 (1호관)">동명생활관 (1호관)</option>
+                    <option value="동명뜰">동명뜰</option>
+                    <option value="체육시설관리동">체육시설관리동</option>
+                    <option value="그린스타트업타운">그린스타트업타운</option>
+                    <option value="대학동물병원">대학동물병원</option>
+                    <option value="창업거점지구">창업거점지구</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>날짜 범위</label>
+
+                <div class="date-row">
+                    <input type="date" name="startDate">
+                    <input type="date" name="endDate">
+                </div>
+            </div>
+
+            <button type="submit" class="filter-submit-btn">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                검색하기
+            </button>
+
+        </form>
+
+    </aside>
+
+    <main class="search-content">
+
+        <section class="search-top-card">
+
+            <div class="search-top-left">
+                <span class="search-label">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    통합 검색
+                </span>
+
+                <h1>분실물과 습득물을 한 번에 찾아보세요</h1>
+
+                <p>
+                    물건명, 위치, 날짜 조건을 이용해 등록된 분실물과 습득물을 빠르게 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="search-count-box">
+                <strong id="resultCount" th:text="${lostCount + foundCount}">16</strong>
+                <span>전체 결과</span>
+            </div>
+
+        </section>
+
+        <section class="result-section">
+
+            <div class="result-control-bar">
+
+                <div class="result-tabs">
+                    <button type="button" class="active" data-filter="all">전체 <span th:text="${lostCount + foundCount}">16</span></button>
+                    <button type="button" data-filter="lost">분실물 <span th:text="${lostCount}">8</span></button>
+                    <button type="button" data-filter="found">습득물 <span th:text="${foundCount}">8</span></button>
+                </div>
+
+                <select class="result-sort">
+                    <option>최신순</option>
+                    <option>이름순</option>
+                    <option>위치순</option>
+                </select>
+
+            </div>
+
+            <div class="result-list">
+
+                <a th:each="item : ${lostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="result-card lost-item" data-type="lost">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received" th:text="${item.status}">접수중</span>
+                        </div>
+
+                        <h3 th:text="${item.title}">검정 노트북 가방</h3>
+
+                        <p class="result-desc" th:text="${item.description != null ? item.description : '상세 설명이 등록되지 않았습니다.'}">
+                            맥북 프로 13인치와 충전기가 들어있는 검정색 노트북 가방입니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미등록'}">중앙도서관 2층</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${item.itemDate != null ? item.itemDate : item.createdAt}">오늘 14:30</span></span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:each="item : ${foundItems}" th:href="@{/found/detail/{id}(id=${item.id})}" class="result-card found-item" data-type="found">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage" th:text="${item.status}">보관중</span>
+                        </div>
+
+                        <h3 th:text="${item.title}">에어팟 프로</h3>
+
+                        <p class="result-desc" th:text="${item.description != null ? item.description : '상세 설명이 등록되지 않았습니다.'}">
+                            ICT 2관 강의실 근처에서 에어팟 프로로 보이는 물건을 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미등록'}">ICT 2관 201호</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${item.itemDate != null ? item.itemDate : item.createdAt}">오늘 09:15</span></span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received">접수중</span>
+                        </div>
+
+                        <h3>검정 노트북 가방</h3>
+
+                        <p class="result-desc">
+                            맥북 프로 13인치와 충전기가 들어있는 검정색 노트북 가방입니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 중앙도서관 2층</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 14:30</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>학생증 분실</h3>
+
+                        <p class="result-desc">
+                            2024년도 입학 학생증을 ICT 1관 근처에서 분실했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> ICT 1관 3층</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 11:00</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received">접수중</span>
+                        </div>
+
+                        <h3>에어팟 프로 분실</h3>
+
+                        <p class="result-desc">
+                            흰색 에어팟 프로 케이스를 중앙도서관 열람실에서 잃어버렸습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 중앙도서관 열람실</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 09:15</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status returned">반환완료</span>
+                        </div>
+
+                        <h3>갈색 지갑 분실</h3>
+
+                        <p class="result-desc">
+                            갈색 가죽 지갑을 학생복지관 근처에서 분실했고 반환 완료되었습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 학생복지관</span>
+                            <span><i class="fa-regular fa-clock"></i> 어제 13:10</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received">접수중</span>
+                        </div>
+
+                        <h3>기숙사 열쇠 분실</h3>
+
+                        <p class="result-desc">
+                            동명생활관 2호관 근처에서 작은 키링이 달린 열쇠를 분실했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 동명생활관 2호관</span>
+                            <span><i class="fa-regular fa-clock"></i> 어제 18:20</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-umbrella"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received">접수중</span>
+                        </div>
+
+                        <h3>파란색 접이식 우산</h3>
+
+                        <p class="result-desc">
+                            비 오는 날 학생회관 입구 쪽에서 파란색 접이식 우산을 잃어버렸습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 학생회관 입구</span>
+                            <span><i class="fa-regular fa-clock"></i> 2일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>흰색 텀블러 분실</h3>
+
+                        <p class="result-desc">
+                            흰색 스테인리스 텀블러를 카페 근처 테이블에 두고 온 것 같습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 학생휴게점(cafe)</span>
+                            <span><i class="fa-regular fa-clock"></i> 3일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-regular fa-credit-card"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received">접수중</span>
+                        </div>
+
+                        <h3>노란색 체크카드</h3>
+
+                        <p class="result-desc">
+                            제5주차장 근처에서 노란색 체크카드를 분실했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 제5주차장</span>
+                            <span><i class="fa-regular fa-clock"></i> 4일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>에어팟 프로</h3>
+
+                        <p class="result-desc">
+                            ICT 2관 강의실 근처에서 에어팟 프로로 보이는 물건을 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> ICT 2관 201호</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 09:15</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status returned">반환완료</span>
+                        </div>
+
+                        <h3>지갑 발견</h3>
+
+                        <p class="result-desc">
+                            대학원 앞에서 갈색 가죽 지갑을 발견했고, 주인에게 반환 완료되었습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 대학원 앞</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 10:30</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>학생증 습득</h3>
+
+                        <p class="result-desc">
+                            중앙도서관 1층 로비에서 학생증을 습득해 보관 중입니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 중앙도서관 1층</span>
+                            <span><i class="fa-regular fa-clock"></i> 오늘 12:05</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-umbrella"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>우산 습득</h3>
+
+                        <p class="result-desc">
+                            학생회관 1층 입구에서 파란색 접이식 우산을 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 학생회관 1층</span>
+                            <span><i class="fa-regular fa-clock"></i> 어제 16:00</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>열쇠 묶음 습득</h3>
+
+                        <p class="result-desc">
+                            봉사관 입구에서 열쇠 2개와 작은 키링이 달린 묶음을 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 봉사관 입구</span>
+                            <span><i class="fa-regular fa-clock"></i> 2일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-memory"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>USB 드라이브 습득</h3>
+
+                        <p class="result-desc">
+                            Do-ing관 강의실에서 파란색 Samsung USB 64GB를 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> Do-ing관</span>
+                            <span><i class="fa-regular fa-clock"></i> 2일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-glasses"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status returned">반환완료</span>
+                        </div>
+
+                        <h3>검정 뿔테 안경</h3>
+
+                        <p class="result-desc">
+                            동명관 복도에서 검정 뿔테 안경을 습득했고 반환 완료되었습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 동명관 복도</span>
+                            <span><i class="fa-regular fa-clock"></i> 3일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-computer-mouse"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage">보관중</span>
+                        </div>
+
+                        <h3>무선 마우스 습득</h3>
+
+                        <p class="result-desc">
+                            국제대학관 강의실에서 검정색 무선 마우스를 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> 국제대학관</span>
+                            <span><i class="fa-regular fa-clock"></i> 5일 전</span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabButtons = document.querySelectorAll(".result-tabs button");
+        const resultCards = document.querySelectorAll(".result-card");
+        const resultCount = document.getElementById("resultCount");
+
+        function applyFilter(filter) {
+            let count = 0;
+
+            resultCards.forEach(function (card) {
+                const type = card.dataset.type;
+
+                if (filter === "all" || filter === type) {
+                    card.classList.remove("hidden");
+                    count++;
+                } else {
+                    card.classList.add("hidden");
+                }
+            });
+
+            resultCount.textContent = count;
+        }
+
+        tabButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                tabButtons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+
+                button.classList.add("active");
+                applyFilter(button.dataset.filter);
+            });
+        });
+
+        applyFilter("all");
+    });
+</script>
+
+</body>
+</html>
