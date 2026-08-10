@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>분실물 상세 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/lost.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+
+    <div class="detail-layout">
+
+        <div class="left-area">
+
+            <div class="image-box">
+                <span class="type-badge">분실물</span>
+                <i class="fa-solid fa-briefcase main-item-icon"></i>
+            </div>
+
+            <div class="info-card">
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>분실 위치</strong>
+                        <span>중앙도서관 2층 열람실 앞</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>분실 시간</strong>
+                        <span>2026.05.19 오후 2:00 ~ 3:00</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>카테고리</strong>
+                        <span>가방 / 노트북 가방</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+
+                    <div class="info-text">
+                        <strong>본인 확인 특징</strong>
+                        <span>검정색, 파란 키링, 내부 맥북 포함</span>
+                    </div>
+                </div>
+
+                <div class="tag-list">
+                    <span class="tag">#검정색</span>
+                    <span class="tag">#노트북가방</span>
+                    <span class="tag">#맥북 포함</span>
+                    <span class="tag">#파란 키링</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="right-area">
+
+            <span class="status status-storage">보관중</span>
+
+            <h1 class="title">검정 노트북 가방을 잃어버렸어요</h1>
+
+            <div class="date">
+                2026년 5월 19일 오후 2:30 게시
+            </div>
+
+            <div class="desc-card">
+                <div class="section-title">상세 설명</div>
+
+                <p class="description">
+                    검정색 노트북 가방을 분실했습니다.
+                    안에는 맥북 프로 13인치, 충전기, 노트와 필기구가 들어있습니다.
+                    가방 앞쪽 지퍼에 파란색 키링이 달려 있고,
+                    오른쪽 측면에는 물병을 넣는 작은 포켓이 있습니다.
+                    비슷한 습득물이 있다면 유사 습득물 목록을 확인한 뒤 수령 신청을 진행할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="writer-card">
+                <div class="writer">
+
+                    <div class="avatar">
+                        김
+                    </div>
+
+                    <div>
+                        <div class="writer-name">김분실 (23120030)</div>
+                        <div class="writer-school">동명대학교 컴퓨터공학과</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="match-guide-card">
+
+                <div class="match-guide-title">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>유사 습득물 확인 안내</span>
+                </div>
+
+                <div class="match-steps">
+
+                    <div class="match-step">
+                        <strong>1. 유사 습득물 확인</strong>
+                        작성한 물건명, 위치, 시간, 특징을 기준으로 비슷한 습득물을 확인합니다.
+                    </div>
+
+                    <div class="match-step">
+                        <strong>2. 수령 신청</strong>
+                        내 물건으로 보이는 습득물이 있으면 본인 확인 정보를 바탕으로 신청합니다.
+                    </div>
+
+                    <div class="match-step">
+                        <strong>3. 관리자 승인</strong>
+                        관리자 확인 후 승인된 경우 지정 보관 장소에서 수령합니다.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="warning-card">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+                    채팅 기능은 사용하지 않습니다.
+                    유사한 습득물이 있더라도 바로 수령할 수 없으며,
+                    본인 확인과 관리자 승인 절차를 거쳐야 합니다.
+                </span>
+            </div>
+
+            <div class="button-area">
+
+                <a th:href="@{/found/list}" class="match-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    유사 습득물 확인하기
+                </a>
+
+                <div class="sub-actions">
+                    <a th:href="@{/lost/list}" class="sub-btn">
+                        <i class="fa-solid fa-list"></i>
+                        목록으로
+                    </a>
+
+                    <a th:href="@{/report/write(type='lost', id=${lostId})}" class="sub-btn">
+                        <i class="fa-regular fa-flag"></i>
+                        신고
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>분실물 등록 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/lost.css}">
+    <style>
+        .upload-preview { margin-top: 12px; display: none; gap: 10px; flex-direction: column; }
+        .upload-preview.active { display: flex; }
+        .upload-preview-title { font-size: 13px; font-weight: 900; color: #2563eb; }
+        .upload-file-list { display: grid; gap: 8px; }
+        .upload-file-item { padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; color: #374151; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .empty-select-alert { padding: 16px; border-radius: 16px; background: #fff7ed; color: #c2410c; font-size: 14px; font-weight: 800; line-height: 1.5; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}" class="active">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/map}">지도</a>
+        </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
+            <a th:href="@{/mypage}" class="icon-btn"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="page-title">
+        <h1>분실물 등록</h1>
+        <p>잃어버린 물건의 특징과 위치를 자세히 작성하면 유사한 습득물을 더 쉽게 찾을 수 있습니다.</p>
+    </div>
+
+    <section class="match-flow">
+        <div class="flow-title">
+            <div class="flow-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+                <h2>자세히 작성할수록 매칭 정확도가 올라갑니다</h2>
+                <p>색상, 위치, 시간, 사진 정보를 함께 등록해 주세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <form th:action="@{/lost/write}" method="post" enctype="multipart/form-data" class="form-card" id="lostForm">
+        <div class="notice">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>
+                <strong>허위 등록은 제한될 수 있습니다.</strong>
+                실제로 잃어버린 물건의 정보만 작성해 주세요.
+            </span>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+            <h2>기본 정보</h2>
+        </div>
+
+        <div class="form-group">
+            <label>제목 <span class="required">*</span></label>
+            <input type="text" name="title" class="input" placeholder="예: 중앙도서관에서 검정 노트북 가방을 잃어버렸어요" required>
+        </div>
+
+        <div class="form-group">
+            <label>물건명 <span class="required">*</span></label>
+            <input type="text" name="itemName" class="input" placeholder="예: 노트북 가방, 에어팟, 학생증" required>
+        </div>
+
+        <div class="form-group">
+            <label>카테고리 <span class="required">*</span></label>
+            <div class="empty-select-alert" th:if="${categories == null or #lists.isEmpty(categories)}">
+                카테고리 데이터가 없습니다. `seed_common_data.sql`을 먼저 실행해 주세요.
+            </div>
+            <div class="category-list" th:if="${categories != null and !#lists.isEmpty(categories)}">
+                <label th:each="category : ${categories}">
+                    <input type="radio" name="categoryId" th:value="${category.categoryId}" required>
+                    <span th:text="${category.categoryName}">카테고리</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-fingerprint"></i></div>
+            <h2>물건 특징</h2>
+        </div>
+
+        <div class="feature-grid">
+            <div class="form-group">
+                <label>색상 <span class="required">*</span></label>
+                <input type="text" name="color" class="input" placeholder="예: 검정, 흰색, 남색" required>
+            </div>
+
+            <div class="form-group">
+                <label>브랜드 <span class="optional">선택</span></label>
+                <input type="text" name="brand" class="input" placeholder="예: Apple, Nike">
+            </div>
+
+            <div class="form-group">
+                <label>무늬/디자인 <span class="optional">선택</span></label>
+                <input type="text" name="pattern" class="input" placeholder="예: 캐릭터 스티커, 줄무늬">
+            </div>
+
+            <div class="form-group">
+                <label>흠집/사용 흔적 <span class="optional">선택</span></label>
+                <input type="text" name="damageInfo" class="input" placeholder="예: 모서리 흠집">
+            </div>
+
+            <div class="form-group">
+                <label>부착물/스티커 <span class="optional">선택</span></label>
+                <input type="text" name="attachmentInfo" class="input" placeholder="예: 파란 키링">
+            </div>
+
+            <div class="form-group">
+                <label>내용물 <span class="optional">선택</span></label>
+                <input type="text" name="insideItem" class="input" placeholder="예: 충전기, 카드">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>상세 설명 <span class="required">*</span></label>
+            <textarea name="description" class="textarea" placeholder="본인 물건을 확인할 수 있는 특징을 자세히 적어주세요." required></textarea>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h2>분실 위치와 시간</h2>
+        </div>
+
+        <div class="form-group">
+            <label>분실 위치 <span class="required">*</span></label>
+            <select name="lostLocationId" class="select" required>
+                <option value="">위치를 선택하세요</option>
+                <option th:each="location : ${locations}" th:value="${location.locationId}"
+                        th:text="${location.buildingName != null ? location.buildingName + ' - ' + location.locationName : location.locationName}">
+                    위치
+                </option>
+            </select>
+            <p class="help-text">위치 목록은 DB의 LOCATIONS 테이블에서 조회됩니다.</p>
+        </div>
+
+        <div class="form-group">
+            <label>상세 위치 <span class="required">*</span></label>
+            <input type="text" name="lostLocationDetail" class="input" placeholder="예: 중앙도서관 3층 열람실" required>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>분실 날짜 <span class="required">*</span></label>
+                <input type="date" name="lostDate" class="input" required>
+            </div>
+
+            <div class="form-group">
+                <label>분실 시간 <span class="optional">선택</span></label>
+                <input type="time" name="lostTime" class="input">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>분실 시간대 <span class="optional">선택</span></label>
+            <input type="text" name="lostTimeRange" class="input" placeholder="예: 오후 2시~3시 사이">
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-image"></i></div>
+            <h2>사진 업로드</h2>
+        </div>
+
+        <div class="form-group">
+            <label>물건 사진 <span class="optional">선택</span></label>
+            <label class="upload-box">
+                <input type="file" name="images" id="lostImages" multiple hidden accept="image/*">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <strong>사진을 클릭해서 업로드</strong>
+                <span>JPG, PNG 최대 10MB</span>
+            </label>
+
+            <div class="upload-preview" id="lostImagePreview">
+                <div class="upload-preview-title" id="lostImageCount">선택된 사진 0장</div>
+                <div class="upload-file-list" id="lostImageList"></div>
+            </div>
+
+            <p class="help-text">사진을 선택하면 아래에 파일명이 표시됩니다. 등록 전 선택 여부를 확인해 주세요.</p>
+        </div>
+
+        <div class="button-area">
+            <a th:href="@{/lost/list}" class="cancel-btn">취소</a>
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-check"></i>
+                분실물 등록하기
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function bindImagePreview(inputId, previewId, countId, listId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        const count = document.getElementById(countId);
+        const list = document.getElementById(listId);
+        input.addEventListener("change", function () {
+            list.innerHTML = "";
+            const files = Array.from(input.files || []);
+            count.textContent = "선택된 사진 " + files.length + "장";
+            preview.classList.toggle("active", files.length > 0);
+            files.forEach(function (file) {
+                const item = document.createElement("div");
+                item.className = "upload-file-item";
+                item.innerHTML = '<i class="fa-solid fa-image"></i><span>' + file.name + '</span>';
+                list.appendChild(item);
+            });
+        });
+    }
+
+    bindImagePreview("lostImages", "lostImagePreview", "lostImageCount", "lostImageList");
+</script>
+
+</body>
+</html>

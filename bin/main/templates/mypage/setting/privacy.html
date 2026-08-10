@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>개인정보 설정 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/setting/privacy.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container privacy-container">
+
+    <a th:href="@{/mypage/setting}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        설정으로 돌아가기
+    </a>
+
+    <div class="page-head">
+        <h1>개인정보 공개 범위 및 검색 허용 설정</h1>
+        <p>
+            내 정보가 다른 사용자에게 어떻게 보일지, 검색에 노출될지 설정할 수 있습니다.
+        </p>
+    </div>
+
+    <div class="privacy-card">
+
+        <div class="summary-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                공개 범위를 좁히면 개인정보 보호에는 도움이 되지만,
+                분실물 반환이나 습득물 확인 과정에서 연락이 어려울 수 있습니다.
+            </div>
+        </div>
+
+        <section class="setting-section privacy-setting-section">
+            <div class="section-head">
+                <div class="section-icon blue">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="section-title">
+                    <h2>프로필 공개 설정</h2>
+                    <p>이름, 학과, 프로필 이미지가 다른 사용자에게 보이는 범위를 설정합니다.</p>
+                </div>
+            </div>
+
+            <div class="option-box">
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>프로필 공개</strong>
+                        <span>게시글과 채팅 화면에서 내 기본 프로필 정보를 표시합니다.</span>
+                    </div>
+
+                    <div class="segmented" data-group="profile">
+                        <button type="button" class="segment-btn active">
+                            <i class="fa-solid fa-globe"></i>
+                            전체 공개
+                        </button>
+                        <button type="button" class="segment-btn">
+                            <i class="fa-solid fa-users"></i>
+                            관련 사용자만
+                        </button>
+                        <button type="button" class="segment-btn">
+                            <i class="fa-solid fa-lock"></i>
+                            비공개
+                        </button>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>학과 정보 공개</strong>
+                        <span>내 학과 정보를 게시글 작성자 정보에 표시합니다.</span>
+                    </div>
+
+                    <div class="segmented two" data-group="department">
+                        <button type="button" class="segment-btn active">
+                            <i class="fa-solid fa-eye"></i>
+                            공개
+                        </button>
+                        <button type="button" class="segment-btn">
+                            <i class="fa-solid fa-eye-slash"></i>
+                            비공개
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="setting-section privacy-setting-section">
+            <div class="section-head">
+                <div class="section-icon green">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <div class="section-title">
+                    <h2>검색 허용 설정</h2>
+                    <p>내가 등록한 게시글이 검색 결과에 노출될지 설정합니다.</p>
+                </div>
+            </div>
+
+            <div class="option-box">
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>검색 허용</strong>
+                        <span>내 게시글이 다른 사용자의 검색 결과에 표시됩니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">허용</span>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>분실물 게시글 검색 허용</strong>
+                        <span>내가 등록한 분실물 게시글을 검색 결과에 노출합니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">허용</span>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>습득물 게시글 검색 허용</strong>
+                        <span>내가 등록한 습득물 게시글을 검색 결과에 노출합니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">허용</span>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="setting-section privacy-setting-section">
+            <div class="section-head">
+                <div class="section-icon orange">
+                    <i class="fa-solid fa-address-book"></i>
+                </div>
+
+                <div class="section-title">
+                    <h2>연락 정보 공개 설정</h2>
+                    <p>다른 사용자가 나에게 연락할 수 있는 정보를 설정합니다.</p>
+                </div>
+            </div>
+
+            <div class="option-box">
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>연락처 공개</strong>
+                        <span>전화번호, 이메일 등 직접 연락 가능한 정보 공개 범위를 설정합니다.</span>
+                    </div>
+
+                    <div class="segmented" data-group="contact">
+                        <button type="button" class="segment-btn orange-active">
+                            <i class="fa-solid fa-globe"></i>
+                            전체 공개
+                        </button>
+                        <button type="button" class="segment-btn orange-active active">
+                            <i class="fa-solid fa-users"></i>
+                            관련 사용자만
+                        </button>
+                        <button type="button" class="segment-btn orange-active">
+                            <i class="fa-solid fa-lock"></i>
+                            비공개
+                        </button>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>채팅 요청 허용</strong>
+                        <span>다른 사용자가 내게 채팅을 보낼 수 있도록 허용합니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">허용</span>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>쪽지 알림 받기</strong>
+                        <span>새로운 메시지가 도착하면 알림을 받습니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">허용</span>
+                        <label class="toggle">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="setting-section privacy-setting-section">
+            <div class="section-head">
+                <div class="section-icon purple">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+
+                <div class="section-title">
+                    <h2>기타 개인정보 설정</h2>
+                    <p>활동 기록과 온라인 상태 표시 여부를 설정합니다.</p>
+                </div>
+            </div>
+
+            <div class="option-box">
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>내 활동 기록 공개</strong>
+                        <span>내가 작성한 글, 댓글, 채팅 활동 일부를 다른 사용자에게 공개합니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">비공개</span>
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="option-row">
+                    <div class="option-text">
+                        <strong>온라인 상태 표시</strong>
+                        <span>다른 사용자에게 내가 현재 접속 중인지 표시합니다.</span>
+                    </div>
+
+                    <div class="toggle-area">
+                        <span class="status-text">비공개</span>
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="notice-box privacy-notice-box">
+            <strong>안내사항</strong>
+            <ul>
+                <li>설정 변경은 저장 버튼을 눌러야 적용됩니다.</li>
+                <li>비공개로 설정하더라도 운영자는 서비스 제공 및 관리 목적상 필요한 정보를 확인할 수 있습니다.</li>
+                <li>분실물 반환을 원활하게 진행하려면 채팅 요청은 허용하는 것을 권장합니다.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="button-area">
+        <button type="button" class="reset-btn" id="resetBtn">
+            <i class="fa-solid fa-rotate-left"></i>
+            기본 설정으로 초기화
+        </button>
+
+        <button type="button" class="save-btn" id="saveBtn">
+            <i class="fa-solid fa-check"></i>
+            설정 저장
+        </button>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const segmentGroups = document.querySelectorAll(".segmented");
+        const toggles = document.querySelectorAll(".toggle input");
+        const resetBtn = document.getElementById("resetBtn");
+        const saveBtn = document.getElementById("saveBtn");
+
+        segmentGroups.forEach(function (group) {
+            const buttons = group.querySelectorAll(".segment-btn");
+
+            buttons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    buttons.forEach(function (btn) {
+                        btn.classList.remove("active");
+                    });
+
+                    button.classList.add("active");
+                });
+            });
+        });
+
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener("change", function () {
+                const statusText = toggle.closest(".toggle-area").querySelector(".status-text");
+
+                if (toggle.checked) {
+                    statusText.textContent = "허용";
+                    statusText.style.color = "#2563eb";
+                } else {
+                    statusText.textContent = "비공개";
+                    statusText.style.color = "#6b7280";
+                }
+            });
+        });
+
+        resetBtn.addEventListener("click", function () {
+            const confirmReset = confirm("개인정보 설정을 기본값으로 초기화할까요?");
+
+            if (!confirmReset) {
+                return;
+            }
+
+            document.querySelectorAll(".segmented").forEach(function (group) {
+                const buttons = group.querySelectorAll(".segment-btn");
+
+                buttons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+
+                if (group.dataset.group === "contact") {
+                    buttons[1].classList.add("active");
+                } else {
+                    buttons[0].classList.add("active");
+                }
+            });
+
+            toggles.forEach(function (toggle, index) {
+                if (index <= 4) {
+                    toggle.checked = true;
+                } else {
+                    toggle.checked = false;
+                }
+
+                toggle.dispatchEvent(new Event("change"));
+            });
+
+            alert("기본 설정으로 초기화되었습니다.");
+        });
+
+        saveBtn.addEventListener("click", function () {
+            alert("개인정보 설정이 저장되었습니다.");
+        });
+    });
+</script>
+
+</body>
+
+</html>

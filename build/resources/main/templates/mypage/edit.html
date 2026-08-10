@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>정보 수정 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container edit-container">
+
+    <a th:href="@{/mypage}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        마이페이지로 돌아가기
+    </a>
+
+    <div class="page-head edit-page-head">
+        <h1>정보 수정</h1>
+        <p>내 계정 정보, 학교 정보, 비밀번호를 수정할 수 있습니다.</p>
+    </div>
+
+    <div class="profile-summary">
+        <div class="avatar">김</div>
+
+        <div class="profile-info">
+            <h2>김동명</h2>
+            <p>
+                tongmyong@tu.ac.kr<br>
+                동명대학교
+            </p>
+        </div>
+    </div>
+
+    <form th:action="@{/mypage/edit}" method="post">
+
+        <div class="edit-card">
+
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>기본 정보</h2>
+                        <p>서비스에서 사용하는 기본 계정 정보를 수정합니다.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="name">이름 <span class="required">*</span></label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               class="input"
+                               value="김동명"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">이메일 <span class="required">*</span></label>
+                        <input type="email"
+                               id="email"
+                               name="email"
+                               class="input"
+                               value="tongmyong@tu.ac.kr"
+                               required>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="phone">전화번호</label>
+                        <input type="text"
+                               id="phone"
+                               name="phone"
+                               class="input"
+                               value=""
+                               placeholder="010-0000-0000">
+                        <p class="help-text">
+                            선택 입력 항목입니다. 전화번호를 추가하면 비밀번호 찾기와 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>학교 정보</h2>
+                        <p>분실물 확인과 교내 사용자 구분에 필요한 정보를 추가할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="school">학교</label>
+                        <input type="text"
+                               id="school"
+                               name="school"
+                               class="input"
+                               value="동명대학교"
+                               readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentNo">학번</label>
+                        <input type="text"
+                               id="studentNo"
+                               name="studentNo"
+                               class="input"
+                               value="20240001"
+                               readonly>
+                        <p class="help-text">학번은 본인 확인용 정보로 사용되며 변경할 수 없습니다.</p>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="department">학과</label>
+                        <select id="department" name="department" class="select">
+                            <option value="" selected>학과를 선택하세요</option>
+
+                            <option value="간호학과">간호학과</option>
+                            <option value="작업치료학과">작업치료학과</option>
+                            <option value="응급구조학과">응급구조학과</option>
+                            <option value="언어치료청각재활학과">언어치료청각재활학과</option>
+                            <option value="스포츠재활학과">스포츠재활학과</option>
+                            <option value="상담·임상심리학과">상담·임상심리학과</option>
+                            <option value="사회복지학과">사회복지학과</option>
+                            <option value="유아교육과">유아교육과</option>
+
+                            <option value="반려동물보건학과">반려동물보건학과</option>
+                            <option value="애견미용·행동교정학과">애견미용·행동교정학과</option>
+                            <option value="반려동물산업학부">반려동물산업학부</option>
+                            <option value="펫푸드전공">펫푸드전공</option>
+                            <option value="반려동물산업디자인전공">반려동물산업디자인전공</option>
+
+                            <option value="뷰티케어학과">뷰티케어학과</option>
+                            <option value="헤어디자인학과">헤어디자인학과</option>
+                            <option value="메이크업디자인학과">메이크업디자인학과</option>
+                            <option value="패션디자인학과">패션디자인학과</option>
+
+                            <option value="게임공학과">게임공학과</option>
+                            <option value="게임그래픽학과">게임그래픽학과</option>
+                            <option value="컴퓨터공학과">컴퓨터공학과</option>
+                            <option value="인공지능응용학과">인공지능응용학과</option>
+                            <option value="냉동공조공학과">냉동공조공학과</option>
+                            <option value="미래자동차학과">미래자동차학과</option>
+                            <option value="전기제어학부">전기제어학부</option>
+                            <option value="전기에너지전공">전기에너지전공</option>
+                            <option value="자율운항시스템전공">자율운항시스템전공</option>
+                            <option value="항만물류시스템학과">항만물류시스템학과</option>
+
+                            <option value="건축학과">건축학과</option>
+                            <option value="건축공학과">건축공학과</option>
+                            <option value="실내건축학과">실내건축학과</option>
+                            <option value="시각디자인학과">시각디자인학과</option>
+
+                            <option value="경영학과">경영학과</option>
+                            <option value="국제통상물류학과">국제통상물류학과</option>
+                            <option value="호텔조리베이커리학과">호텔조리베이커리학과</option>
+                            <option value="글로벌관광학과">글로벌관광학과</option>
+
+                            <option value="미디어커뮤니케이션학과">미디어커뮤니케이션학과</option>
+                            <option value="광고홍보학과">광고홍보학과</option>
+                            <option value="글로벌문화콘텐츠학과">글로벌문화콘텐츠학과</option>
+                            <option value="웹툰·애니메이션학과">웹툰·애니메이션학과</option>
+
+                            <option value="엔터테인먼트예술학과">엔터테인먼트예술학과</option>
+                            <option value="K-sports태권도학과">K-sports태권도학과</option>
+                            <option value="축구·스포츠산업학과">축구·스포츠산업학과</option>
+                            <option value="레저·승마학과">레저·승마학과</option>
+                            <option value="군사학과">군사학과</option>
+
+                            <option value="복지경영학과">복지경영학과</option>
+                            <option value="선명상치유학과">선명상치유학과</option>
+                            <option value="동양문화학과">동양문화학과</option>
+                            <option value="뷰티산업학과">뷰티산업학과</option>
+                            <option value="한국어교육다문화학과">한국어교육다문화학과</option>
+                            <option value="창업학과">창업학과</option>
+
+                            <option value="학부교양대학">학부교양대학</option>
+                            <option value="Dept. of Global Korean Studies">Dept. of Global Korean Studies</option>
+                            <option value="Dept. of Global Business">Dept. of Global Business</option>
+                            <option value="Dept. of AI&Computer Engineering">Dept. of AI&amp;Computer Engineering</option>
+                            <option value="Dept. of Mechanical and Automotive Engineering">Dept. of Mechanical and Automotive Engineering</option>
+                            <option value="Dept. of Information System and Security">Dept. of Information System and Security</option>
+                            <option value="Dept. of Tech Management and Innovation">Dept. of Tech Management and Innovation</option>
+                            <option value="Dept. of Culture and Design Management">Dept. of Culture and Design Management</option>
+
+                            <option value="기타">기타</option>
+                        </select>
+                        <p class="help-text">
+                            선택 입력 항목입니다. 학과 정보를 추가하면 분실물 확인과 교내 사용자 구분에 도움이 됩니다.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>비밀번호 변경</h2>
+                        <p>비밀번호를 변경하려면 현재 비밀번호 확인이 필요합니다.</p>
+                    </div>
+                </div>
+
+                <div class="password-box">
+                    <div class="password-box-title">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        비밀번호는 영문, 숫자, 특수문자를 조합해 설정하는 것을 권장합니다.
+                    </div>
+
+                    <button type="button" class="toggle-password-btn" id="passwordToggleBtn">
+                        비밀번호 변경하기
+                    </button>
+
+                    <div class="form-grid password-fields" id="passwordFields">
+
+                        <div class="form-group full">
+                            <label for="currentPassword">현재 비밀번호</label>
+                            <input type="password"
+                                   id="currentPassword"
+                                   name="currentPassword"
+                                   class="input"
+                                   placeholder="현재 비밀번호를 입력하세요">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">새 비밀번호</label>
+                            <input type="password"
+                                   id="newPassword"
+                                   name="newPassword"
+                                   class="input"
+                                   placeholder="새 비밀번호를 입력하세요">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPasswordConfirm">새 비밀번호 확인</label>
+                            <input type="password"
+                                   id="newPasswordConfirm"
+                                   name="newPasswordConfirm"
+                                   class="input"
+                                   placeholder="새 비밀번호를 다시 입력하세요">
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="section edit-section">
+                <div class="section-head edit-section-head">
+                    <div class="section-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div class="section-title">
+                        <h2>개인정보 공개 설정 바로가기</h2>
+                        <p>게시글 공개 범위와 검색 허용 여부는 개인정보 설정에서 관리합니다.</p>
+                    </div>
+                </div>
+
+                <div class="auth-box">
+                    <div class="auth-left">
+                        <div class="auth-icon" style="background:#eef2ff; color:#4f46e5;">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+
+                        <div class="auth-text">
+                            <strong>개인정보 공개 범위 설정</strong>
+                            <span>프로필 공개, 검색 허용, 채팅 요청 허용 여부를 변경할 수 있습니다.</span>
+                        </div>
+                    </div>
+
+                    <a th:href="@{/mypage/setting/privacy}" class="auth-btn">
+                        설정하기
+                    </a>
+                </div>
+            </section>
+
+            <div class="notice-box">
+                <i class="fa-solid fa-circle-info"></i>
+                <div>
+                    전화번호와 학과는 선택 입력 항목입니다.
+                    정보를 추가하면 비밀번호 찾기, 분실물 확인, 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
+                    실제 저장 기능은 Controller, DTO, Service, DAO 작업 후 USERS 테이블과 연결하면 됩니다.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="button-area">
+            <a th:href="@{/mypage}" class="cancel-btn">
+                <i class="fa-solid fa-xmark"></i>
+                취소
+            </a>
+
+            <button type="submit" class="save-btn">
+                <i class="fa-solid fa-check"></i>
+                수정 내용 저장
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordToggleBtn = document.getElementById("passwordToggleBtn");
+        const passwordFields = document.getElementById("passwordFields");
+
+        const currentPassword = document.getElementById("currentPassword");
+        const newPassword = document.getElementById("newPassword");
+        const newPasswordConfirm = document.getElementById("newPasswordConfirm");
+
+        passwordToggleBtn.addEventListener("click", function () {
+            passwordFields.classList.toggle("active");
+
+            if (passwordFields.classList.contains("active")) {
+                passwordToggleBtn.textContent = "비밀번호 변경 닫기";
+            } else {
+                passwordToggleBtn.textContent = "비밀번호 변경하기";
+                currentPassword.value = "";
+                newPassword.value = "";
+                newPasswordConfirm.value = "";
+            }
+        });
+
+        document.querySelector("form").addEventListener("submit", function (event) {
+            if (passwordFields.classList.contains("active")) {
+                if (newPassword.value !== newPasswordConfirm.value) {
+                    alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+                    newPasswordConfirm.focus();
+                    event.preventDefault();
+                    return;
+                }
+
+                if (newPassword.value.length > 0 && newPassword.value.length < 8) {
+                    alert("새 비밀번호는 8자 이상으로 입력해주세요.");
+                    newPassword.focus();
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            alert("정보 수정 화면입니다. 실제 저장 기능은 백엔드 연결 후 처리됩니다.");
+        });
+    });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>습득물 등록 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/found.css}">
+    <style>
+        .upload-preview { margin-top: 12px; display: none; gap: 10px; flex-direction: column; }
+        .upload-preview.active { display: flex; }
+        .upload-preview-title { font-size: 13px; font-weight: 900; color: #2563eb; }
+        .upload-file-list { display: grid; gap: 8px; }
+        .upload-file-item { padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; color: #374151; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .empty-select-alert { padding: 16px; border-radius: 16px; background: #fff7ed; color: #c2410c; font-size: 14px; font-weight: 800; line-height: 1.5; }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}" class="active">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/map}">지도</a>
+        </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
+            <a th:href="@{/mypage}" class="icon-btn"><i class="fa-solid fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="page-title">
+        <h1>습득물 등록</h1>
+        <p>주운 물건의 위치와 보관 정보를 등록해 주세요.</p>
+    </div>
+
+    <form th:action="@{/found/write}" method="post" enctype="multipart/form-data" class="form-card">
+        <div class="notice">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>
+                <strong>습득물은 실제 보관 가능한 장소와 함께 등록해 주세요.</strong>
+                사진을 선택하면 등록 전 파일명을 확인할 수 있습니다.
+            </span>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-box-open"></i></div>
+            <h2>물건 정보</h2>
+        </div>
+
+        <div class="form-group">
+            <label>제목 <span class="optional">선택</span></label>
+            <input type="text" name="title" class="input" placeholder="예: 검정 지갑 보관 중">
+        </div>
+
+        <div class="form-group">
+            <label>물건명 <span class="required">*</span></label>
+            <input type="text" name="itemName" class="input" placeholder="예: 지갑, 에어팟, 학생증" required>
+        </div>
+
+        <div class="form-group">
+            <label>카테고리 <span class="required">*</span></label>
+            <div class="empty-select-alert" th:if="${categories == null or #lists.isEmpty(categories)}">
+                카테고리 데이터가 없습니다. `seed_common_data.sql`을 먼저 실행해 주세요.
+            </div>
+            <div class="category-list" th:if="${categories != null and !#lists.isEmpty(categories)}">
+                <label th:each="category : ${categories}">
+                    <input type="radio" name="categoryId" th:value="${category.categoryId}" required>
+                    <span th:text="${category.categoryName}">카테고리</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="form-group">
+                <label>색상 <span class="optional">선택</span></label>
+                <input type="text" name="color" class="input" placeholder="예: 검정">
+            </div>
+
+            <div class="form-group">
+                <label>브랜드 <span class="optional">선택</span></label>
+                <input type="text" name="brand" class="input" placeholder="예: Apple">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>물건 사진 <span class="required">*</span></label>
+            <label class="upload-box">
+                <input type="file" name="images" id="foundImages" multiple hidden required accept="image/*">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <strong>사진을 클릭해서 업로드</strong>
+                <span>JPG, PNG 최대 10MB</span>
+            </label>
+
+            <div class="upload-preview" id="foundImagePreview">
+                <div class="upload-preview-title" id="foundImageCount">선택된 사진 0장</div>
+                <div class="upload-file-list" id="foundImageList"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>간단 설명 <span class="optional">선택</span></label>
+            <textarea name="description" class="textarea" placeholder="예: 중앙도서관 1층에서 지갑을 습득했습니다."></textarea>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h2>습득 위치</h2>
+        </div>
+
+        <div class="form-group">
+            <label>습득 위치 <span class="required">*</span></label>
+            <select name="foundLocationId" class="select" required>
+                <option value="">위치를 선택하세요</option>
+                <option th:each="location : ${locations}" th:value="${location.locationId}"
+                        th:text="${location.buildingName != null ? location.buildingName + ' - ' + location.locationName : location.locationName}">
+                    위치
+                </option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>상세 위치 <span class="optional">선택</span></label>
+                <input type="text" name="foundLocationDetail" class="input" placeholder="예: 1층 로비">
+            </div>
+
+            <div class="form-group">
+                <label>습득 날짜 <span class="required">*</span></label>
+                <input type="date" name="foundDate" class="input" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>습득 시간 <span class="optional">선택</span></label>
+                <input type="time" name="foundTime" class="input">
+            </div>
+
+            <div class="form-group">
+                <label>습득 시간대 <span class="optional">선택</span></label>
+                <input type="text" name="foundTimeRange" class="input" placeholder="예: 오후 2시~3시 사이">
+            </div>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <h2>보관 정보</h2>
+        </div>
+
+        <div class="form-group">
+            <label>보관 또는 인계 상태 <span class="required">*</span></label>
+            <div class="handover-status">
+                <label>
+                    <input type="radio" name="handoverStatus" value="PLANNED" required>
+                    <div class="handover-card">
+                        <i class="fa-solid fa-clock"></i>
+                        <div>
+                            <strong>인계 예정</strong>
+                            <span>등록 후 보관처에 인계할 예정입니다.</span>
+                        </div>
+                    </div>
+                </label>
+
+                <label>
+                    <input type="radio" name="handoverStatus" value="COMPLETED">
+                    <div class="handover-card">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div>
+                            <strong>이미 인계</strong>
+                            <span>이미 지정 보관처에 맡겼습니다.</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>보관 장소 <span class="required">*</span></label>
+            <select name="storageId" class="select" required>
+                <option value="">보관 장소를 선택하세요</option>
+                <option th:each="storage : ${storagePlaces}" th:value="${storage.storageId}"
+                        th:text="${storage.storageName}">
+                    보관소
+                </option>
+            </select>
+        </div>
+
+        <div class="button-area">
+            <a th:href="@{/found/list}" class="cancel-btn">취소</a>
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-check"></i>
+                습득물 등록하기
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function bindImagePreview(inputId, previewId, countId, listId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        const count = document.getElementById(countId);
+        const list = document.getElementById(listId);
+        input.addEventListener("change", function () {
+            list.innerHTML = "";
+            const files = Array.from(input.files || []);
+            count.textContent = "선택된 사진 " + files.length + "장";
+            preview.classList.toggle("active", files.length > 0);
+            files.forEach(function (file) {
+                const item = document.createElement("div");
+                item.className = "upload-file-item";
+                item.innerHTML = '<i class="fa-solid fa-image"></i><span>' + file.name + '</span>';
+                list.appendChild(item);
+            });
+        });
+    }
+
+    bindImagePreview("foundImages", "foundImagePreview", "foundImageCount", "foundImageList");
+</script>
+
+</body>
+</html>

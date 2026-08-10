@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.INotificationDao">
+
+    <insert id="insertNotification" parameterType="com.example.find_campus.dto.NotificationDto">
+        <selectKey keyProperty="notificationId" resultType="long" order="BEFORE">
+            SELECT SEQ_NOTIFICATIONS.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO NOTIFICATIONS (
+            NOTIFICATION_ID,
+            USER_ID,
+            TITLE,
+            MESSAGE,
+            NOTIFICATION_TYPE,
+            TARGET_TYPE,
+            TARGET_ID,
+            READ_YN,
+            CREATED_AT
+        ) VALUES (
+            #{notificationId},
+            #{userId},
+            #{title},
+            #{message},
+            #{notificationType},
+            #{targetType},
+            #{targetId},
+            #{readYn},
+            SYSDATE
+        )
+    </insert>
+
+    <select id="findNotificationsByUserId" parameterType="long" resultType="com.example.find_campus.dto.NotificationDto">
+        SELECT *
+        FROM (
+            SELECT
+                NOTIFICATION_ID,
+                USER_ID,
+                TITLE,
+                MESSAGE,
+                NOTIFICATION_TYPE,
+                TARGET_TYPE,
+                TARGET_ID,
+                READ_YN,
+                CREATED_AT
+            FROM NOTIFICATIONS
+            WHERE USER_ID = #{userId}
+            ORDER BY CREATED_AT DESC
+        )
+        WHERE ROWNUM &lt;= 100
+    </select>
+
+    <select id="countUnreadNotifications" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM NOTIFICATIONS
+        WHERE USER_ID = #{userId}
+          AND READ_YN = 'N'
+    </select>
+
+    <update id="markNotificationRead">
+        UPDATE NOTIFICATIONS
+        SET READ_YN = 'Y'
+        WHERE NOTIFICATION_ID = #{notificationId}
+          AND USER_ID = #{userId}
+    </update>
+
+    <update id="markAllNotificationsRead" parameterType="long">
+        UPDATE NOTIFICATIONS
+        SET READ_YN = 'Y'
+        WHERE USER_ID = #{userId}
+          AND READ_YN = 'N'
+    </update>
+
+</mapper>

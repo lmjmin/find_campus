@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>신고하기 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/report.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="report-container">
+
+    <a href="javascript:history.back()" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        이전 페이지로 돌아가기
+    </a>
+
+    <section class="report-head">
+
+        <div class="report-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <div>
+            <h1>신고하기</h1>
+            <p>
+                부적절한 게시글이나 허위 정보가 있다면 신고할 수 있습니다.
+            </p>
+        </div>
+
+    </section>
+
+    <form th:action="@{/report/write}" method="post" class="report-card">
+
+        <section class="target-box">
+
+            <div class="target-label">
+                신고 대상
+            </div>
+
+            <div class="target-info">
+                <div class="target-thumb">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+
+                <div class="target-text">
+                    <strong>게시글 제목이 들어가는 영역</strong>
+                    <span>분실물 또는 습득물 상세 페이지에서 넘어온 게시글 정보 표시 예정</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="form-section">
+
+            <h2>신고 이유 선택</h2>
+
+            <p class="section-desc">
+                해당되는 신고 사유를 선택해주세요.
+            </p>
+
+            <div class="reason-grid">
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="FALSE_INFO">
+                    <span>
+                        <i class="fa-solid fa-circle-question"></i>
+                        허위 게시글
+                    </span>
+                </label>
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="PRIVATE_INFO">
+                    <span>
+                        <i class="fa-solid fa-shield-halved"></i>
+                        개인정보 노출
+                    </span>
+                </label>
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="DUPLICATE">
+                    <span>
+                        <i class="fa-solid fa-copy"></i>
+                        중복 게시글
+                    </span>
+                </label>
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="BAD_CONTENT">
+                    <span>
+                        <i class="fa-solid fa-ban"></i>
+                        부적절한 내용
+                    </span>
+                </label>
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="SPAM">
+                    <span>
+                        <i class="fa-solid fa-bullhorn"></i>
+                        광고/스팸
+                    </span>
+                </label>
+
+                <label class="reason-card">
+                    <input type="radio" name="reasonType" value="ETC">
+                    <span>
+                        <i class="fa-solid fa-ellipsis"></i>
+                        기타
+                    </span>
+                </label>
+
+            </div>
+
+        </section>
+
+        <section class="form-section">
+
+            <h2>상세 신고 내용</h2>
+
+            <p class="section-desc">
+                신고 사유를 간단히 작성해주세요.
+            </p>
+
+            <textarea name="reasonDetail"
+                      class="report-textarea"
+                      placeholder="예: 실제 분실물과 관련 없는 허위 게시글 같습니다. / 학생증 번호가 그대로 노출되어 있습니다."></textarea>
+
+            <p class="help-text">
+                신고 내용은 관리자만 확인할 수 있습니다.
+            </p>
+
+        </section>
+
+        <section class="notice-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                허위 신고 또는 반복적인 신고 남용은 서비스 이용 제한 사유가 될 수 있습니다.
+            </div>
+        </section>
+
+        <div class="button-area">
+
+            <button type="button" class="cancel-btn" onclick="history.back()">
+                취소
+            </button>
+
+            <button type="submit" class="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                신고 제출
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

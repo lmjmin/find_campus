@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>지도 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/map.css}">
+</head>
+
+<body>
+
+<header>
+    <div class="header-inner">
+        <a th:href="@{/}" class="logo">
+            <span class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            FindCampus
+        </a>
+
+        <nav class="nav">
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/map}" class="active">지도</a>
+        </nav>
+
+        <div class="user-menu">
+            <a th:href="@{/notification}" class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </a>
+            <a th:href="@{/mypage}" class="icon-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="map-page">
+    <aside class="map-sidebar">
+        <div class="map-search-area">
+            <form class="map-search-box" onsubmit="return false;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="mapSearchInput" placeholder="건물명, 장소, 물건명 검색">
+            </form>
+
+            <div class="filter-tags">
+                <button type="button" class="filter-tag tag-all active" data-filter="all">전체</button>
+                <button type="button" class="filter-tag tag-lost" data-filter="lost">분실물</button>
+                <button type="button" class="filter-tag tag-found" data-filter="found">습득물</button>
+                <button type="button" class="filter-tag tag-received" data-filter="received">접수중</button>
+                <button type="button" class="filter-tag tag-storage" data-filter="storage">보관중</button>
+                <button type="button" class="filter-tag tag-returned" data-filter="returned">반환완료</button>
+            </div>
+        </div>
+
+        <div class="nearby-header">
+            <h2>지도 주변 물건</h2>
+            <span id="resultCount">0건</span>
+        </div>
+
+        <div class="nearby-list" id="nearbyList">
+            <div class="map-list-empty">등록된 물건을 불러오는 중입니다.</div>
+        </div>
+    </aside>
+
+    <main class="map-area">
+        <div id="kakaoMap"></div>
+
+        <div class="mock-map" id="mockMap">
+            <div class="map-list-empty map-fallback">
+                지도를 불러오지 못했습니다. Kakao JavaScript 키와 네트워크 상태를 확인해 주세요.
+            </div>
+        </div>
+
+        <div class="map-popup hidden" id="mapPopup">
+            <div class="popup-image" id="popupIcon">
+                <span class="status-badge status-received" id="popupStatus">접수중</span>
+                <i class="fa-solid fa-box"></i>
+            </div>
+
+            <div class="popup-top">
+                <button type="button" class="popup-close" id="popupCloseBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <span class="popup-type lost" id="popupType">분실물</span>
+
+                <div class="popup-title" id="popupTitle">물건명</div>
+                <div class="popup-location" id="popupLocation">위치 정보</div>
+                <div class="popup-desc" id="popupDesc">상세 정보</div>
+            </div>
+
+            <div class="popup-buttons">
+                <button type="button" class="popup-btn detail" id="popupDetailBtn">
+                    <i class="fa-solid fa-circle-info"></i>
+                    상세보기
+                </button>
+            </div>
+        </div>
+
+        <div class="map-toolbar">
+            <button type="button" class="tool-btn" id="zoomInBtn">+</button>
+            <button type="button" class="tool-btn" id="zoomOutBtn">-</button>
+            <button type="button" class="tool-btn" id="currentLocationBtn">
+                <i class="fa-solid fa-location-crosshairs"></i>
+            </button>
+        </div>
+
+        <div class="map-legend">
+            <h3>지도 범례</h3>
+
+            <div class="legend-list">
+                <div class="legend-item">
+                    <span class="legend-dot red"></span>
+                    분실물 위치
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot blue"></span>
+                    습득물 위치
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot yellow"></span>
+                    보관중 위치
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot green"></span>
+                    반환완료 위치
+                </div>
+            </div>
+        </div>
+
+        <div class="api-guide" id="apiGuide">
+            <strong>DB 지도 연동</strong>
+            `/api/map/items`에서 분실물과 습득물 위치를 조회해 지도 마커로 표시합니다.
+        </div>
+    </main>
+</div>
+
+<script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nearbyList = document.getElementById("nearbyList");
+        const searchInput = document.getElementById("mapSearchInput");
+        const resultCount = document.getElementById("resultCount");
+        const filterButtons = document.querySelectorAll(".filter-tag");
+
+        const popup = document.getElementById("mapPopup");
+        const popupCloseBtn = document.getElementById("popupCloseBtn");
+        const popupStatus = document.getElementById("popupStatus");
+        const popupType = document.getElementById("popupType");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupLocation = document.getElementById("popupLocation");
+        const popupDesc = document.getElementById("popupDesc");
+        const popupIcon = document.getElementById("popupIcon");
+        const popupDetailBtn = document.getElementById("popupDetailBtn");
+
+        const zoomInBtn = document.getElementById("zoomInBtn");
+        const zoomOutBtn = document.getElementById("zoomOutBtn");
+        const currentLocationBtn = document.getElementById("currentLocationBtn");
+        const kakaoMapArea = document.getElementById("kakaoMap");
+        const mockMap = document.getElementById("mockMap");
+        const apiGuide = document.getElementById("apiGuide");
+
+        let selectedFilter = "all";
+        let currentKeyword = "";
+        let currentDetailUrl = "/";
+        let kakaoMap = null;
+        let currentLocationOverlay = null;
+        let overlays = [];
+        let items = [];
+
+        function escapeHtml(value) {
+            if (value === null || value === undefined) {
+                return "";
+            }
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function getTypeText(type) {
+            return type === "lost" ? "분실물" : "습득물";
+        }
+
+        function getStatusKey(item) {
+            if (item.statusName === "반환완료" || item.status === "RETURNED" || item.status === "COMPLETED") {
+                return "returned";
+            }
+            if (item.itemType === "found") {
+                return "storage";
+            }
+            return "received";
+        }
+
+        function getStatusText(item) {
+            return item.statusName || (getStatusKey(item) === "storage" ? "보관중" : "접수중");
+        }
+
+        function getIconByItemName(itemName) {
+            const name = itemName || "";
+            if (name.includes("가방")) return "fa-briefcase";
+            if (name.includes("이어폰") || name.includes("에어팟")) return "fa-headphones";
+            if (name.includes("열쇠") || name.includes("키")) return "fa-key";
+            if (name.includes("학생증") || name.includes("카드")) return "fa-id-card";
+            if (name.includes("우산")) return "fa-umbrella";
+            if (name.includes("지갑")) return "fa-wallet";
+            return "fa-box";
+        }
+
+        function getMarkerClass(item) {
+            const statusKey = getStatusKey(item);
+            if (statusKey === "storage") return "fc-marker-storage";
+            if (statusKey === "returned") return "fc-marker-returned";
+            return item.itemType === "lost" ? "fc-marker-lost" : "fc-marker-found";
+        }
+
+        function formatLocation(item) {
+            const locationName = item.locationName || "위치 미등록";
+            const locationDetail = item.locationDetail ? " · " + item.locationDetail : "";
+            return locationName + locationDetail;
+        }
+
+        function createCard(item, index) {
+            const statusKey = getStatusKey(item);
+            const typeText = getTypeText(item.itemType);
+            const statusText = getStatusText(item);
+            const iconClass = getIconByItemName(item.itemName || item.title);
+            const locationText = formatLocation(item);
+
+            const card = document.createElement("div");
+            card.className = "nearby-card";
+            card.dataset.index = String(index);
+            card.innerHTML =
+                '<div class="nearby-image">' +
+                    '<span class="status-badge status-' + statusKey + '">' + escapeHtml(statusText) + '</span>' +
+                    '<i class="fa-solid ' + iconClass + '"></i>' +
+                '</div>' +
+                '<div class="nearby-body">' +
+                    '<span class="nearby-type ' + escapeHtml(item.itemType) + '">' + escapeHtml(typeText) + '</span>' +
+                    '<div class="nearby-title">' + escapeHtml(item.title || item.itemName) + '</div>' +
+                    '<div class="nearby-meta">' +
+                        '<span><i class="fa-solid fa-location-dot"></i> ' + escapeHtml(locationText) + '</span>' +
+                        '<span><i class="fa-regular fa-eye"></i> 조회수 ' + escapeHtml(item.viewCount || 0) + '</span>' +
+                    '</div>' +
+                '</div>';
+            card.addEventListener("click", function () {
+                openPopup(item);
+                setActiveCard(card);
+            });
+            return card;
+        }
+
+        function setActiveCard(card) {
+            nearbyList.querySelectorAll(".nearby-card").forEach(function (item) {
+                item.classList.remove("active");
+            });
+            card.classList.add("active");
+        }
+
+        function renderList() {
+            nearbyList.innerHTML = "";
+            resultCount.textContent = items.length + "건";
+
+            if (items.length === 0) {
+                nearbyList.innerHTML = '<div class="map-list-empty">조회된 물건이 없습니다.</div>';
+                popup.classList.add("hidden");
+                return;
+            }
+
+            items.forEach(function (item, index) {
+                nearbyList.appendChild(createCard(item, index));
+            });
+        }
+
+        function createOverlayContent(item) {
+            const markerClass = getMarkerClass(item);
+            const typeText = getTypeText(item.itemType);
+            const statusText = getStatusText(item);
+            const iconClass = getIconByItemName(item.itemName || item.title);
+
+            return (
+                '<div class="fc-item-marker ' + markerClass + '">' +
+                    '<div class="fc-item-label">' +
+                        '<span>' + escapeHtml(typeText + " · " + statusText) + '</span>' +
+                        '<strong>' + escapeHtml(item.title || item.itemName) + '</strong>' +
+                        '<em>' + escapeHtml(item.locationName || "위치 미등록") + '</em>' +
+                    '</div>' +
+                    '<div class="fc-item-pin">' +
+                        '<i class="fa-solid ' + iconClass + '"></i>' +
+                    '</div>' +
+                '</div>'
+            );
+        }
+
+        function clearOverlays() {
+            overlays.forEach(function (overlay) {
+                overlay.setMap(null);
+            });
+            overlays = [];
+        }
+
+        function renderMarkers() {
+            if (!kakaoMap) return;
+            clearOverlays();
+
+            const bounds = new kakao.maps.LatLngBounds();
+            let hasPosition = false;
+
+            items.forEach(function (item, index) {
+                if (item.latitude === null || item.longitude === null || item.latitude === undefined || item.longitude === undefined) {
+                    return;
+                }
+
+                const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                const overlay = new kakao.maps.CustomOverlay({
+                    position: position,
+                    content: createOverlayContent(item),
+                    xAnchor: 0.5,
+                    yAnchor: 1,
+                    zIndex: 50
+                });
+
+                overlay.setMap(kakaoMap);
+                overlays.push(overlay);
+                bounds.extend(position);
+                hasPosition = true;
+
+                setTimeout(function () {
+                    const markerElements = document.querySelectorAll(".fc-item-marker");
+                    const markerElement = markerElements[index];
+                    if (markerElement) {
+                        markerElement.style.pointerEvents = "auto";
+                        markerElement.addEventListener("click", function () {
+                            openPopup(item);
+                            const card = nearbyList.querySelector('[data-index="' + index + '"]');
+                            if (card) setActiveCard(card);
+                        });
+                    }
+                }, 0);
+            });
+
+            if (hasPosition) {
+                kakaoMap.setBounds(bounds);
+            }
+        }
+
+        function openPopup(item) {
+            const statusKey = getStatusKey(item);
+            const statusText = getStatusText(item);
+            const iconClass = getIconByItemName(item.itemName || item.title);
+
+            currentDetailUrl = item.detailUrl || "/";
+            popup.classList.remove("hidden");
+
+            popupStatus.className = "status-badge status-" + statusKey;
+            popupStatus.textContent = statusText;
+            popupType.className = "popup-type " + item.itemType;
+            popupType.textContent = getTypeText(item.itemType);
+            popupTitle.textContent = item.title || item.itemName || "제목 없음";
+            popupLocation.textContent = formatLocation(item);
+            popupDesc.textContent = item.itemName ? "물건명: " + item.itemName : "상세 정보가 없습니다.";
+            popupIcon.innerHTML =
+                '<span class="status-badge status-' + statusKey + '">' + escapeHtml(statusText) + '</span>' +
+                '<i class="fa-solid ' + iconClass + '"></i>';
+
+            if (kakaoMap && item.latitude !== null && item.longitude !== null && item.latitude !== undefined && item.longitude !== undefined) {
+                kakaoMap.panTo(new kakao.maps.LatLng(item.latitude, item.longitude));
+            }
+        }
+
+        async function loadMapItems() {
+            const params = new URLSearchParams();
+            params.set("filter", selectedFilter);
+            if (currentKeyword) {
+                params.set("keyword", currentKeyword);
+            }
+
+            nearbyList.innerHTML = '<div class="map-list-empty">등록된 물건을 불러오는 중입니다.</div>';
+
+            try {
+                const response = await fetch("/api/map/items?" + params.toString());
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.message || "지도 데이터를 불러오지 못했습니다.");
+                }
+                items = result.data || [];
+                renderList();
+                renderMarkers();
+            } catch (error) {
+                nearbyList.innerHTML = '<div class="map-list-empty">지도 데이터를 불러오지 못했습니다.</div>';
+                resultCount.textContent = "0건";
+                clearOverlays();
+                console.error(error);
+            }
+        }
+
+        function createCurrentLocationOverlayContent() {
+            return (
+                '<div class="fc-current-location-overlay">' +
+                    '<div class="fc-current-pulse"></div>' +
+                    '<div class="fc-current-dot">' +
+                        '<i class="fa-solid fa-location-arrow"></i>' +
+                    '</div>' +
+                    '<div class="fc-current-label">내 위치</div>' +
+                '</div>'
+            );
+        }
+
+        function showCurrentLocation(lat, lng) {
+            if (!kakaoMap) return;
+
+            const currentPosition = new kakao.maps.LatLng(lat, lng);
+            if (currentLocationOverlay) {
+                currentLocationOverlay.setMap(null);
+            }
+
+            currentLocationOverlay = new kakao.maps.CustomOverlay({
+                position: currentPosition,
+                content: createCurrentLocationOverlayContent(),
+                xAnchor: 0.5,
+                yAnchor: 0.5,
+                zIndex: 60
+            });
+
+            currentLocationOverlay.setMap(kakaoMap);
+            kakaoMap.panTo(currentPosition);
+        }
+
+        function moveToCurrentLocation(showFailAlert) {
+            if (!navigator.geolocation) {
+                if (showFailAlert) alert("현재 브라우저에서 위치 기능을 지원하지 않습니다.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    showCurrentLocation(position.coords.latitude, position.coords.longitude);
+                },
+                function () {
+                    if (showFailAlert) alert("현재 위치 권한을 허용해야 사용할 수 있습니다.");
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        function initKakaoMap() {
+            if (typeof kakao === "undefined" || !kakao.maps) {
+                console.error("Kakao 지도 SDK를 불러오지 못했습니다.");
+                return;
+            }
+
+            kakaoMap = new kakao.maps.Map(kakaoMapArea, {
+                center: new kakao.maps.LatLng(35.1225, 129.1020),
+                level: 3
+            });
+
+            mockMap.style.display = "none";
+            apiGuide.style.display = "none";
+        }
+
+        filterButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                filterButtons.forEach(function (btn) {
+                    btn.classList.remove("active");
+                });
+                button.classList.add("active");
+                selectedFilter = button.dataset.filter;
+                loadMapItems();
+            });
+        });
+
+        let searchTimer = null;
+        searchInput.addEventListener("input", function () {
+            window.clearTimeout(searchTimer);
+            searchTimer = window.setTimeout(function () {
+                currentKeyword = searchInput.value.trim();
+                loadMapItems();
+            }, 250);
+        });
+
+        popupCloseBtn.addEventListener("click", function () {
+            popup.classList.add("hidden");
+        });
+
+        popupDetailBtn.addEventListener("click", function () {
+            location.href = currentDetailUrl;
+        });
+
+        zoomInBtn.addEventListener("click", function () {
+            if (kakaoMap) kakaoMap.setLevel(kakaoMap.getLevel() - 1);
+        });
+
+        zoomOutBtn.addEventListener("click", function () {
+            if (kakaoMap) kakaoMap.setLevel(kakaoMap.getLevel() + 1);
+        });
+
+        currentLocationBtn.addEventListener("click", function () {
+            moveToCurrentLocation(true);
+        });
+
+        initKakaoMap();
+        loadMapItems();
+    });
+</script>
+
+</body>
+</html>

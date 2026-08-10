@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.IUserDao">
+
+    <select id="countByLoginId" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE LOGIN_ID = #{loginId}
+    </select>
+
+    <select id="countByEmail" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <insert id="insertUser" parameterType="com.example.find_campus.dto.JoinDto">
+        INSERT INTO USERS (
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT
+        ) VALUES (
+            SEQ_USERS.NEXTVAL,
+            #{loginId},
+            #{password},
+            #{userName},
+            #{studentNo},
+            #{phone},
+            #{email},
+            'USER',
+            'ACTIVE',
+            SYSDATE
+        )
+    </insert>
+
+    <select id="findByLoginId" parameterType="string" resultType="com.example.find_campus.dto.UserDto">
+        SELECT
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT,
+            UPDATED_AT
+        FROM USERS
+        WHERE LOGIN_ID = #{loginId}
+    </select>
+    <select id="findByEmail" parameterType="string" resultType="com.example.find_campus.dto.UserDto">
+        SELECT
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT,
+            UPDATED_AT
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="findById" parameterType="long" resultType="com.example.find_campus.dto.UserDto">
+        SELECT
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT,
+            UPDATED_AT
+        FROM USERS
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <update id="updateUser" parameterType="com.example.find_campus.dto.UserDto">
+        UPDATE USERS
+        SET
+            USER_NAME = #{userName},
+            STUDENT_NO = #{studentNo},
+            PHONE = #{phone},
+            EMAIL = #{email},
+            UPDATED_AT = SYSDATE
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE USERS
+        SET
+            PASSWORD = #{password},
+            UPDATED_AT = SYSDATE
+        WHERE USER_ID = #{userId}
+    </update>
+
+
+    <select id="findAllUsers" resultType="com.example.find_campus.dto.UserDto">
+        SELECT USER_ID, LOGIN_ID, PASSWORD, USER_NAME, STUDENT_NO, PHONE, EMAIL, ROLE, STATUS, CREATED_AT, UPDATED_AT
+        FROM USERS
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (LOGIN_ID LIKE '%' || #{keyword} || '%' OR USER_NAME LIKE '%' || #{keyword} || '%' OR EMAIL LIKE '%' || #{keyword} || '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+        </where>
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (LOGIN_ID LIKE '%' || #{keyword} || '%' OR USER_NAME LIKE '%' || #{keyword} || '%' OR EMAIL LIKE '%' || #{keyword} || '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND STATUS = #{status}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateStatus">
+        UPDATE USERS
+        SET STATUS = #{status}, UPDATED_AT = SYSDATE
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <insert id="savePushToken" parameterType="com.example.find_campus.dto.PushTokenDto">
+        MERGE INTO USER_PUSH_TOKENS T
+        USING (
+            SELECT #{userId} AS USER_ID, #{fcmToken} AS FCM_TOKEN
+            FROM DUAL
+        ) S
+        ON (T.USER_ID = S.USER_ID AND T.FCM_TOKEN = S.FCM_TOKEN)
+        WHEN MATCHED THEN
+            UPDATE SET
+                DEVICE_TYPE = #{deviceType},
+                USE_YN = 'Y',
+                UPDATED_AT = SYSDATE
+        WHEN NOT MATCHED THEN
+            INSERT (TOKEN_ID, USER_ID, FCM_TOKEN, DEVICE_TYPE, USE_YN, CREATED_AT)
+            VALUES (SEQ_USER_PUSH_TOKENS.NEXTVAL, #{userId}, #{fcmToken}, #{deviceType}, 'Y', SYSDATE)
+    </insert>
+
+    <update id="deactivatePushToken">
+        UPDATE USER_PUSH_TOKENS
+        SET
+            USE_YN = 'N',
+            UPDATED_AT = SYSDATE
+        WHERE USER_ID = #{userId}
+          AND FCM_TOKEN = #{fcmToken}
+    </update>
+</mapper>
+

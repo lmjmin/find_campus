@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>보관 장소 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <!-- 상단바 -->
+    <header class="admin-header">
+
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            <span>FindCampus Admin</span>
+        </a>
+
+        <div class="admin-header-right">
+            <span>
+                <i class="fa-regular fa-user"></i>
+                관리자
+            </span>
+
+            <a th:href="@{/admin/login}" class="logout-btn">
+                로그아웃
+            </a>
+        </div>
+
+    </header>
+
+
+    <div class="admin-layout">
+
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+
+            <div class="sidebar-title">
+                메뉴
+            </div>
+
+            <nav class="side-menu">
+
+                <a th:href="@{/admin/dashboard}" class="side-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    대시보드
+                </a>
+
+                <a th:href="@{/admin/users}" class="side-link">
+                    <i class="fa-solid fa-users"></i>
+                    사용자 관리
+                </a>
+
+                <a th:href="@{/admin/lost}" class="side-link">
+                    <i class="fa-solid fa-circle-question"></i>
+                    분실물 관리
+                </a>
+
+                <a th:href="@{/admin/found}" class="side-link">
+                    <i class="fa-solid fa-box-open"></i>
+                    습득물 관리
+                </a>
+
+                <a th:href="@{/admin/storage}" class="side-link active">
+                    <i class="fa-solid fa-warehouse"></i>
+                    보관 장소 관리
+                </a>
+
+                <a th:href="@{/admin/locations}" class="side-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    위치 관리
+                </a>
+
+                <a th:href="@{/admin/categories}" class="side-link">
+                    <i class="fa-solid fa-tags"></i>
+                    카테고리 관리
+                </a>
+
+                <a th:href="@{/admin/reports}" class="side-link">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    신고 관리
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- 본문 -->
+        <main class="admin-content">
+
+            <div class="page-title-wrap">
+                <h1 class="page-title">
+                    보관 장소 관리
+                </h1>
+
+                <p class="page-desc">
+                    습득물을 실제로 보관하는 교내 보관처를 등록하고 관리합니다.
+                </p>
+            </div>
+
+
+            <!-- 요약 카드 -->
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">전체 보관처</div>
+                        <div class="summary-icon total">
+                            <i class="fa-solid fa-warehouse"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">7<span>곳</span></div>
+                    <div class="summary-sub">등록된 전체 보관 장소</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">사용중</div>
+                        <div class="summary-icon active">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">6<span>곳</span></div>
+                    <div class="summary-sub">현재 선택 가능한 보관처</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">보관중 물품</div>
+                        <div class="summary-icon storage">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">18<span>건</span></div>
+                    <div class="summary-sub">전체 보관처 기준 보관중</div>
+                </div>
+
+            </section>
+
+
+            <section class="manage-grid">
+
+                <!-- 보관 장소 등록 -->
+                <div class="form-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            보관 장소 등록
+                        </h2>
+                    </div>
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label for="storageName">보관 장소명</label>
+                            <input
+                                    type="text"
+                                    id="storageName"
+                                    placeholder="예: 학생지원팀">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="buildingName">건물명</label>
+                            <input
+                                    type="text"
+                                    id="buildingName"
+                                    placeholder="예: 학생복지관">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storageLocation">상세 위치</label>
+                            <input
+                                    type="text"
+                                    id="storageLocation"
+                                    placeholder="예: 학생복지관 1층">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storagePhone">연락처</label>
+                            <input
+                                    type="text"
+                                    id="storagePhone"
+                                    placeholder="예: 051-629-0514">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storageStatus">사용 여부</label>
+                            <select id="storageStatus">
+                                <option>사용중</option>
+                                <option>사용안함</option>
+                            </select>
+
+                            <p class="form-help">
+                                사용중인 보관 장소만 습득물 등록 시 선택할 수 있도록 처리할 예정입니다.
+                            </p>
+                        </div>
+
+                        <button type="button" class="submit-btn">
+                            보관 장소 등록
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 보관 장소 목록 -->
+                <div class="table-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            보관 장소 목록
+                        </h2>
+                    </div>
+
+                    <div class="filter-bar">
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="보관 장소명, 건물명으로 검색">
+                        </div>
+
+                        <select class="filter-select">
+                            <option>상태 전체</option>
+                            <option>사용중</option>
+                            <option>사용안함</option>
+                        </select>
+
+                    </div>
+
+                    <table class="storage-table">
+
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>보관 장소</th>
+                            <th>연락처</th>
+                            <th>보관중</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr>
+                            <td>1</td>
+
+                            <td>
+                                <div class="storage-name">학생지원팀</div>
+                                <div class="storage-desc">학생복지관 1층</div>
+                            </td>
+
+                            <td>051-629-0514</td>
+
+                            <td>
+                                <span class="count-badge">8건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>2</td>
+
+                            <td>
+                                <div class="storage-name">대학본관 경비실</div>
+                                <div class="storage-desc">대학본관 1층 입구</div>
+                            </td>
+
+                            <td>051-629-0001</td>
+
+                            <td>
+                                <span class="count-badge">4건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>3</td>
+
+                            <td>
+                                <div class="storage-name">ICT관 행정실</div>
+                                <div class="storage-desc">ICT관 2층</div>
+                            </td>
+
+                            <td>051-629-0002</td>
+
+                            <td>
+                                <span class="count-badge">5건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>4</td>
+
+                            <td>
+                                <div class="storage-name">중앙도서관 안내데스크</div>
+                                <div class="storage-desc">중앙도서관 1층</div>
+                            </td>
+
+                            <td>051-629-0003</td>
+
+                            <td>
+                                <span class="count-badge">1건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge inactive">사용안함</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn restore-btn">
+                                        사용
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

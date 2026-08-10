@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>위치 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <!-- 상단바 -->
+    <header class="admin-header">
+
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </span>
+            <span>FindCampus Admin</span>
+        </a>
+
+        <div class="admin-header-right">
+            <span>
+                <i class="fa-regular fa-user"></i>
+                관리자
+            </span>
+
+            <a th:href="@{/admin/login}" class="logout-btn">
+                로그아웃
+            </a>
+        </div>
+
+    </header>
+
+
+    <div class="admin-layout">
+
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+
+            <div class="sidebar-title">
+                메뉴
+            </div>
+
+            <nav class="side-menu">
+
+                <a th:href="@{/admin/dashboard}" class="side-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    대시보드
+                </a>
+
+                <a th:href="@{/admin/users}" class="side-link">
+                    <i class="fa-solid fa-users"></i>
+                    사용자 관리
+                </a>
+
+                <a th:href="@{/admin/lost}" class="side-link">
+                    <i class="fa-solid fa-circle-question"></i>
+                    분실물 관리
+                </a>
+
+                <a th:href="@{/admin/found}" class="side-link">
+                    <i class="fa-solid fa-box-open"></i>
+                    습득물 관리
+                </a>
+
+                <a th:href="@{/admin/storage}" class="side-link">
+                    <i class="fa-solid fa-warehouse"></i>
+                    보관 장소 관리
+                </a>
+
+                <a th:href="@{/admin/locations}" class="side-link active">
+                    <i class="fa-solid fa-location-dot"></i>
+                    위치 관리
+                </a>
+
+                <a th:href="@{/admin/categories}" class="side-link">
+                    <i class="fa-solid fa-tags"></i>
+                    카테고리 관리
+                </a>
+
+                <a th:href="@{/admin/reports}" class="side-link">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    신고 관리
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- 본문 -->
+        <main class="admin-content">
+
+            <div class="page-title-wrap">
+                <h1 class="page-title">
+                    위치 관리
+                </h1>
+
+                <p class="page-desc">
+                    분실물과 습득물 등록 시 선택할 수 있는 교내 위치 정보를 관리합니다.
+                </p>
+            </div>
+
+
+            <!-- 요약 카드 -->
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">전체 위치</div>
+                        <div class="summary-icon total">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">15<span>곳</span></div>
+                    <div class="summary-sub">등록된 전체 위치</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">사용중</div>
+                        <div class="summary-icon active">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">14<span>곳</span></div>
+                    <div class="summary-sub">게시글 등록 시 선택 가능</div>
+                </div>
+
+
+                <div class="summary-card">
+                    <div class="summary-top">
+                        <div class="summary-label">건물 위치</div>
+                        <div class="summary-icon building">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                    </div>
+
+                    <div class="summary-count">11<span>곳</span></div>
+                    <div class="summary-sub">건물 단위 등록 위치</div>
+                </div>
+
+            </section>
+
+
+            <section class="manage-grid">
+
+                <!-- 위치 등록 -->
+                <div class="form-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            위치 등록
+                        </h2>
+                    </div>
+
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label for="locationName">위치명</label>
+                            <input
+                                    type="text"
+                                    id="locationName"
+                                    placeholder="예: 중앙도서관">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="locationType">위치 유형</label>
+                            <select id="locationType">
+                                <option>건물</option>
+                                <option>야외</option>
+                                <option>기타</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="detailLocation">상세 설명</label>
+                            <input
+                                    type="text"
+                                    id="detailLocation"
+                                    placeholder="예: 중앙도서관 1층 로비">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="locationStatus">사용 여부</label>
+                            <select id="locationStatus">
+                                <option>사용중</option>
+                                <option>사용안함</option>
+                            </select>
+
+                            <p class="form-help">
+                                사용중인 위치만 분실물/습득물 등록 화면에서 선택할 수 있도록 처리할 예정입니다.
+                            </p>
+                        </div>
+
+                        <button type="button" class="submit-btn">
+                            위치 등록
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 위치 목록 -->
+                <div class="table-panel">
+
+                    <div class="panel-head">
+                        <h2 class="panel-title">
+                            위치 목록
+                        </h2>
+                    </div>
+
+                    <div class="filter-bar">
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="위치명, 설명으로 검색">
+                        </div>
+
+                        <select class="filter-select">
+                            <option>유형 전체</option>
+                            <option>건물</option>
+                            <option>야외</option>
+                            <option>기타</option>
+                        </select>
+
+                        <select class="filter-select">
+                            <option>상태 전체</option>
+                            <option>사용중</option>
+                            <option>사용안함</option>
+                        </select>
+
+                    </div>
+
+                    <table class="location-table">
+
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>위치명</th>
+                            <th>유형</th>
+                            <th>등록 게시글</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr>
+                            <td>1</td>
+
+                            <td>
+                                <div class="location-name">중앙도서관</div>
+                                <div class="location-desc">중앙도서관 전체 및 열람실 주변</div>
+                            </td>
+
+                            <td>
+                                <span class="type-badge building">건물</span>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">21건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>2</td>
+
+                            <td>
+                                <div class="location-name">대학본관</div>
+                                <div class="location-desc">대학본관 로비, 강의실, 행정실 주변</div>
+                            </td>
+
+                            <td>
+                                <span class="type-badge building">건물</span>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">18건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>3</td>
+
+                            <td>
+                                <div class="location-name">ICT관</div>
+                                <div class="location-desc">ICT관 강의실, 복도, 행정실 주변</div>
+                            </td>
+
+                            <td>
+                                <span class="type-badge building">건물</span>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">12건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>4</td>
+
+                            <td>
+                                <div class="location-name">운동장</div>
+                                <div class="location-desc">운동장 및 야외 체육시설 주변</div>
+                            </td>
+
+                            <td>
+                                <span class="type-badge outdoor">야외</span>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">5건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge active">사용중</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn stop-btn">
+                                        중지
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>5</td>
+
+                            <td>
+                                <div class="location-name">기타</div>
+                                <div class="location-desc">정확한 위치를 선택하기 어려운 경우</div>
+                            </td>
+
+                            <td>
+                                <span class="type-badge etc">기타</span>
+                            </td>
+
+                            <td>
+                                <span class="count-badge">3건</span>
+                            </td>
+
+                            <td>
+                                <span class="status-badge inactive">사용안함</span>
+                            </td>
+
+                            <td>
+                                <div class="action-group">
+                                    <button type="button" class="action-btn edit-btn">
+                                        수정
+                                    </button>
+
+                                    <button type="button" class="action-btn restore-btn">
+                                        사용
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

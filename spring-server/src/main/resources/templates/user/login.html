@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/user.css}">
+</head>
+
+<body>
+
+<div class="login-container">
+    <div class="left-section">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+            FindCampus
+        </div>
+
+        <h1>
+            동명대학교<br>
+            스마트 분실물 서비스
+        </h1>
+
+        <p>
+            분실물과 습득물을 쉽고 빠르게 연결하는<br>
+            동명대학교 학생 전용 플랫폼입니다.
+        </p>
+    </div>
+
+    <div class="right-section">
+        <div class="form-title">로그인</div>
+        <div class="form-subtitle">학번 또는 학교 이메일로 로그인하세요.</div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>학번 또는 학교 이메일</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text"
+                           id="loginId"
+                           name="loginId"
+                           autocomplete="username"
+                           placeholder="예: 23120030 또는 tongmyong@tu.ac.kr">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>비밀번호</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           autocomplete="current-password"
+                           placeholder="비밀번호를 입력하세요">
+                </div>
+            </div>
+
+            <div class="extra-menu">
+                <a href="#">비밀번호를 잊으셨나요?</a>
+            </div>
+
+            <p id="loginError" class="error-message"></p>
+
+            <button type="submit" class="login-btn">로그인</button>
+        </form>
+
+        <div class="divider">또는</div>
+
+        <button type="button"
+                class="school-login"
+                onclick="document.getElementById('loginId').focus();">
+            <i class="fa-solid fa-building-columns"></i>
+            동명대학교 계정으로 로그인
+        </button>
+
+        <div class="bottom-text">
+            아직 계정이 없으신가요?
+            <a th:href="@{/join}">회원가입</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+
+    function showLoginError(message) {
+        loginError.style.display = "block";
+        loginError.textContent = message;
+    }
+
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const loginId = document.getElementById("loginId").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        loginError.style.display = "none";
+        loginError.textContent = "";
+
+        if (!loginId) {
+            showLoginError("학번 또는 이메일을 입력해 주세요.");
+            return;
+        }
+        if (!password) {
+            showLoginError("비밀번호를 입력해 주세요.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    loginId: loginId,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                showLoginError(result.message || "로그인에 실패했습니다.");
+                return;
+            }
+
+            location.href = "/";
+        } catch (error) {
+            showLoginError("로그인 요청 중 오류가 발생했습니다.");
+        }
+    });
+</script>
+
+</body>
+</html>

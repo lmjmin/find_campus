@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>공지사항 | FindCampus</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/setting/notice.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="notice-page">
+
+    <div class="notice-container">
+
+        <a th:href="@{/mypage/setting}" class="notice-back-link">
+            <i class="fa-solid fa-chevron-left"></i>
+            설정으로 돌아가기
+        </a>
+
+        <section class="notice-hero">
+
+            <div class="notice-hero-text">
+                <span class="notice-label">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Notice
+                </span>
+
+                <h1>공지사항</h1>
+
+                <p>
+                    FindCampus 서비스 공지와 업데이트 내용을 확인하세요.
+                </p>
+            </div>
+
+            <div class="notice-hero-icon">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+
+        </section>
+
+        <section class="notice-summary">
+
+            <div class="summary-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <div class="summary-text">
+                <h2>서비스 운영 안내</h2>
+
+                <p>
+                    분실물 등록, 습득물 등록, AI 유사 추천, 수령 신청, 보관 장소 안내 기능을
+                    안정적으로 이용할 수 있도록 주요 안내사항을 제공합니다.
+                </p>
+            </div>
+
+        </section>
+
+        <section class="notice-list-box">
+
+            <article class="notice-card">
+
+                <div class="notice-top">
+                    <span class="notice-badge notice">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        공지
+                    </span>
+
+                    <span class="notice-date">
+                        2026.05.27
+                    </span>
+                </div>
+
+                <h3 class="notice-title">
+                    FindCampus 정식 오픈 안내
+                </h3>
+
+                <div class="notice-content">
+                    <p>
+                        안녕하세요. FindCampus가 정식 오픈되었습니다.
+                    </p>
+
+                    <p>
+                        이제 동명대학교 캠퍼스 내에서
+                        <strong>분실물 등록, 습득물 등록, 검색, 캠퍼스 지도, AI 유사 추천</strong>
+                        기능을 이용할 수 있습니다.
+                    </p>
+
+                    <p>
+                        습득물 수령은 게시글만 보고 바로 진행되는 것이 아니라,
+                        본인이 등록한 분실물 글 선택, 유사도 확인, 보관 장소 안내 절차를 거쳐 진행됩니다.
+                    </p>
+                </div>
+
+            </article>
+
+            <article class="notice-card">
+
+                <div class="notice-top">
+                    <span class="notice-badge update">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        업데이트
+                    </span>
+
+                    <span class="notice-date">
+                        2026.05.20
+                    </span>
+                </div>
+
+                <h3 class="notice-title">
+                    수령 신청 및 유사도 확인 기능 안내
+                </h3>
+
+                <div class="notice-content">
+                    <p>
+                        습득물 상세 페이지에서
+                        <strong>내 물건 같아요, 수령 신청하기</strong>
+                        버튼을 누르면 내가 등록한 분실물 글을 선택할 수 있습니다.
+                    </p>
+
+                    <p>
+                        선택한 분실물 글과 습득물 글의 물건명, 카테고리, 위치, 시간, 특징을 비교하여
+                        유사도 결과를 확인할 수 있습니다.
+                    </p>
+                </div>
+
+            </article>
+
+            <article class="notice-card">
+
+                <div class="notice-top">
+                    <span class="notice-badge check">
+                        <i class="fa-solid fa-circle-info"></i>
+                        안내
+                    </span>
+
+                    <span class="notice-date">
+                        2026.05.18
+                    </span>
+                </div>
+
+                <h3 class="notice-title">
+                    보관 장소 확인 및 수령 주의사항
+                </h3>
+
+                <div class="notice-content">
+                    <p>
+                        유사도 결과는 참고용이며, 물건 수령이 바로 확정되는 것은 아닙니다.
+                    </p>
+
+                    <p>
+                        보관 장소 안내 페이지에서 학생장학봉사팀 등 보관처 정보를 확인한 뒤,
+                        학생증 또는 본인 확인 수단을 지참해 방문해 주세요.
+                    </p>
+
+                    <p>
+                        실제 수령은 보관처에서 물건의 세부 특징과 본인 확인을 완료한 뒤 진행됩니다.
+                    </p>
+                </div>
+
+            </article>
+
+        </section>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

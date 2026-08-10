@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>유사도 비교 결과 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/match.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+
+    <a th:href="@{/match/select-lost}"
+       href="/match/select-lost"
+       class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        분실물 선택으로 돌아가기
+    </a>
+
+    <div class="page-head">
+
+        <div class="page-badge">
+            <i class="fa-solid fa-chart-simple"></i>
+            수령 신청 2단계
+        </div>
+
+        <h1>유사도 비교 결과</h1>
+
+        <p>
+            선택한 분실물 글과 현재 습득물 글의 정보를 비교한 결과입니다.<br>
+            유사도는 참고용이며, 실제 수령은 보관 장소에서 본인 확인 후 진행됩니다.
+        </p>
+
+    </div>
+
+    <section class="result-hero">
+
+        <div class="score-circle">
+            <div class="score-content">
+                <div class="score-num">86%</div>
+                <div class="score-label">유사도</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="result-title">
+                본인 물건일 가능성이 높습니다
+            </div>
+
+            <div class="result-desc">
+                카테고리, 물건명, 위치, 날짜 조건이 대부분 일치합니다.
+                다만 유사도는 최종 본인 확인이 아니므로, 보관 장소 방문 시 학생증과 물건의 세부 특징 설명이 필요할 수 있습니다.
+            </div>
+
+            <div class="result-status">
+                <i class="fa-solid fa-circle-check"></i>
+                다음 단계에서 보관 장소 확인 가능
+            </div>
+        </div>
+
+    </section>
+
+    <section class="compare-grid">
+
+        <div class="item-card">
+
+            <div class="item-card-head">
+                <div class="item-icon lost-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <div>
+                    <h2>내 분실물 글</h2>
+                    <p>분실자가 등록한 기준 정보</p>
+                </div>
+            </div>
+
+            <div class="info-list">
+
+                <div class="info-row">
+                    <span class="info-label">물건명</span>
+                    <span class="info-value">에어팟 프로</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">카테고리</span>
+                    <span class="info-value">전자기기</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">분실 위치</span>
+                    <span class="info-value">ICT 2관</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">분실 날짜</span>
+                    <span class="info-value">2026.05.20</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">공개 설명</span>
+                    <span class="info-value">흰색 에어팟 프로를 잃어버렸습니다.</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="item-card">
+
+            <div class="item-card-head">
+                <div class="item-icon found-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+
+                <div>
+                    <h2>선택한 습득물 글</h2>
+                    <p>습득자가 등록한 보관 정보</p>
+                </div>
+            </div>
+
+            <div class="info-list">
+
+                <div class="info-row">
+                    <span class="info-label">물건명</span>
+                    <span class="info-value">에어팟</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">카테고리</span>
+                    <span class="info-value">전자기기</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">습득 위치</span>
+                    <span class="info-value">ICT 2관 강의실</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">습득 날짜</span>
+                    <span class="info-value">2026.05.20</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">보관 상태</span>
+                    <span class="info-value">학생장학봉사팀 인계 완료</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="match-section">
+
+        <div class="section-title">
+            <div class="section-title-icon">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+
+            <h2>비교 항목</h2>
+        </div>
+
+        <div class="match-list">
+
+            <div class="match-item">
+                <div class="match-check good">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>카테고리 일치</strong>
+                    <span>분실물과 습득물 모두 전자기기 카테고리입니다.</span>
+                </div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-check good">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>물건명 유사</strong>
+                    <span>에어팟 프로와 에어팟은 같은 제품군으로 판단됩니다.</span>
+                </div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-check good">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>위치 유사</strong>
+                    <span>분실 위치와 습득 위치가 모두 ICT 2관 주변입니다.</span>
+                </div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-check good">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>날짜 조건 일치</strong>
+                    <span>습득 날짜가 분실 날짜와 같거나 이후입니다.</span>
+                </div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-check normal">
+                    <i class="fa-solid fa-minus"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>세부 특징은 현장 확인 필요</strong>
+                    <span>이니셜, 흠집, 기기명 등은 보관 장소에서 실제 물건과 대조해야 합니다.</span>
+                </div>
+            </div>
+
+            <div class="match-item">
+                <div class="match-check normal">
+                    <i class="fa-solid fa-minus"></i>
+                </div>
+
+                <div class="match-text">
+                    <strong>유사도는 참고용</strong>
+                    <span>자동 비교 결과만으로 수령이 확정되지는 않습니다.</span>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <div class="warning-box">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <div>
+            <strong>유사도는 본인 확인 완료가 아닙니다.</strong>
+            유사도는 분실물과 습득물의 정보가 얼마나 비슷한지 보여주는 참고 결과입니다.
+            실제 수령은 보관 장소에서 학생증 확인과 물건의 세부 특징 확인 후 진행됩니다.
+        </div>
+    </div>
+
+    <div class="action-area">
+
+        <a th:href="@{/match/select-lost}"
+           href="/match/select-lost"
+           class="prev-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            다시 선택
+        </a>
+
+        <a th:href="@{/match/storage-guide}"
+           href="/match/storage-guide"
+           class="next-btn">
+            보관 장소 확인하기
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
