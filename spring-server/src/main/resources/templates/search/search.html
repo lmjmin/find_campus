@@ -159,15 +159,21 @@
                 </p>
             </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
             <div class="search-count-box">
-                <strong id="resultCount">16</strong>
+                <strong id="resultCount" th:text="${lostCount + foundCount}">16</strong>
                 <span>전체 결과</span>
+<<<<<<< HEAD
 =======
             <div class="hero-count">
                 <strong id="resultCount" th:text="${lostCount}">2</strong>
                 <span>검색 결과</span>
 >>>>>>> main:spring-server/src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
             </div>
 
         </section>
@@ -177,9 +183,9 @@
             <div class="result-control-bar">
 
                 <div class="result-tabs">
-                    <button type="button" class="active" data-filter="all">전체 <span>16</span></button>
-                    <button type="button" data-filter="lost">분실물 <span>8</span></button>
-                    <button type="button" data-filter="found">습득물 <span>8</span></button>
+                    <button type="button" class="active" data-filter="all">전체 <span th:text="${lostCount + foundCount}">16</span></button>
+                    <button type="button" data-filter="lost">분실물 <span th:text="${lostCount}">8</span></button>
+                    <button type="button" data-filter="found">습득물 <span th:text="${foundCount}">8</span></button>
                 </div>
 
                 <select class="result-sort">
@@ -192,6 +198,7 @@
 
             <div class="result-list">
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/search/search.html
                 <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
                     <div class="result-thumb lost">
@@ -203,6 +210,68 @@
             <button type="button" data-filter="found" th:text="|습득물(${foundCount})|">습득물(2)</button>
         </div>
 >>>>>>> main:spring-server/src/main/resources/templates/search/search.html
+=======
+                <a th:each="item : ${lostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="result-card lost-item" data-type="lost">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type lost">분실물</span>
+                            <span class="result-status received" th:text="${item.status}">접수중</span>
+                        </div>
+
+                        <h3 th:text="${item.title}">검정 노트북 가방</h3>
+
+                        <p class="result-desc" th:text="${item.description != null ? item.description : '상세 설명이 등록되지 않았습니다.'}">
+                            맥북 프로 13인치와 충전기가 들어있는 검정색 노트북 가방입니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미등록'}">중앙도서관 2층</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${item.itemDate != null ? item.itemDate : item.createdAt}">오늘 14:30</span></span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:each="item : ${foundItems}" th:href="@{/found/detail/{id}(id=${item.id})}" class="result-card found-item" data-type="found">
+                    <div class="result-thumb found">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+
+                    <div class="result-body">
+                        <div class="result-card-top">
+                            <span class="result-type found">습득물</span>
+                            <span class="result-status storage" th:text="${item.status}">보관중</span>
+                        </div>
+
+                        <h3 th:text="${item.title}">에어팟 프로</h3>
+
+                        <p class="result-desc" th:text="${item.description != null ? item.description : '상세 설명이 등록되지 않았습니다.'}">
+                            ICT 2관 강의실 근처에서 에어팟 프로로 보이는 물건을 습득했습니다.
+                        </p>
+
+                        <div class="result-meta">
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미등록'}">ICT 2관 201호</span></span>
+                            <span><i class="fa-regular fa-clock"></i> <span th:text="${item.itemDate != null ? item.itemDate : item.createdAt}">오늘 09:15</span></span>
+                        </div>
+                    </div>
+
+                    <div class="result-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </a>
+
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
+                    <div class="result-thumb lost">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 
                     <div class="result-body">
                         <div class="result-card-top">
@@ -210,7 +279,10 @@
                             <span class="result-status received">접수중</span>
                         </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                         <h3>검정 노트북 가방</h3>
 
                         <p class="result-desc">
@@ -228,7 +300,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-id-card"></i>
                     </div>
@@ -239,6 +311,7 @@
                             <span class="result-status storage">보관중</span>
                         </div>
 
+<<<<<<< HEAD
 =======
             <a th:each="item : ${lostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="result-item lost-item">
                 <div class="thumb">
@@ -292,6 +365,8 @@
                 <div class="result-info">
                     <div class="result-top">
 >>>>>>> main:spring-server/src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                         <h3>학생증 분실</h3>
 
                         <p class="result-desc">
@@ -309,12 +384,15 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-headphones"></i>
                     </div>
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                     <div class="result-body">
                         <div class="result-card-top">
                             <span class="result-type lost">분실물</span>
@@ -338,7 +416,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-wallet"></i>
                     </div>
@@ -366,7 +444,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-key"></i>
                     </div>
@@ -394,7 +472,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-umbrella"></i>
                     </div>
@@ -422,7 +500,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-solid fa-mug-hot"></i>
                     </div>
@@ -450,7 +528,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost">
+                <a th:href="@{/lost/detail}" class="result-card lost-item" data-type="lost" th:remove="all">
                     <div class="result-thumb lost">
                         <i class="fa-regular fa-credit-card"></i>
                     </div>
@@ -478,7 +556,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-headphones"></i>
                     </div>
@@ -506,7 +584,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-wallet"></i>
                     </div>
@@ -516,12 +594,15 @@
                             <span class="result-type found">습득물</span>
                             <span class="result-status returned">반환완료</span>
                         </div>
+<<<<<<< HEAD
 =======
             <a th:href="@{/found/detail}" class="result-item found-item hidden" th:remove="all">
                 <div class="thumb">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
 >>>>>>> main:spring-server/src/main/resources/templates/search/search.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 
                         <h3>지갑 발견</h3>
 
@@ -540,7 +621,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-id-card"></i>
                     </div>
@@ -568,7 +649,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-umbrella"></i>
                     </div>
@@ -596,7 +677,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-key"></i>
                     </div>
@@ -624,7 +705,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-memory"></i>
                     </div>
@@ -652,7 +733,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-glasses"></i>
                     </div>
@@ -680,7 +761,7 @@
                     </div>
                 </a>
 
-                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found">
+                <a th:href="@{/found/detail}" class="result-card found-item" data-type="found" th:remove="all">
                     <div class="result-thumb found">
                         <i class="fa-solid fa-computer-mouse"></i>
                     </div>

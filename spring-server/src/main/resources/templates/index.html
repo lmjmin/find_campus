@@ -101,29 +101,41 @@
     <section class="stats">
         <div class="stat-card">
             <span>분실물</span>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/index.html
             <strong>1,234건</strong>
 =======
             <strong th:text="${lostCount != null ? lostCount + '건' : '0건'}">0건</strong>
 >>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|${lostCount}건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
 
         <div class="stat-card">
             <span>습득물</span>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/index.html
             <strong>987건</strong>
 =======
             <strong th:text="${foundCount != null ? foundCount + '건' : '0건'}">0건</strong>
 >>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|${foundCount}건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
 
         <div class="stat-card">
             <span>반환 완료</span>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/index.html
             <strong>456건</strong>
 =======
             <strong>0건</strong>
 >>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|0건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
     </section>
 
@@ -214,9 +226,14 @@
 
             <div th:if="${recentLostItems == null or #lists.isEmpty(recentLostItems)}" class="item">
                 <div>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/index.html
                     <h3>검정 노트북 가방</h3>
                     <p>대학본관 · 2026.01.15</p>
+=======
+                    <h3 th:text="${item.title}">검정 노트북 가방</h3>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">대학본관 · 2026.01.15</p>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                 </div>
 
                 <span class="status green">
@@ -249,6 +266,7 @@
                th:href="@{/lost/detail/{id}(id=${item.id})}"
                class="item">
                 <div>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/index.html
                     <h3>학생증</h3>
                     <p>중앙도서관 · 2026.01.15</p>
@@ -258,6 +276,10 @@
                         위치 · 날짜
                     </p>
 >>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+                    <h3 th:text="${item.title}">학생증</h3>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">중앙도서관 · 2026.01.15</p>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                 </div>
                 <span class="status yellow" th:text="${item.status}">접수중</span>
             </a>
@@ -365,5 +387,8 @@
     }
 </script>
 
+<<<<<<< HEAD
 </body>
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 </html>

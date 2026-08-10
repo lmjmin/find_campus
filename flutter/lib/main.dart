@@ -85,12 +85,12 @@ class _MainShellState extends State<MainShell> {
           NavigationDestination(
             icon: Icon(Icons.inventory_2_outlined),
             selectedIcon: Icon(Icons.inventory_2),
-            label: '분실�?,
+            label: '분실�?,
           ),
           NavigationDestination(
             icon: Icon(Icons.backpack_outlined),
             selectedIcon: Icon(Icons.backpack),
-            label: '?�득�?,
+            label: '?�득�?,
           ),
           NavigationDestination(
             icon: Icon(Icons.search),
@@ -100,7 +100,7 @@ class _MainShellState extends State<MainShell> {
           NavigationDestination(
             icon: Icon(Icons.notifications_none),
             selectedIcon: Icon(Icons.notifications),
-            label: '?�림',
+            label: '?�림',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
@@ -135,16 +135,16 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 24),
           SectionHeader(
             title: '빠른 메뉴',
-            trailing: TextButton(onPressed: () {}, child: const Text('?�체')),
+            trailing: TextButton(onPressed: () {}, child: const Text('?�체')),
           ),
           const SizedBox(height: 12),
           const QuickMenuGrid(),
           const SizedBox(height: 28),
-          const SectionHeader(title: '최근 분실�?),
+          const SectionHeader(title: '최근 분실�?),
           const SizedBox(height: 12),
           ...sampleLostItems.take(2).map((item) => ItemCard(item: item)),
           const SizedBox(height: 20),
-          const SectionHeader(title: '최근 ?�득�?),
+          const SectionHeader(title: '최근 ?�득�?),
           const SizedBox(height: 12),
           ...sampleFoundItems.take(2).map((item) => ItemCard(item: item)),
         ],
@@ -185,7 +185,7 @@ class HeroPanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
             ),
             child: const Text(
-              '?�명?�?�교 ?�생 ?�용 ?�비??,
+              '?�명?�?�교 ?�생 ?�용 ?�비??,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13,
@@ -195,7 +195,7 @@ class HeroPanel extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           const Text(
-            '?�어버린 물건??n빠르�?찾아?�릴게요',
+            '?�어버린 물건??n빠르�?찾아?�릴게요',
             style: TextStyle(
               color: Colors.white,
               fontSize: 30,
@@ -205,7 +205,7 @@ class HeroPanel extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           const Text(
-            '분실물과 ?�득물을 ?�록?�고, 캠퍼???�에??빠르�??�인?�세??',
+            '분실물과 ?�득물을 ?�록?�고, 캠퍼???�에??빠르�??�인?�세??',
             style: TextStyle(
               color: Color(0xFFEFF6FF),
               fontSize: 15,
@@ -227,7 +227,7 @@ class HeroPanel extends StatelessWidget {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '분실�??�는 ?�득�?검??,
+                    '분실�??�는 ?�득�?검??,
                     style: TextStyle(
                       color: AppColors.subText,
                       fontWeight: FontWeight.w700,
@@ -251,11 +251,11 @@ class StatRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Row(
       children: [
-        Expanded(child: StatCard(label: '분실�?, value: '24�?)),
+        Expanded(child: StatCard(label: '분실�?, value: '24�?)),
         SizedBox(width: 10),
-        Expanded(child: StatCard(label: '?�득�?, value: '50�?)),
+        Expanded(child: StatCard(label: '?�득�?, value: '50�?)),
         SizedBox(width: 10),
-        Expanded(child: StatCard(label: '반환?�료', value: '12�?)),
+        Expanded(child: StatCard(label: '반환?�료', value: '12�?)),
       ],
     );
   }
@@ -321,17 +321,17 @@ class QuickMenuGrid extends StatelessWidget {
       children: const [
         QuickMenuCard(
           icon: Icons.edit_note,
-          title: '분실�?n?�록',
+          title: '분실�?n?�록',
           color: AppColors.primary,
         ),
         QuickMenuCard(
           icon: Icons.add_location_alt_outlined,
-          title: '?�득�?n?�록',
+          title: '?�득�?n?�록',
           color: AppColors.indigo,
         ),
         QuickMenuCard(
           icon: Icons.auto_awesome,
-          title: '?�사 물건\n추천',
+          title: '?�사 물건\n추천',
           color: Color(0xFF7C3AED),
         ),
       ],
@@ -394,11 +394,11 @@ class LostListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ItemListPage(
-      title: '분실�?,
-      subtitle: '?�어버린 물건??찾아보세??,
-      buttonLabel: '분실�??�록',
+      title: '분실�?,
+      subtitle: '?�어버린 물건??찾아보세??,
+      buttonLabel: '분실�??�록',
       items: sampleLostItems,
-      emptyHint: '?�록??분실물이 ?�어??,
+      emptyHint: '?�록??분실물이 ?�어??,
     );
   }
 }
@@ -409,11 +409,11 @@ class FoundListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ItemListPage(
-      title: '?�득�?,
-      subtitle: '보�? 중인 물건???�인?�세??,
-      buttonLabel: '?�득�??�록',
+      title: '?�득�?,
+      subtitle: '보�? 중인 물건???�인?�세??,
+      buttonLabel: '?�득�??�록',
       items: sampleFoundItems,
-      emptyHint: '?�록???�득물이 ?�어??,
+      emptyHint: '?�록???�득물이 ?�어??,
     );
   }
 }
@@ -451,7 +451,7 @@ class ItemListPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          const SearchField(hint: '물건�? ?�치, ?�짜�?검??),
+          const SearchField(hint: '물건�? ?�치, ?�짜�?검??),
           const SizedBox(height: 16),
           if (items.isEmpty)
             EmptyState(message: emptyHint)
@@ -488,16 +488,16 @@ class _SearchScreenState extends State<SearchScreen> {
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: [
           const PageIntro(
-            title: '?�합 검??,
-            subtitle: '분실물과 ?�득물을 ??번에 찾아보세??,
+            title: '?�합 검??,
+            subtitle: '분실물과 ?�득물을 ??번에 찾아보세??,
           ),
           const SizedBox(height: 16),
-          const SearchField(hint: '?�어?? 지�? ?�생�? ?�산'),
+          const SearchField(hint: '?�어?? 지�? ?�생�? ?�산'),
           const SizedBox(height: 16),
           SegmentedButton<bool>(
             segments: const [
-              ButtonSegment(value: true, label: Text('분실�?)),
-              ButtonSegment(value: false, label: Text('?�득�?)),
+              ButtonSegment(value: true, label: Text('분실�?)),
+              ButtonSegment(value: false, label: Text('?�득�?)),
             ],
             selected: {_showLost},
             onSelectionChanged: (values) {
@@ -518,25 +518,25 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPage(
-      title: '?�림',
+      title: '?�림',
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: const [
           PageIntro(
-            title: '?�림',
-            subtitle: '매칭, ?�고 처리, 반환 ?�내�??�인?�세??,
+            title: '?�림',
+            subtitle: '매칭, ?�고 처리, 반환 ?�내�??�인?�세??,
           ),
           SizedBox(height: 16),
           NoticeCard(
-            title: '?�사 ?�득물이 발견?�어??,
-            body: '검???�트�?가방과 비슷???�득물이 ?�록?�었?�니??',
+            title: '?�사 ?�득물이 발견?�어??,
+            body: '검???�트�?가방과 비슷???�득물이 ?�록?�었?�니??',
             time: '방금 ??,
             unread: true,
           ),
           NoticeCard(
-            title: '분실�??�록 ?�료',
-            body: '?�성??분실물이 ?�상 ?�록?�었?�니??',
-            time: '?�제',
+            title: '분실�??�록 ?�료',
+            body: '?�성??분실물이 ?�상 ?�록?�었?�니??',
+            time: '?�제',
             unread: false,
           ),
         ],
@@ -551,7 +551,7 @@ class MyPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppPage(
-      title: '마이?�이지',
+      title: '마이?�이지',
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
         children: [
@@ -579,7 +579,7 @@ class MyPageScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '?�명?�?�교 ?�생',
+                        '?�명?�?�교 ?�생',
                         style: TextStyle(
                           color: AppColors.subText,
                           fontWeight: FontWeight.w700,
@@ -592,10 +592,10 @@ class MyPageScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 18),
-          const MenuTile(icon: Icons.inventory_2_outlined, label: '??분실�?),
-          const MenuTile(icon: Icons.backpack_outlined, label: '???�득�?),
-          const MenuTile(icon: Icons.notifications_none, label: '?�림 ?�정'),
-          const MenuTile(icon: Icons.settings_outlined, label: '?�경 ?�정'),
+          const MenuTile(icon: Icons.inventory_2_outlined, label: '??분실�?),
+          const MenuTile(icon: Icons.backpack_outlined, label: '???�득�?),
+          const MenuTile(icon: Icons.notifications_none, label: '?�림 ?�정'),
+          const MenuTile(icon: Icons.settings_outlined, label: '?�경 ?�정'),
         ],
       ),
     );
@@ -612,7 +612,7 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('?�세'),
+        title: const Text('?�세'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -662,7 +662,7 @@ class DetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           PrimaryButton(
-            label: item.type == ItemType.lost ? '?�사 ?�득�??�인?�기' : '??물건?�로 ?�령 ?�청',
+            label: item.type == ItemType.lost ? '?�사 ?�득�??�인?�기' : '??물건?�로 ?�령 ?�청',
             icon: item.type == ItemType.lost ? Icons.search : Icons.handshake,
             onPressed: () {},
           ),
@@ -685,20 +685,20 @@ class WriteScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const InputLabel('물건�?),
-          const AppTextField(hint: '?? ?�어?? 지�? ?�생�?),
+          const InputLabel('물건�?),
+          const AppTextField(hint: '?? ?�어?? 지�? ?�생�?),
           const SizedBox(height: 14),
-          const InputLabel('?�치'),
-          const AppTextField(hint: '?? 중앙?�서관 1�?),
+          const InputLabel('?�치'),
+          const AppTextField(hint: '?? 중앙?�서관 1�?),
           const SizedBox(height: 14),
-          const InputLabel('?�세 ?�명'),
+          const InputLabel('?�세 ?�명'),
           const AppTextField(
-            hint: '?�상, 브랜?? ?�징???�세???�어주세??,
+            hint: '?�상, 브랜?? ?�징???�세???�어주세??,
             maxLines: 5,
           ),
           const SizedBox(height: 22),
           PrimaryButton(
-            label: '?�록?�기',
+            label: '?�록?�기',
             icon: Icons.check,
             onPressed: () {},
           ),
@@ -902,7 +902,7 @@ class ItemCard extends StatelessWidget {
                         StatusBadge(status: item.status),
                         const SizedBox(width: 8),
                         Text(
-                          item.type == ItemType.lost ? '분실�? : '?�득�?,
+                          item.type == ItemType.lost ? '분실�? : '?�득�?,
                           style: const TextStyle(
                             color: AppColors.subText,
                             fontSize: 12,
@@ -953,8 +953,8 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      '반환?�료' => AppColors.green,
-      '보�?�? => AppColors.yellow,
+      '반환?�료' => AppColors.green,
+      '보�?�? => AppColors.yellow,
       _ => AppColors.primary,
     };
 
@@ -1257,32 +1257,32 @@ class ItemSummary {
 const sampleLostItems = [
   ItemSummary(
     type: ItemType.lost,
-    title: '검???�트�?가�?,
-    description: '맥북 ?�로 13?�치?� 충전기�? ?�어?�는 검?�색 ?�트�?가방입?�다.',
-    location: '중앙?�서관 2�?,
-    date: '?�늘 14:30',
-    category: '가�?,
-    status: '?�수�?,
+    title: '검???�트�?가�?,
+    description: '맥북 ?�로 13?�치?� 충전기�? ?�어?�는 검?�색 ?�트�?가방입?�다.',
+    location: '중앙?�서관 2�?,
+    date: '?�늘 14:30',
+    category: '가�?,
+    status: '?�수�?,
     icon: Icons.business_center,
   ),
   ItemSummary(
     type: ItemType.lost,
-    title: '?�생�?,
-    description: '2024?�도 ?�학 ?�생증입?�다. ICT 1관 근처?�서 분실?�습?�다.',
-    location: 'ICT 1관 3�?,
-    date: '?�늘 11:00',
-    category: '?�분�?,
-    status: '?�수�?,
+    title: '?�생�?,
+    description: '2024?�도 ?�학 ?�생증입?�다. ICT 1관 근처?�서 분실?�습?�다.',
+    location: 'ICT 1관 3�?,
+    date: '?�늘 11:00',
+    category: '?�분�?,
+    status: '?�수�?,
     icon: Icons.badge,
   ),
   ItemSummary(
     type: ItemType.lost,
-    title: '?�어???�로',
-    description: '?�색 ?�어??케?�스 ?�함?�니??',
-    location: '?�명?��??��?',
-    date: '?�제',
-    category: '?�자기기',
-    status: '보�?�?,
+    title: '?�어???�로',
+    description: '?�색 ?�어??케?�스 ?�함?�니??',
+    location: '?�명?��??��?',
+    date: '?�제',
+    category: '?�자기기',
+    status: '보�?�?,
     icon: Icons.headphones,
   ),
 ];
@@ -1290,33 +1290,32 @@ const sampleLostItems = [
 const sampleFoundItems = [
   ItemSummary(
     type: ItemType.found,
-    title: '?�어???�득',
-    description: '?�색 ?�어??케?�스 ?�함, 분실�??�터??보�? 중입?�다.',
-    location: '건축?�자?��? 6�?,
-    date: '?�늘 09:15',
-    category: '?�자기기',
-    status: '보�?�?,
+    title: '?�어???�득',
+    description: '?�색 ?�어??케?�스 ?�함, 분실�??�터??보�? 중입?�다.',
+    location: '건축?�자?��? 6�?,
+    date: '?�늘 09:15',
+    category: '?�자기기',
+    status: '보�?�?,
     icon: Icons.headphones,
   ),
   ItemSummary(
     type: ItemType.found,
-    title: '갈색 지�?발견',
-    description: '갈색 가�?지갑이�??�생증이 ?�함?�어 ?�습?�다.',
-    location: '?�?�본부 ??,
-    date: '?�늘 10:30',
-    category: '지�?,
-    status: '보�?�?,
+    title: '갈색 지�?발견',
+    description: '갈색 가�?지갑이�??�생증이 ?�함?�어 ?�습?�다.',
+    location: '?�?�본부 ??,
+    date: '?�늘 10:30',
+    category: '지�?,
+    status: '보�?�?,
     icon: Icons.account_balance_wallet,
   ),
   ItemSummary(
     type: ItemType.found,
-    title: '?�산 ?�득',
-    description: '검?�색 ?�우?�입?�다.',
-    location: '?�생?��? 1�?,
-    date: '?�제',
-    category: '?�활?�품',
-    status: '반환?�료',
+    title: '?�산 ?�득',
+    description: '검?�색 ?�우?�입?�다.',
+    location: '?�생?��? 1�?,
+    date: '?�제',
+    category: '?�활?�품',
+    status: '반환?�료',
     icon: Icons.umbrella,
   ),
 ];
-

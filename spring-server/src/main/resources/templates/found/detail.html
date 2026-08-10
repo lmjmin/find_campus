@@ -116,6 +116,7 @@
                     </div>
 
                     <div>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/found/detail.html
                         <div class="writer-name">이습득</div>
                         <div class="writer-school">동명대학교 컴퓨터공학과</div>
@@ -123,6 +124,10 @@
                         <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">이습득 (23120030)</div>
                         <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
 >>>>>>> main:spring-server/src/main/resources/templates/found/detail.html
+=======
+                        <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">이습득 (23120030)</div>
+                        <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                     </div>
 
                 </div>
@@ -167,7 +172,10 @@
 
             <div class="button-area">
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/main/resources/templates/found/detail.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                 <div class="primary-actions">
 
                     <a th:href="@{/chat/room}" class="chat-btn">
@@ -175,18 +183,21 @@
                         채팅하기
                     </a>
 
-                    <a th:href="@{/match/select-lost}" class="claim-btn">
+                    <a th:href="@{/match/select-lost/{foundId}(foundId=${foundId})}" class="claim-btn">
                         <i class="fa-solid fa-hand-holding-heart"></i>
                         내 물건 같아요, 수령 신청하기
                     </a>
 
                 </div>
+<<<<<<< HEAD
 =======
                 <a th:href="@{/match/select-lost/{foundId}(foundId=${foundId})}" class="claim-btn">
                     <i class="fa-solid fa-hand-holding-heart"></i>
                     내 물건 같아요, 수령 신청하기
                 </a>
 >>>>>>> main:spring-server/src/main/resources/templates/found/detail.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 
                 <div class="sub-actions">
                     <a th:href="@{/found/list}" class="sub-btn">
