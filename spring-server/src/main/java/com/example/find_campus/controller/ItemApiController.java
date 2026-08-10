@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +54,22 @@ public class ItemApiController {
         return ResponseEntity.ok(new ApiResponseDto<>(true, "분실물이 등록되었습니다.", Map.of("lostId", lostId)));
     }
 
+    @PutMapping("/lost/{lostId}")
+    public ResponseEntity<ApiResponseDto<Void>> updateLost(@PathVariable Long lostId,
+                                                           @RequestBody LostItemDto dto,
+                                                           HttpSession session) {
+        itemService.updateLostItem(lostId, dto, resolveUserId(session, dto.getUserId()));
+        return ResponseEntity.ok(new ApiResponseDto<>(true, "분실물이 수정되었습니다.", null));
+    }
+
+    @DeleteMapping("/lost/{lostId}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteLost(@PathVariable Long lostId,
+                                                           @RequestParam(required = false) Long userId,
+                                                           HttpSession session) {
+        itemService.deleteLostItem(lostId, resolveUserId(session, userId));
+        return ResponseEntity.ok(new ApiResponseDto<>(true, "분실물이 삭제되었습니다.", null));
+    }
+
     @PatchMapping("/lost/{lostId}/status")
     public ResponseEntity<ApiResponseDto<Void>> updateLostStatus(@PathVariable Long lostId,
                                                                  @RequestBody StatusUpdateDto dto) {
@@ -77,6 +95,22 @@ public class ItemApiController {
                                                                          HttpSession session) {
         Long foundId = itemService.createFoundItem(dto, resolveUserId(session, dto.getUserId()));
         return ResponseEntity.ok(new ApiResponseDto<>(true, "습득물이 등록되었습니다.", Map.of("foundId", foundId)));
+    }
+
+    @PutMapping("/found/{foundId}")
+    public ResponseEntity<ApiResponseDto<Void>> updateFound(@PathVariable Long foundId,
+                                                            @RequestBody FoundItemDto dto,
+                                                            HttpSession session) {
+        itemService.updateFoundItem(foundId, dto, resolveUserId(session, dto.getUserId()));
+        return ResponseEntity.ok(new ApiResponseDto<>(true, "습득물이 수정되었습니다.", null));
+    }
+
+    @DeleteMapping("/found/{foundId}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteFound(@PathVariable Long foundId,
+                                                            @RequestParam(required = false) Long userId,
+                                                            HttpSession session) {
+        itemService.deleteFoundItem(foundId, resolveUserId(session, userId));
+        return ResponseEntity.ok(new ApiResponseDto<>(true, "습득물이 삭제되었습니다.", null));
     }
 
     @PatchMapping("/found/{foundId}/status")

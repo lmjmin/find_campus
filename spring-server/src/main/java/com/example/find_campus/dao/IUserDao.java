@@ -20,6 +20,8 @@ public interface IUserDao {
 
     UserDto findByLoginId(String loginId);
 
+    UserDto findByEmail(String email);
+
     UserDto findById(Long userId);
 
     int updateUser(UserDto userDto);

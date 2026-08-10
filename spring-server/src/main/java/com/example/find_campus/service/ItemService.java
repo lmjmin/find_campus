@@ -130,10 +130,38 @@ public class ItemService {
         dto.setStatus("REGISTERED");
 
         if (itemDao.insertLostItem(dto) != 1) {
-            throw new IllegalStateException("분실물을 등록할 수 없습니다.");
+            throw new IllegalStateException("분실물을 등록하지 못했습니다.");
         }
         imageStorageService.store("lost", dto.getLostId(), images).forEach(itemDao::insertItemImage);
         return dto.getLostId();
+    }
+
+    @Transactional
+    public void updateLostItem(Long lostId, LostItemDto dto, Long userId) {
+        updateLostItem(lostId, dto, userId, null);
+    }
+
+    @Transactional
+    public void updateLostItem(Long lostId, LostItemDto dto, Long userId, List<MultipartFile> images) {
+        requireLogin(userId);
+        requireOwner(itemDao.countLostItemByOwner(lostId, userId), "분실물");
+        validateLostItem(dto);
+        dto.setLostId(lostId);
+        dto.setUserId(userId);
+
+        if (itemDao.updateLostItem(dto) != 1) {
+            throw new IllegalStateException("분실물을 수정하지 못했습니다.");
+        }
+        replaceImagesIfUploaded("lost", lostId, images);
+    }
+
+    @Transactional
+    public void deleteLostItem(Long lostId, Long userId) {
+        requireLogin(userId);
+        requireOwner(itemDao.countLostItemByOwner(lostId, userId), "분실물");
+        if (itemDao.deleteLostItem(lostId, userId) != 1) {
+            throw new IllegalStateException("분실물을 삭제하지 못했습니다.");
+        }
     }
 
     @Transactional
@@ -152,10 +180,41 @@ public class ItemService {
         dto.setStatus("REGISTERED");
 
         if (itemDao.insertFoundItem(dto) != 1) {
-            throw new IllegalStateException("습득물을 등록할 수 없습니다.");
+            throw new IllegalStateException("습득물을 등록하지 못했습니다.");
         }
         imageStorageService.store("found", dto.getFoundId(), images).forEach(itemDao::insertItemImage);
         return dto.getFoundId();
+    }
+
+    @Transactional
+    public void updateFoundItem(Long foundId, FoundItemDto dto, Long userId) {
+        updateFoundItem(foundId, dto, userId, null);
+    }
+
+    @Transactional
+    public void updateFoundItem(Long foundId, FoundItemDto dto, Long userId, List<MultipartFile> images) {
+        requireLogin(userId);
+        requireOwner(itemDao.countFoundItemByOwner(foundId, userId), "습득물");
+        validateFoundItem(dto);
+        dto.setFoundId(foundId);
+        dto.setUserId(userId);
+        if (!StringUtils.hasText(dto.getTitle())) {
+            dto.setTitle(dto.getItemName() + " 습득");
+        }
+
+        if (itemDao.updateFoundItem(dto) != 1) {
+            throw new IllegalStateException("습득물을 수정하지 못했습니다.");
+        }
+        replaceImagesIfUploaded("found", foundId, images);
+    }
+
+    @Transactional
+    public void deleteFoundItem(Long foundId, Long userId) {
+        requireLogin(userId);
+        requireOwner(itemDao.countFoundItemByOwner(foundId, userId), "습득물");
+        if (itemDao.deleteFoundItem(foundId, userId) != 1) {
+            throw new IllegalStateException("습득물을 삭제하지 못했습니다.");
+        }
     }
 
     @Transactional
@@ -175,7 +234,7 @@ public class ItemService {
         dto.setStatus("WAITING");
 
         if (itemDao.insertReport(dto) != 1) {
-            throw new IllegalStateException("신고를 등록할 수 없습니다.");
+            throw new IllegalStateException("신고를 등록하지 못했습니다.");
         }
         return dto.getReportId();
     }
@@ -206,13 +265,28 @@ public class ItemService {
         user.setStudentNo(dto.getStudentNo());
 
         if (userDao.updateUser(user) != 1) {
-            throw new IllegalStateException("회원 정보를 수정할 수 없습니다.");
+            throw new IllegalStateException("회원 정보를 수정하지 못했습니다.");
         }
 
         if (StringUtils.hasText(dto.getNewPassword())) {
             userService.changePassword(userId, dto.getCurrentPassword(), dto.getNewPassword(), dto.getNewPasswordConfirm());
         }
         return userDao.findById(userId);
+    }
+
+    private void replaceImagesIfUploaded(String itemType, Long itemId, List<MultipartFile> images) {
+        if (!hasFiles(images)) {
+            return;
+        }
+        itemDao.deleteItemImages(itemType, itemId);
+        imageStorageService.store(itemType, itemId, images).forEach(itemDao::insertItemImage);
+    }
+
+    private boolean hasFiles(List<MultipartFile> images) {
+        if (images == null || images.isEmpty()) {
+            return false;
+        }
+        return images.stream().anyMatch(image -> image != null && !image.isEmpty());
     }
 
     private void normalizeSearch(ItemSearchDto searchDto) {
@@ -224,6 +298,12 @@ public class ItemService {
     private void requireLogin(Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("로그인이 필요합니다.");
+        }
+    }
+
+    private void requireOwner(int count, String itemName) {
+        if (count < 1) {
+            throw new IllegalArgumentException(itemName + " 작성자만 수정하거나 삭제할 수 있습니다.");
         }
     }
 
@@ -258,14 +338,14 @@ public class ItemService {
         if (dto.getCategoryId() == null) {
             throw new IllegalArgumentException("카테고리를 선택해 주세요.");
         }
-        if (dto.getFoundLocationId() == null) {
+        if (dto.getFoundLocationId() == null || !StringUtils.hasText(dto.getFoundLocationDetail())) {
             throw new IllegalArgumentException("습득 위치를 입력해 주세요.");
         }
         if (dto.getFoundDate() == null) {
             throw new IllegalArgumentException("습득 날짜를 입력해 주세요.");
         }
         if (dto.getStorageId() == null) {
-            throw new IllegalArgumentException("보관소를 선택해 주세요.");
+            throw new IllegalArgumentException("보관 장소를 선택해 주세요.");
         }
     }
 }

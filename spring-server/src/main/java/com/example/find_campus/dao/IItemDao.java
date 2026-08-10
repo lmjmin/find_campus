@@ -18,11 +18,25 @@ public interface IItemDao {
 
     int insertLostItem(LostItemDto lostItemDto);
 
+    int updateLostItem(LostItemDto lostItemDto);
+
+    int deleteLostItem(@Param("lostId") Long lostId, @Param("userId") Long userId);
+
+    int countLostItemByOwner(@Param("lostId") Long lostId, @Param("userId") Long userId);
+
     int insertFoundItem(FoundItemDto foundItemDto);
+
+    int updateFoundItem(FoundItemDto foundItemDto);
+
+    int deleteFoundItem(@Param("foundId") Long foundId, @Param("userId") Long userId);
+
+    int countFoundItemByOwner(@Param("foundId") Long foundId, @Param("userId") Long userId);
 
     int insertReport(ReportDto reportDto);
 
     int insertItemImage(ItemImageDto itemImageDto);
+
+    int deleteItemImages(@Param("itemType") String itemType, @Param("itemId") Long itemId);
 
     List<ItemViewDto> findLostItems(ItemSearchDto searchDto);
 

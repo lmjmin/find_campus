@@ -59,6 +59,22 @@
         FROM USERS
         WHERE LOGIN_ID = #{loginId}
     </select>
+    <select id="findByEmail" parameterType="string" resultType="com.example.find_campus.dto.UserDto">
+        SELECT
+            USER_ID,
+            LOGIN_ID,
+            PASSWORD,
+            USER_NAME,
+            STUDENT_NO,
+            PHONE,
+            EMAIL,
+            ROLE,
+            STATUS,
+            CREATED_AT,
+            UPDATED_AT
+        FROM USERS
+        WHERE EMAIL = #{email}
+    </select>
 
     <select id="findById" parameterType="long" resultType="com.example.find_campus.dto.UserDto">
         SELECT
@@ -156,3 +172,4 @@
           AND FCM_TOKEN = #{fcmToken}
     </update>
 </mapper>
+
