@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/user.css}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="left-section">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+
+            FindCampus
+
+        </div>
+
+        <h1>
+            동명대학교<br>
+            스마트 분실물 서비스
+        </h1>
+
+        <p>
+            분실물과 습득물을 쉽고 빠르게 연결하는<br>
+            동명대학교 학생 전용 플랫폼입니다.
+        </p>
+
+    </div>
+
+    <div class="right-section">
+
+        <div class="form-title">
+            로그인
+        </div>
+
+        <div class="form-subtitle">
+            학번 또는 이메일로 로그인하세요.
+        </div>
+
+        <!-- 지금은 화면 이동용. 실제 로그인 DB 검증은 나중에 연결 -->
+        <form th:action="@{/}" method="get">
+
+            <div class="input-group">
+
+                <label>학번 또는 이메일</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <input type="text"
+                           name="loginId"
+                           placeholder="예: 23120030 또는 tongmyong@gmail.com">
+
+                </div>
+
+            </div>
+
+            <div class="input-group">
+
+                <label>비밀번호</label>
+
+                <div class="input-box">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                           name="password"
+                           placeholder="비밀번호를 입력하세요">
+
+                </div>
+
+            </div>
+
+            <div class="extra-menu">
+
+                <a href="#">비밀번호를 잊으셨나요?</a>
+
+            </div>
+
+            <button type="submit" class="login-btn">
+                로그인
+            </button>
+
+        </form>
+
+        <div class="divider">
+            또는
+        </div>
+
+        <button type="button"
+                class="school-login"
+                onclick="location.href='/'">
+
+            <i class="fa-solid fa-building-columns"></i>
+
+            동명대학교 로그인
+
+        </button>
+
+        <div class="bottom-text">
+            아직 계정이 없으신가요?
+            <a th:href="@{/join}">
+                회원가입
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

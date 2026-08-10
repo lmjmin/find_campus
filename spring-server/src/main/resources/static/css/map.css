@@ -9,13 +9,20 @@
     --deep-blue: #1d4ed8;
     --blue-light: #eef2ff;
 
-    --lost-main: #ef4444;
-    --lost-deep: #dc2626;
-    --lost-light: #fff1f2;
+    /* 분실물 색상: lost.css와 통일 */
+    --lost-main: #d94b45;
+    --lost-deep: #c43f3a;
+    --lost-light: #fff6f6;
+    --lost-soft: #fff8f8;
+    --lost-border: #f3d0d0;
+    --lost-text: #8f2421;
 
     --found-main: #2563eb;
     --found-deep: #1d4ed8;
     --found-light: #eef2ff;
+    --found-soft: #e0e7ff;
+    --found-border: #c7d2fe;
+    --found-text: #1e3a8a;
 
     --status-received-bg: #f3e8ff;
     --status-received-text: #7e22ce;
@@ -177,6 +184,13 @@ header {
     margin-top: 16px;
 
     display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.filter-tag-row {
+    display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 8px;
 }
@@ -265,20 +279,41 @@ header {
 .nearby-card.active {
     transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.nearby-card[data-type="lost"]:hover,
+.nearby-card[data-type="lost"].active {
+    border-color: var(--lost-border);
+}
+
+.nearby-card[data-type="found"]:hover,
+.nearby-card[data-type="found"].active {
     border-color: #bfdbfe;
 }
 
 .nearby-image {
     height: 118px;
-    background: #e0e7ff;
     position: relative;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: #4f46e5;
     font-size: 42px;
+}
+
+.nearby-image.lost-image {
+    background: var(--lost-soft);
+    color: var(--lost-main);
+}
+
+.nearby-image.found-image {
+    background: #e0e7ff;
+    color: #4f46e5;
+}
+
+.nearby-image i {
+    color: inherit;
 }
 
 .nearby-body {
@@ -325,7 +360,7 @@ header {
 }
 
 .nearby-type.lost {
-    color: var(--lost-deep);
+    color: var(--lost-main);
 }
 
 .nearby-type.found {
@@ -589,6 +624,51 @@ header {
     left: 81%;
 }
 
+.m6 {
+    top: 46%;
+    left: 58%;
+}
+
+.m7 {
+    top: 45%;
+    left: 79%;
+}
+
+.m8 {
+    top: 33%;
+    left: 47%;
+}
+
+.m9 {
+    top: 68%;
+    left: 84%;
+}
+
+.m10 {
+    top: 58%;
+    left: 48%;
+}
+
+.m11 {
+    top: 79%;
+    left: 42%;
+}
+
+.m12 {
+    top: 51%;
+    left: 22%;
+}
+
+.m13 {
+    top: 29%;
+    left: 79%;
+}
+
+.m14 {
+    top: 36%;
+    left: 34%;
+}
+
 .map-popup {
     position: absolute;
     top: 24px;
@@ -609,15 +689,27 @@ header {
 
 .popup-image {
     height: 140px;
-    background: #e0e7ff;
     position: relative;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: #4f46e5;
     font-size: 42px;
+}
+
+.popup-image.lost-image {
+    background: var(--lost-soft);
+    color: var(--lost-main);
+}
+
+.popup-image.found-image {
+    background: #e0e7ff;
+    color: #4f46e5;
+}
+
+.popup-image i {
+    color: inherit;
 }
 
 .popup-top {
@@ -650,7 +742,7 @@ header {
 }
 
 .popup-type.lost {
-    color: var(--lost-deep);
+    color: var(--lost-main);
 }
 
 .popup-type.found {
@@ -915,8 +1007,8 @@ header {
 .fc-marker-lost .fc-item-pin {
     background: var(--lost-main);
     box-shadow:
-        0 7px 16px rgba(239, 68, 68, 0.28),
-        0 0 0 5px rgba(239, 68, 68, 0.14);
+        0 7px 16px rgba(217, 75, 69, 0.28),
+        0 0 0 5px rgba(217, 75, 69, 0.14);
 }
 
 .fc-marker-found .fc-item-pin {

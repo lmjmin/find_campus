@@ -40,6 +40,26 @@ public class TestController {
         return "user/join";
     }
 
+<<<<<<< HEAD:src/main/java/com/example/find_campus/controller/TestController.java
+    // 상대방 공개 프로필 페이지
+    @GetMapping("/profile/{id}")
+    public String userProfile(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("userId", id);
+        return "user/profile";
+    }
+
+    // 혹시 /profile로 들어왔을 때 기본 프로필로 이동
+    @GetMapping("/profile")
+    public String userProfileDefault(Model model) {
+        model.addAttribute("userId", 1L);
+        return "user/profile";
+    }
+
+    // =========================
+    // LOST
+    // =========================
+=======
+>>>>>>> main:spring-server/src/main/java/com/example/find_campus/controller/TestController.java
     @GetMapping("/lost/list")
     public String lostList(@ModelAttribute ItemSearchDto searchDto, Model model) {
         model.addAttribute("items", itemService.findLostItems(searchDto));
@@ -99,7 +119,8 @@ public class TestController {
     }
 
     @GetMapping("/chat/room")
-    public String chatRoom() {
+    public String chatRoom(Model model) {
+        model.addAttribute("roomId", 1L);
         return "chat/room";
     }
 
@@ -109,6 +130,20 @@ public class TestController {
         return "chat/room";
     }
 
+<<<<<<< HEAD:src/main/java/com/example/find_campus/controller/TestController.java
+    // =========================
+    // REPORT
+    // =========================
+
+    // 신고 기본 주소
+    @GetMapping("/report")
+    public String reportDefault() {
+        return "report/write";
+    }
+
+    // lost/detail.html, found/detail.html에서 신고하기 버튼 누르면 이동
+=======
+>>>>>>> main:spring-server/src/main/java/com/example/find_campus/controller/TestController.java
     @GetMapping("/report/write")
     public String reportWrite(@RequestParam(value = "type", required = false) String type,
                               @RequestParam(value = "id", required = false) Long id,

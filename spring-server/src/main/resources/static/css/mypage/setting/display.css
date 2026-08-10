@@ -1,0 +1,452 @@
+/* ==============================
+   display.css
+   화면 설정 페이지
+   setting.css 공통 상세 레이아웃 기반
+================================= */
+
+/* ==============================
+   Preview
+================================= */
+
+.display-card {
+    width: 100%;
+}
+
+.display-preview {
+    padding: 28px;
+    margin-bottom: 32px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f4f6ff 0%, #ffffff 100%);
+    border: 1px solid #e4e7ff;
+}
+
+.preview-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 14px;
+    margin-bottom: 16px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #5b6cff;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.display-preview h2 {
+    margin: 0 0 10px;
+    font-size: 26px;
+    font-weight: 900;
+    color: #111111;
+}
+
+.display-preview p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #555555;
+}
+
+/* ==============================
+   Section
+================================= */
+
+.display-section {
+    padding: 30px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.display-section:first-of-type {
+    padding-top: 0;
+}
+
+.display-section:last-of-type {
+    border-bottom: none;
+}
+
+.display-section-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.display-section-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    font-size: 18px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.display-section-icon.blue {
+    background: #f1f3ff;
+    color: #5b6cff;
+}
+
+.display-section-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.display-section-icon.purple {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+.display-section-title h2 {
+    margin: 0 0 7px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #111111;
+}
+
+.display-section-title p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #6b7280;
+}
+
+/* ==============================
+   Theme Options
+================================= */
+
+.option-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #f9fafb;
+    border: 1px solid #edf0f5;
+    cursor: pointer;
+}
+
+.option-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.option-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+    background: #f1f3ff;
+    color: #5b6cff;
+    font-size: 18px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-icon.yellow {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.option-icon.purple {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+
+.option-text {
+    min-width: 0;
+}
+
+.option-text strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 900;
+    color: #111111;
+}
+
+.option-text span {
+    display: block;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+.radio {
+    width: 18px;
+    height: 18px;
+    accent-color: #5b6cff;
+    flex-shrink: 0;
+}
+
+/* ==============================
+   Font Size
+================================= */
+
+.font-size-box {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.size-btn {
+    height: 44px;
+    padding: 0 20px;
+    border: 1px solid #dfe3ec;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #555555;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.size-btn.active {
+    background: #5b6cff;
+    border-color: #5b6cff;
+    color: #ffffff;
+}
+
+.size-btn:hover {
+    background: #f4f6ff;
+}
+
+.size-btn.active:hover {
+    background: #4b5cf0;
+}
+
+/* ==============================
+   Switch
+================================= */
+
+.switch-row {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.switch-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #f9fafb;
+    border: 1px solid #edf0f5;
+}
+
+.switch-info {
+    min-width: 0;
+}
+
+.switch-info strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 900;
+    color: #111111;
+}
+
+.switch-info span {
+    display: block;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+.switch {
+    position: relative;
+    width: 54px;
+    height: 30px;
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: #d1d5db;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: 0.2s;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
+}
+
+.switch input:checked + .slider {
+    background: #5b6cff;
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(24px);
+}
+
+/* ==============================
+   Notice
+================================= */
+
+.display-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px 18px;
+    margin-top: 28px;
+    border-radius: 16px;
+    background: #f4f6ff;
+    color: #4b5cf0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.display-notice i {
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+/* ==============================
+   Button Area
+================================= */
+
+.display-button-area {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.display-back-btn,
+.display-save-btn {
+    height: 46px;
+    padding: 0 18px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.display-back-btn {
+    background: #f1f3f7;
+    color: #555555;
+}
+
+.display-save-btn {
+    background: #5b6cff;
+    color: #ffffff;
+}
+
+.display-back-btn:hover {
+    background: #e7eaf1;
+}
+
+.display-save-btn:hover {
+    background: #4b5cf0;
+}
+
+/* ==============================
+   JS Preview Modes
+================================= */
+
+.display-dark-mode .display-preview {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+.display-dark-mode .display-preview h2 {
+    color: #ffffff;
+}
+
+.display-dark-mode .display-preview p {
+    color: #d1d5db;
+}
+
+.display-dark-mode .preview-label {
+    background: #374151;
+    color: #ffffff;
+}
+
+.display-small-mode .display-preview h2 {
+    font-size: 22px;
+}
+
+.display-small-mode .display-preview p {
+    font-size: 13px;
+}
+
+.display-large-mode .display-preview h2 {
+    font-size: 32px;
+}
+
+.display-large-mode .display-preview p,
+.display-large-mode .option-text span,
+.display-large-mode .switch-info span {
+    font-size: 16px;
+}
+
+.reduce-motion * {
+    transition: none !important;
+}
+
+/* ==============================
+   Responsive
+================================= */
+
+@media (max-width: 640px) {
+    .display-preview {
+        padding: 24px 20px;
+    }
+
+    .display-section-head {
+        flex-direction: column;
+    }
+
+    .option-item,
+    .switch-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .display-button-area {
+        flex-direction: column;
+    }
+
+    .display-back-btn,
+    .display-save-btn {
+        width: 100%;
+    }
+}

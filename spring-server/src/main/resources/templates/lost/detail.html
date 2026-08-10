@@ -14,31 +14,7 @@
 
 <body>
 
-<header>
-
-    <div class="header-inner">
-
-        <a th:href="@{/}" class="logo">
-
-            <span class="logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
-
-            FindCampus
-
-        </a>
-
-        <div class="header-actions">
-
-            <a th:href="@{/lost/list}" class="back-link">
-                분실물 목록으로
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
 
@@ -48,7 +24,7 @@
 
             <div class="image-box">
                 <span class="type-badge">분실물</span>
-                <i class="fa-solid fa-briefcase"></i>
+                <i class="fa-solid fa-briefcase main-item-icon"></i>
             </div>
 
             <div class="info-card">
@@ -110,10 +86,18 @@
 
         <div class="right-area">
 
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/lost/detail.html
+            <span class="status status-storage">보관중</span>
+=======
             <span class="status status-storage" th:text="${item.status}">보관중</span>
             <!-- 반환완료 상태로 보여야 하면 위 줄을 아래처럼 바꾸면 됨
             <span class="status status-returned">반환완료</span>
             -->
+>>>>>>> main:spring-server/src/main/resources/templates/lost/detail.html
+=======
+            <span class="status status-storage" th:text="${item.status}">보관중</span>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 
             <h1 class="title" th:text="${item.title}">검정 노트북 가방을 잃어버렸어요</h1>
 

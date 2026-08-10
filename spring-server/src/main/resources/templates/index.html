@@ -14,6 +14,9 @@
 
 <body>
 
+<<<<<<< HEAD:src/main/resources/templates/index.html
+<div th:replace="~{fragments/header :: header}"></div>
+=======
 <header>
     <div class="header-inner">
         <a th:href="@{/}" class="logo">
@@ -58,10 +61,17 @@
         </div>
     </div>
 </header>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
 
 <main>
     <section class="hero">
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+        <div class="hero-content">
+
+=======
         <div>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             <span class="hero-badge">
                 동명대학교 학생 전용 서비스
             </span>
@@ -91,17 +101,41 @@
     <section class="stats">
         <div class="stat-card">
             <span>분실물</span>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/index.html
+            <strong>1,234건</strong>
+=======
             <strong th:text="${lostCount != null ? lostCount + '건' : '0건'}">0건</strong>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|${lostCount}건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
 
         <div class="stat-card">
             <span>습득물</span>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/index.html
+            <strong>987건</strong>
+=======
             <strong th:text="${foundCount != null ? foundCount + '건' : '0건'}">0건</strong>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|${foundCount}건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
 
         <div class="stat-card">
             <span>반환 완료</span>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/index.html
+            <strong>456건</strong>
+=======
             <strong>0건</strong>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+            <strong th:text="|0건|">0건</strong>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
         </div>
     </section>
 
@@ -111,28 +145,64 @@
         </div>
 
         <div class="quick-grid">
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+            <a th:href="@{/chat/rooms}" class="quick-card">
+
+=======
             <a th:href="@{/lost/write}" class="quick-card">
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
                 <div class="quick-icon">
-                    <i class="fa-solid fa-pen-to-square"></i>
+                    <i class="fa-regular fa-comments"></i>
                 </div>
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+                <h3>채팅</h3>
+
+                <p>
+                    문의와 대화를 확인합니다.
+                </p>
+
+=======
                 <h3>분실물 등록</h3>
                 <p>잃어버린 물건을 등록합니다.</p>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             </a>
 
             <a th:href="@{/map}" class="quick-card">
                 <div class="quick-icon">
                     <i class="fa-solid fa-map-location-dot"></i>
                 </div>
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+                <h3>캠퍼스 지도</h3>
+
+                <p>
+                    건물 위치 기반 조회
+                </p>
+
+=======
                 <h3>캠퍼스 지도</h3>
                 <p>건물 위치 기반으로 물건을 조회합니다.</p>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             </a>
 
             <a th:href="@{/recommend}" class="quick-card">
                 <div class="quick-icon">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </div>
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+                <h3>유사 물건 추천</h3>
+
+                <p>
+                    AI 유사 추천
+                </p>
+
+=======
                 <h3>유사 물건 추천</h3>
                 <p>등록된 물건과 비슷한 항목을 확인합니다.</p>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             </a>
         </div>
     </section>
@@ -140,25 +210,76 @@
     <section class="list-wrap">
         <div class="list-box">
             <div class="list-head">
+<<<<<<< HEAD:src/main/resources/templates/index.html
+
+                <h2>최근 분실물</h2>
+
+                <a th:href="@{/lost/list}">
+                    더보기
+                </a>
+
+=======
                 <h2>최근 분실물</h2>
                 <a th:href="@{/lost/list}">더보기</a>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             </div>
 
             <div th:if="${recentLostItems == null or #lists.isEmpty(recentLostItems)}" class="item">
                 <div>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/index.html
+                    <h3>검정 노트북 가방</h3>
+                    <p>대학본관 · 2026.01.15</p>
+=======
+                    <h3 th:text="${item.title}">검정 노트북 가방</h3>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">대학본관 · 2026.01.15</p>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
+                </div>
+
+                <span class="status green">
+                    반환완료
+                </span>
+
+            </a>
+
+        </div>
+
+
+        <div class="list-box">
+
+            <div class="list-head">
+
+                <h2>최근 습득물</h2>
+
+                <a th:href="@{/found/list}">
+                    더보기
+                </a>
+
+=======
                     <h3>등록된 분실물이 없습니다.</h3>
                     <p>첫 분실물을 등록해 보세요.</p>
                 </div>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
             </div>
 
             <a th:each="item : ${recentLostItems}"
                th:href="@{/lost/detail/{id}(id=${item.id})}"
                class="item">
                 <div>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/index.html
+                    <h3>학생증</h3>
+                    <p>중앙도서관 · 2026.01.15</p>
+=======
                     <h3 th:text="${item.title}">분실물 제목</h3>
                     <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
                         위치 · 날짜
                     </p>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
+=======
+                    <h3 th:text="${item.title}">학생증</h3>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">중앙도서관 · 2026.01.15</p>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                 </div>
                 <span class="status yellow" th:text="${item.status}">접수중</span>
             </a>
@@ -208,6 +329,8 @@
         </a>
     </section>
 
+<<<<<<< HEAD:src/main/resources/templates/index.html
+=======
     <section class="home-support-section">
         <div class="home-support-bar">
             <div class="home-support-left">
@@ -248,6 +371,7 @@
             </div>
         </div>
     </section>
+>>>>>>> main:spring-server/src/main/resources/templates/index.html
 
     <footer>
         FindCampus · 동명대학교
@@ -263,5 +387,8 @@
     }
 </script>
 
+<<<<<<< HEAD
 </body>
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 </html>

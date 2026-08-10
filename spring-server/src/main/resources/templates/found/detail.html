@@ -14,31 +14,7 @@
 
 <body>
 
-<header>
-
-    <div class="header-inner">
-
-        <a th:href="@{/}" class="logo">
-
-            <span class="logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
-
-            FindCampus
-
-        </a>
-
-        <div class="header-actions">
-
-            <a th:href="@{/found/list}" class="back-link">
-                습득물 목록으로
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
 
@@ -128,7 +104,7 @@
                     중앙도서관 1층 로비 근처에서 에어팟으로 보이는 물건을 습득했습니다.
                     현재 학생장학봉사팀 분실물 센터에 보관 중입니다.
                     도용 방지를 위해 세부 특징은 모두 공개하지 않습니다.
-                    본인 물건이라고 생각되면 내 분실글을 선택한 뒤 수령 신청을 진행해 주세요.
+                    본인 물건이라고 생각되면 수령 신청을 진행해 주세요.
                 </p>
             </div>
 
@@ -140,8 +116,18 @@
                     </div>
 
                     <div>
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/found/detail.html
+                        <div class="writer-name">이습득</div>
+                        <div class="writer-school">동명대학교 컴퓨터공학과</div>
+=======
                         <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">이습득 (23120030)</div>
                         <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
+>>>>>>> main:spring-server/src/main/resources/templates/found/detail.html
+=======
+                        <div class="writer-name" th:text="${item.writerName + (item.studentNo != null ? ' (' + item.studentNo + ')' : '')}">이습득 (23120030)</div>
+                        <div class="writer-school" th:text="${item.school != null ? item.school : ''}">동명대학교 컴퓨터공학과</div>
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
                     </div>
 
                 </div>
@@ -157,40 +143,61 @@
                 <div class="claim-steps">
 
                     <div class="claim-step">
-                        <strong>1. 내 분실글 선택</strong>
-                        먼저 등록한 분실글 중 이 습득물과 관련된 글을 선택합니다.
+                        <strong>1. 보관 상태 확인</strong>
+                        보관 장소가 있으면 바로 확인하고, 없으면 채팅으로 조율합니다.
                     </div>
 
                     <div class="claim-step">
-                        <strong>2. 유사도 확인</strong>
-                        선택한 분실글과 습득물의 위치, 시간, 특징을 비교합니다.
+                        <strong>2. 내 분실글 선택</strong>
+                        내 분실글을 선택해 내 물건인지 비교합니다.
                     </div>
 
                     <div class="claim-step">
-                        <strong>3. 보관장소 안내</strong>
-                        관리자 확인 후 수령 가능한 보관 장소를 안내받습니다.
+                        <strong>3. 수령 방법 확인</strong>
+                        보관처 수령 또는 채팅 약속으로 물건을 찾습니다.
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="warning-card">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="warning-card notice-card">
+                <i class="fa-solid fa-circle-info"></i>
 
                 <span>
-                    채팅 기능은 사용하지 않습니다.
-                    이 물건은 게시글만 보고 바로 수령할 수 없으며,
-                    분실물 등록과 관리자 확인 절차를 거친 뒤 수령할 수 있습니다.
+                    학번과 세부 특징은 공개되지 않습니다.
+                    보관 장소가 없으면 채팅으로 전달 방법을 정해 주세요.
                 </span>
             </div>
 
             <div class="button-area">
 
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/resources/templates/found/detail.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
+                <div class="primary-actions">
+
+                    <a th:href="@{/chat/room}" class="chat-btn">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        채팅하기
+                    </a>
+
+                    <a th:href="@{/match/select-lost/{foundId}(foundId=${foundId})}" class="claim-btn">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        내 물건 같아요, 수령 신청하기
+                    </a>
+
+                </div>
+<<<<<<< HEAD
+=======
                 <a th:href="@{/match/select-lost/{foundId}(foundId=${foundId})}" class="claim-btn">
                     <i class="fa-solid fa-hand-holding-heart"></i>
                     내 물건 같아요, 수령 신청하기
                 </a>
+>>>>>>> main:spring-server/src/main/resources/templates/found/detail.html
+=======
+>>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
 
                 <div class="sub-actions">
                     <a th:href="@{/found/list}" class="sub-btn">
