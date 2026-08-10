@@ -3,11 +3,12 @@ package com.example.find_campus.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.find_campus.dto.ItemSearchDto;
+import com.example.find_campus.service.CommonService;
 import com.example.find_campus.service.ItemService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class TestController {
 
     private final ItemService itemService;
+    private final CommonService commonService;
 
     @GetMapping({"/", "/main"})
     public String main(Model model) {
@@ -28,9 +30,6 @@ public class TestController {
         return "index";
     }
 
-    // =========================
-    // USER
-    // =========================
     @GetMapping("/login")
     public String login() {
         return "user/login";
@@ -41,9 +40,6 @@ public class TestController {
         return "user/join";
     }
 
-    // =========================
-    // LOST
-    // =========================
     @GetMapping("/lost/list")
     public String lostList(@ModelAttribute ItemSearchDto searchDto, Model model) {
         model.addAttribute("items", itemService.findLostItems(searchDto));
@@ -53,7 +49,8 @@ public class TestController {
     }
 
     @GetMapping("/lost/write")
-    public String lostWrite() {
+    public String lostWrite(Model model) {
+        addCommonWriteModel(model);
         return "lost/write";
     }
 
@@ -69,9 +66,6 @@ public class TestController {
         return "lost/detail";
     }
 
-    // =========================
-    // FOUND
-    // =========================
     @GetMapping("/found/list")
     public String foundList(@ModelAttribute ItemSearchDto searchDto, Model model) {
         model.addAttribute("items", itemService.findFoundItems(searchDto));
@@ -81,7 +75,9 @@ public class TestController {
     }
 
     @GetMapping("/found/write")
-    public String foundWrite() {
+    public String foundWrite(Model model) {
+        addCommonWriteModel(model);
+        model.addAttribute("storagePlaces", commonService.findStoragePlaces());
         return "found/write";
     }
 
@@ -97,34 +93,22 @@ public class TestController {
         return "found/detail";
     }
 
-    // =========================
-    // CHAT
-    // =========================
-
-    // 채팅방 목록
     @GetMapping("/chat/rooms")
     public String chatRooms() {
         return "chat/rooms";
     }
 
-    // 채팅방 상세 기본 주소
     @GetMapping("/chat/room")
     public String chatRoom() {
         return "chat/room";
     }
 
-    // 채팅방 상세 주소
     @GetMapping("/chat/room/{id}")
     public String chatRoomById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("roomId", id);
         return "chat/room";
     }
 
-    // =========================
-    // REPORT
-    // =========================
-
-    // lost/detail.html, found/detail.html에서 신고하기 버튼 누르면 이동
     @GetMapping("/report/write")
     public String reportWrite(@RequestParam(value = "type", required = false) String type,
                               @RequestParam(value = "id", required = false) Long id,
@@ -134,22 +118,16 @@ public class TestController {
         return "report/write";
     }
 
-    // =========================
-    // MATCH
-    // =========================
-
-    // found/detail.html에서 "내 물건 같아요, 수령 신청하기" 버튼 누르면 여기로 이동
     @GetMapping("/match/select-lost")
     public String selectLost() {
         return "match/select-lost";
     }
 
-    // 나중에 foundId를 붙여서 이동할 때 사용할 수 있는 주소
     @GetMapping("/match/select-lost/{foundId}")
     public String selectLostByFoundId(@PathVariable("foundId") Long foundId,
                                       jakarta.servlet.http.HttpSession session,
                                       Model model) {
-        Long userId = (Long) session.getAttribute("loginUserId");
+        Long userId = getLoginUserId(session);
         if (userId == null) {
             return "redirect:/login";
         }
@@ -158,7 +136,6 @@ public class TestController {
         return "match/select-lost";
     }
 
-    // select-lost.html에서 분실글 선택 후 유사도 결과 페이지로 이동
     @GetMapping("/match/result")
     public String matchResult(@RequestParam(value = "foundId", required = false) Long foundId,
                               @RequestParam(value = "lostId", required = false) Long lostId,
@@ -168,7 +145,6 @@ public class TestController {
         return "match/result";
     }
 
-    // result.html에서 보관 장소 확인하기 버튼 누르면 이동
     @GetMapping("/match/storage-guide")
     public String storageGuide(@RequestParam(value = "foundId", required = false) Long foundId,
                                @RequestParam(value = "lostId", required = false) Long lostId,
@@ -178,9 +154,6 @@ public class TestController {
         return "match/storage-guide";
     }
 
-    // =========================
-    // SEARCH
-    // =========================
     @GetMapping("/search")
     public String search(@ModelAttribute ItemSearchDto searchDto, Model model) {
         model.addAttribute("lostItems", itemService.findLostItems(searchDto));
@@ -191,28 +164,19 @@ public class TestController {
         return "search/search";
     }
 
-    // =========================
-    // RECOMMEND
-    // =========================
     @GetMapping({"/recommend", "/recommend/list"})
     public String recommendList() {
         return "recommend/list";
     }
 
-    // =========================
-    // MAP
-    // =========================
     @GetMapping("/map")
     public String map() {
         return "map/map";
     }
 
-    // =========================
-    // MYPAGE
-    // =========================
     @GetMapping("/mypage")
     public String mypage(jakarta.servlet.http.HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("loginUserId");
+        Long userId = getLoginUserId(session);
         if (userId == null) {
             return "redirect:/login";
         }
@@ -241,9 +205,6 @@ public class TestController {
         return "mypage/privacy";
     }
 
-    // =========================
-    // MYPAGE SETTING
-    // =========================
     @GetMapping("/mypage/setting/notice")
     public String notice() {
         return "mypage/setting/notice";
@@ -284,45 +245,47 @@ public class TestController {
         return "mypage/setting/app-info";
     }
 
-    // =========================
-    // ADMIN
-    // =========================
-
-    // 관리자 로그인 화면
     @GetMapping("/admin/login")
     public String adminLogin() {
         return "admin/login";
     }
 
-    // 관리자 대시보드
-    // 사용자 관리
-    // 분실물 관리
-    // 습득물 관리
-    // 보관 장소 관리
     @GetMapping("/admin/storage")
     public String adminStorageList() {
         return "admin/storage-list";
     }
 
-    // 위치 관리
     @GetMapping("/admin/locations")
     public String adminLocationList() {
         return "admin/location-list";
     }
 
-    // 카테고리 관리
     @GetMapping("/admin/categories")
     public String adminCategoryList() {
         return "admin/category-list";
     }
 
-    // 신고 관리
-    /*
-     * 예전 관리자 통합 물품 관리 주소.
-     * 혹시 기존에 /admin/items로 연결한 버튼이 있으면 깨지지 않게 유지.
-     */
     @GetMapping("/admin/items")
     public String adminItemList() {
         return "admin/item-list";
+    }
+
+    private void addCommonWriteModel(Model model) {
+        model.addAttribute("categories", commonService.findCategories());
+        model.addAttribute("locations", commonService.findLocations());
+    }
+
+    private Long getLoginUserId(jakarta.servlet.http.HttpSession session) {
+        Object loginUserId = session.getAttribute("loginUserId");
+        if (loginUserId instanceof Long userId) {
+            return userId;
+        }
+        if (loginUserId instanceof Integer userId) {
+            return userId.longValue();
+        }
+        if (loginUserId instanceof String userId && !userId.isBlank()) {
+            return Long.valueOf(userId);
+        }
+        return null;
     }
 }

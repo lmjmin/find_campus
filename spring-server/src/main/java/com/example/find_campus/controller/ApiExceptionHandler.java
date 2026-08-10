@@ -11,7 +11,8 @@ import com.example.find_campus.dto.ApiResponseDto;
         ItemApiController.class,
         CommonApiController.class,
         NotificationApiController.class,
-        MatchApiController.class
+        MatchApiController.class,
+        MapApiController.class
 })
 public class ApiExceptionHandler {
 

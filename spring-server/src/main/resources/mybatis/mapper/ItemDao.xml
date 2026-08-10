@@ -182,6 +182,7 @@
             GROUP BY ITEM_ID
         ) IMG ON IMG.ITEM_ID = L.LOST_ID
         WHERE L.LOST_ID = #{lostId}
+          AND L.STATUS != 'DELETED'
     </select>
 
     <update id="increaseLostViewCount" parameterType="long">
@@ -284,6 +285,7 @@
             GROUP BY ITEM_ID
         ) IMG ON IMG.ITEM_ID = F.FOUND_ID
         WHERE F.FOUND_ID = #{foundId}
+          AND F.STATUS != 'DELETED'
     </select>
 
     <update id="increaseFoundViewCount" parameterType="long">
@@ -299,12 +301,14 @@
             FROM LOST_ITEMS L
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
             WHERE #{itemType} = 'lost'
+              AND L.STATUS != 'DELETED'
             UNION ALL
             SELECT F.FOUND_ID AS ID, 'found' AS ITEM_TYPE, F.TITLE, F.ITEM_NAME, F.STATUS, F.CREATED_AT,
                    LOC.LOCATION_NAME, F.FOUND_LOCATION_DETAIL AS LOCATION_DETAIL
             FROM FOUND_ITEMS F
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
             WHERE #{itemType} = 'found'
+              AND F.STATUS != 'DELETED'
             ORDER BY CREATED_AT DESC
         )
         WHERE ROWNUM &lt;= #{limit}
@@ -330,6 +334,7 @@
             FROM LOST_ITEMS L
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
             WHERE L.USER_ID = #{userId}
+              AND L.STATUS != 'DELETED'
             ORDER BY L.CREATED_AT DESC
         )
     </select>
@@ -342,6 +347,7 @@
             FROM FOUND_ITEMS F
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
             WHERE F.USER_ID = #{userId}
+              AND F.STATUS != 'DELETED'
             ORDER BY F.CREATED_AT DESC
         )
     </select>
@@ -400,5 +406,84 @@
         SET STATUS = #{status}, UPDATED_AT = SYSDATE
         WHERE FOUND_ID = #{foundId}
     </update>
+
+    <update id="updateLostItem" parameterType="com.example.find_campus.dto.LostItemDto">
+        UPDATE LOST_ITEMS
+        SET TITLE = #{title},
+            CATEGORY_ID = #{categoryId},
+            ITEM_NAME = #{itemName},
+            COLOR = #{color},
+            BRAND = #{brand},
+            LOST_LOCATION_ID = #{lostLocationId},
+            LOST_LOCATION_DETAIL = #{lostLocationDetail},
+            LOST_DATE = #{lostDate},
+            LOST_TIME = #{lostTime},
+            LOST_TIME_RANGE = #{lostTimeRange},
+            DESCRIPTION = #{description},
+            UPDATED_AT = SYSDATE
+        WHERE LOST_ID = #{lostId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </update>
+
+    <update id="deleteLostItem">
+        UPDATE LOST_ITEMS
+        SET STATUS = 'DELETED',
+            UPDATED_AT = SYSDATE
+        WHERE LOST_ID = #{lostId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </update>
+
+    <select id="countLostItemByOwner" resultType="int">
+        SELECT COUNT(*)
+        FROM LOST_ITEMS
+        WHERE LOST_ID = #{lostId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </select>
+
+    <update id="updateFoundItem" parameterType="com.example.find_campus.dto.FoundItemDto">
+        UPDATE FOUND_ITEMS
+        SET TITLE = #{title},
+            CATEGORY_ID = #{categoryId},
+            ITEM_NAME = #{itemName},
+            COLOR = #{color},
+            BRAND = #{brand},
+            FOUND_LOCATION_ID = #{foundLocationId},
+            FOUND_LOCATION_DETAIL = #{foundLocationDetail},
+            FOUND_DATE = #{foundDate},
+            FOUND_TIME = #{foundTime},
+            FOUND_TIME_RANGE = #{foundTimeRange},
+            STORAGE_ID = #{storageId},
+            DESCRIPTION = #{description},
+            UPDATED_AT = SYSDATE
+        WHERE FOUND_ID = #{foundId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </update>
+
+    <update id="deleteFoundItem">
+        UPDATE FOUND_ITEMS
+        SET STATUS = 'DELETED',
+            UPDATED_AT = SYSDATE
+        WHERE FOUND_ID = #{foundId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </update>
+
+    <select id="countFoundItemByOwner" resultType="int">
+        SELECT COUNT(*)
+        FROM FOUND_ITEMS
+        WHERE FOUND_ID = #{foundId}
+          AND USER_ID = #{userId}
+          AND STATUS != 'DELETED'
+    </select>
+
+    <delete id="deleteItemImages">
+        DELETE FROM ITEM_IMAGES
+        WHERE ITEM_TYPE = #{itemType}
+          AND ITEM_ID = #{itemId}
+    </delete>
 
 </mapper>

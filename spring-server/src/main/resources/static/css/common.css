@@ -248,3 +248,23 @@ footer .footer-divider {
         display: none;
     }
 }
+.login-user-name {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.logout-btn {
+    padding: 11px 16px;
+    border: none;
+    border-radius: 12px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #e5e7eb;
+}

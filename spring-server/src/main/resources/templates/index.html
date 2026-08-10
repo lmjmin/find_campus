@@ -8,7 +8,6 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
@@ -16,80 +15,60 @@
 <body>
 
 <header>
-
     <div class="header-inner">
-
         <a th:href="@{/}" class="logo">
-
             <span class="logo-icon">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
             </span>
-
             FindCampus
-
         </a>
 
         <nav class="nav">
-
-            <a th:href="@{/lost/list}">
-                분실물
-            </a>
-
-            <a th:href="@{/found/list}">
-                습득물
-            </a>
-
-            <a th:href="@{/search}">
-                검색
-            </a>
-
-            <a th:href="@{/chat/rooms}">
-                채팅
-            </a>
-
-            <a th:href="@{/map}">
-                지도
-            </a>
-
+            <a th:href="@{/lost/list}">분실물</a>
+            <a th:href="@{/found/list}">습득물</a>
+            <a th:href="@{/search}">검색</a>
+            <a th:href="@{/chat/rooms}">채팅</a>
+            <a th:href="@{/map}">지도</a>
         </nav>
 
         <div class="auth">
-
-            <a th:href="@{/notification}" class="header-icon">
+            <a th:href="@{/notification}" class="header-icon" th:if="${session.loginUserId != null}">
                 <i class="fa-regular fa-bell"></i>
             </a>
 
-            <a th:href="@{/mypage}" class="header-icon">
+            <a th:href="@{/mypage}" class="header-icon" th:if="${session.loginUserId != null}">
                 <i class="fa-solid fa-user"></i>
             </a>
 
-            <a th:href="@{/login}" class="login">
+            <span class="login-user-name" th:if="${session.loginUserId != null}" th:text="${session.loginName + '님'}">
+                사용자님
+            </span>
+
+            <button type="button" class="logout-btn" th:if="${session.loginUserId != null}" onclick="logout()">
+                로그아웃
+            </button>
+
+            <a th:href="@{/login}" class="login" th:if="${session.loginUserId == null}">
                 로그인
             </a>
 
-            <a th:href="@{/join}" class="join">
+            <a th:href="@{/join}" class="join" th:if="${session.loginUserId == null}">
                 회원가입
             </a>
-
         </div>
-
     </div>
-
 </header>
 
 <main>
-
     <section class="hero">
-
         <div>
-
             <span class="hero-badge">
                 동명대학교 학생 전용 서비스
             </span>
 
             <h1>
                 잃어버린 물건을<br>
-                찾아드립니다
+                빠르게 찾아드립니다
             </h1>
 
             <p>
@@ -97,244 +76,141 @@
                 캠퍼스 안에서 잃어버린 물건을 빠르게 검색하고 등록할 수 있습니다.
             </p>
 
-            <form
-                    th:action="@{/search}"
-                    method="get"
-                    class="search-box">
-
+            <form th:action="@{/search}" method="get" class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-
-                <input
-                        type="text"
-                        name="keyword"
-                        placeholder="분실물 또는 습득물을 검색하세요...">
-
-                <button type="submit">
-                    검색
-                </button>
-
+                <input type="text" name="keyword" placeholder="분실물 또는 습득물을 검색하세요...">
+                <button type="submit">검색</button>
             </form>
-
         </div>
 
         <div class="hero-visual">
             <i class="fa-solid fa-box-open"></i>
         </div>
-
     </section>
-
 
     <section class="stats">
-
         <div class="stat-card">
-
             <span>분실물</span>
-
-            <strong th:text="|${lostCount}건|">0건</strong>
-
+            <strong th:text="${lostCount != null ? lostCount + '건' : '0건'}">0건</strong>
         </div>
 
         <div class="stat-card">
-
             <span>습득물</span>
-
-            <strong th:text="|${foundCount}건|">0건</strong>
-
+            <strong th:text="${foundCount != null ? foundCount + '건' : '0건'}">0건</strong>
         </div>
 
         <div class="stat-card">
-
             <span>반환 완료</span>
-
-            <strong th:text="|0건|">0건</strong>
-
+            <strong>0건</strong>
         </div>
-
     </section>
 
-
     <section class="quick-section">
-
         <div class="section-title">
-
-            <h2>
-                빠른 메뉴
-            </h2>
-
+            <h2>빠른 메뉴</h2>
         </div>
 
         <div class="quick-grid">
-
             <a th:href="@{/lost/write}" class="quick-card">
-
                 <div class="quick-icon">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </div>
-
-                <h3>
-                    분실물 등록
-                </h3>
-
-                <p>
-                    잃어버린 물건을 등록합니다.
-                </p>
-
+                <h3>분실물 등록</h3>
+                <p>잃어버린 물건을 등록합니다.</p>
             </a>
 
-
             <a th:href="@{/map}" class="quick-card">
-
                 <div class="quick-icon">
                     <i class="fa-solid fa-map-location-dot"></i>
                 </div>
-
-                <h3>
-                    캠퍼스 지도
-                </h3>
-
-                <p>
-                    건물 위치 기반 조회
-                </p>
-
+                <h3>캠퍼스 지도</h3>
+                <p>건물 위치 기반으로 물건을 조회합니다.</p>
             </a>
 
-
             <a th:href="@{/recommend}" class="quick-card">
-
                 <div class="quick-icon">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </div>
-
-                <h3>
-                    유사 물건 추천
-                </h3>
-
-                <p>
-                    AI 유사 추천
-                </p>
-
+                <h3>유사 물건 추천</h3>
+                <p>등록된 물건과 비슷한 항목을 확인합니다.</p>
             </a>
-
         </div>
-
     </section>
-
 
     <section class="list-wrap">
-
         <div class="list-box">
-
             <div class="list-head">
-
-                <h2>
-                    최근 분실물
-                </h2>
-
-                <a th:href="@{/lost/list}">
-                    더보기
-                </a>
-
+                <h2>최근 분실물</h2>
+                <a th:href="@{/lost/list}">더보기</a>
             </div>
 
-            <a th:each="item : ${recentLostItems}" th:href="@{/lost/detail/{id}(id=${item.id})}" class="item">
-
+            <div th:if="${recentLostItems == null or #lists.isEmpty(recentLostItems)}" class="item">
                 <div>
-
-                    <h3 th:text="${item.title}">
-                        검정 노트북 가방
-                    </h3>
-
-                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
-                        대학본관 · 2026.01.15
-                    </p>
-
+                    <h3>등록된 분실물이 없습니다.</h3>
+                    <p>첫 분실물을 등록해 보세요.</p>
                 </div>
-
-                <span class="status green" th:text="${item.status}">
-                    반환완료
-                </span>
-
-            </a>
-
-        </div>
-
-
-        <div class="list-box">
-
-            <div class="list-head">
-
-                <h2>
-                    최근 습득물
-                </h2>
-
-                <a th:href="@{/found/list}">
-                    더보기
-                </a>
-
             </div>
 
-            <a th:each="item : ${recentFoundItems}" th:href="@{/found/detail/{id}(id=${item.id})}" class="item">
-
+            <a th:each="item : ${recentLostItems}"
+               th:href="@{/lost/detail/{id}(id=${item.id})}"
+               class="item">
                 <div>
-
-                    <h3 th:text="${item.title}">
-                        학생증
-                    </h3>
-
+                    <h3 th:text="${item.title}">분실물 제목</h3>
                     <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
-                        중앙도서관 · 2026.01.15
+                        위치 · 날짜
                     </p>
-
                 </div>
-
-                <span class="status yellow" th:text="${item.status}">
-                    보관중
-                </span>
-
+                <span class="status yellow" th:text="${item.status}">접수중</span>
             </a>
-
         </div>
 
+        <div class="list-box">
+            <div class="list-head">
+                <h2>최근 습득물</h2>
+                <a th:href="@{/found/list}">더보기</a>
+            </div>
+
+            <div th:if="${recentFoundItems == null or #lists.isEmpty(recentFoundItems)}" class="item">
+                <div>
+                    <h3>등록된 습득물이 없습니다.</h3>
+                    <p>첫 습득물을 등록해 보세요.</p>
+                </div>
+            </div>
+
+            <a th:each="item : ${recentFoundItems}"
+               th:href="@{/found/detail/{id}(id=${item.id})}"
+               class="item">
+                <div>
+                    <h3 th:text="${item.title}">습득물 제목</h3>
+                    <p th:text="${item.locationName != null ? item.locationName + ' - ' + item.itemDate : item.itemDate}">
+                        위치 · 날짜
+                    </p>
+                </div>
+                <span class="status yellow" th:text="${item.status}">보관중</span>
+            </a>
+        </div>
     </section>
-
 
     <section class="cta">
-
         <a th:href="@{/lost/write}" class="cta-lost">
-
             <i class="fa-solid fa-pen"></i>
-
             분실물 등록
-
         </a>
-
 
         <a th:href="@{/found/write}" class="cta-found">
-
             <i class="fa-solid fa-box"></i>
-
             습득물 등록
-
         </a>
-
 
         <a th:href="@{/search}" class="cta-search">
-
             <i class="fa-solid fa-magnifying-glass"></i>
-
             검색하기
-
         </a>
-
     </section>
 
-
     <section class="home-support-section">
-
         <div class="home-support-bar">
-
             <div class="home-support-left">
-
                 <div class="home-support-badge">
                     <i class="fa-solid fa-circle-info"></i>
                     분실물 문의 안내
@@ -346,22 +222,17 @@
 
                 <div class="home-support-desc">
                     실제 보관 및 반환은 교내 담당 부서 또는 지정 보관처를 통해 이루어집니다.
-                    문의사항이 있다면 학생장학봉사팀으로 연락해 주세요.
+                    문의사항이 있다면 학생복지팀으로 연락해 주세요.
                 </div>
-
             </div>
 
             <div class="home-support-right">
-
-                <div class="home-support-info-title">
-                    문의처 정보
-                </div>
+                <div class="home-support-info-title">문의처 정보</div>
 
                 <div class="home-support-info-list">
-
                     <div class="home-support-info-item">
                         <i class="fa-solid fa-building-columns"></i>
-                        <span>학생장학봉사팀</span>
+                        <span>학생복지팀</span>
                     </div>
 
                     <div class="home-support-info-item">
@@ -373,30 +244,24 @@
                         <i class="fa-solid fa-location-dot"></i>
                         <span>동명대학교 학생복지관</span>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
 
     <footer>
         FindCampus · 동명대학교
-
-        <span class="footer-divider">
-            |
-        </span>
-
-        <a th:href="@{/admin/login}" class="admin-footer-link">
-            관리자
-        </a>
+        <span class="footer-divider">|</span>
+        <a th:href="@{/admin/login}" class="admin-footer-link">관리자</a>
     </footer>
-
 </main>
 
-</body>
+<script>
+    async function logout() {
+        await fetch("/api/logout", { method: "POST" });
+        location.href = "/";
+    }
+</script>
 
+</body>
 </html>
