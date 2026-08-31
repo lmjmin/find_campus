@@ -5,6 +5,24 @@
 
 <header th:fragment="header">
 
+    <script>
+        (function applyDisplaySettings() {
+            const storageKey = "findCampusDisplaySettings";
+            const root = document.documentElement;
+
+            try {
+                const settings = JSON.parse(localStorage.getItem(storageKey) || "{}");
+                root.classList.toggle("fc-theme-dark", settings.theme === "dark");
+                root.classList.toggle("fc-font-small", settings.fontSize === "small");
+                root.classList.toggle("fc-font-large", settings.fontSize === "large");
+                root.style.colorScheme = settings.theme === "dark" ? "dark" : "light";
+            } catch (error) {
+                root.classList.remove("fc-theme-dark", "fc-font-small", "fc-font-large");
+                root.style.colorScheme = "light";
+            }
+        })();
+    </script>
+
     <div class="header-inner">
 
         <a th:href="@{/}" class="logo">
@@ -43,25 +61,58 @@
 
         <div class="auth">
 
-            <a th:href="@{/notification}" class="header-icon">
+            <a th:href="@{/notification}" class="header-icon header-notification-link" th:if="${session.loginUserId != null}" aria-label="?뚮┝">
                 <i class="fa-regular fa-bell"></i>
+                <span class="header-notification-badge"
+                      th:if="${headerUnreadCount != null and headerUnreadCount > 0}"
+                      th:text="${headerUnreadCount > 9 ? '9+' : headerUnreadCount}">1</span>
             </a>
 
-            <a th:href="@{/mypage}" class="header-icon">
+            <a th:href="@{/mypage}" class="header-icon" th:if="${session.loginUserId != null}">
                 <i class="fa-solid fa-user"></i>
             </a>
 
-            <a th:href="@{/login}" class="login">
+            <span class="login-user-name"
+                  th:if="${session.loginUserId != null}"
+                  th:text="${session.loginName != null ? session.loginName : '마이페이지'}">
+                마이페이지
+            </span>
+
+            <button type="button"
+                    class="logout-btn"
+                    th:if="${session.loginUserId != null}"
+                    onclick="logoutFromHeader()">
+                로그아웃
+            </button>
+
+            <a th:href="@{/login}" class="login" th:if="${session.loginUserId == null}">
                 로그인
             </a>
 
-            <a th:href="@{/join}" class="join">
+            <a th:href="@{/join}" class="join" th:if="${session.loginUserId == null}">
                 회원가입
             </a>
 
         </div>
 
     </div>
+
+    <script>
+        async function logoutFromHeader() {
+            try {
+                await fetch("/api/logout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            } finally {
+                location.href = "/";
+            }
+        }
+    </script>
+
+    <script th:src="@{/js/common.js(v=${#dates.createNow().time})}" defer></script>
 
 </header>
 

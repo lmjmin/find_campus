@@ -14,32 +14,7 @@
 
 <body>
 
-<header>
-    <div class="header-inner">
-        <a th:href="@{/}" class="logo">
-            <span class="logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
-            FindCampus
-        </a>
-
-        <nav class="nav">
-            <a th:href="@{/lost/list}">분실물</a>
-            <a th:href="@{/found/list}">습득물</a>
-            <a th:href="@{/search}">검색</a>
-            <a th:href="@{/map}" class="active">지도</a>
-        </nav>
-
-        <div class="user-menu">
-            <a th:href="@{/notification}" class="icon-btn">
-                <i class="fa-regular fa-bell"></i>
-            </a>
-            <a th:href="@{/mypage}" class="icon-btn">
-                <i class="fa-solid fa-user"></i>
-            </a>
-        </div>
-    </div>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="map-page">
     <aside class="map-sidebar">
@@ -50,12 +25,9 @@
             </form>
 
             <div class="filter-tags">
-                <button type="button" class="filter-tag tag-all active" data-filter="all">전체</button>
+                <button type="button" class="filter-tag tag-all" data-filter="all">전체</button>
                 <button type="button" class="filter-tag tag-lost" data-filter="lost">분실물</button>
                 <button type="button" class="filter-tag tag-found" data-filter="found">습득물</button>
-                <button type="button" class="filter-tag tag-received" data-filter="received">접수중</button>
-                <button type="button" class="filter-tag tag-storage" data-filter="storage">보관중</button>
-                <button type="button" class="filter-tag tag-returned" data-filter="returned">반환완료</button>
             </div>
         </div>
 
@@ -124,14 +96,6 @@
                     <span class="legend-dot blue"></span>
                     습득물 위치
                 </div>
-                <div class="legend-item">
-                    <span class="legend-dot yellow"></span>
-                    보관중 위치
-                </div>
-                <div class="legend-item">
-                    <span class="legend-dot green"></span>
-                    반환완료 위치
-                </div>
             </div>
         </div>
 
@@ -143,7 +107,7 @@
 </div>
 
 <script type="text/javascript"
-        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052"></script>
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052&autoload=false"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -169,7 +133,7 @@
         const mockMap = document.getElementById("mockMap");
         const apiGuide = document.getElementById("apiGuide");
 
-        let selectedFilter = "all";
+        let selectedFilter = "";
         let currentKeyword = "";
         let currentDetailUrl = "/";
         let kakaoMap = null;
@@ -197,6 +161,12 @@
             if (item.statusName === "반환완료" || item.status === "RETURNED" || item.status === "COMPLETED") {
                 return "returned";
             }
+            if (item.statusName === "보관중" || item.status === "STORED" || item.status === "STORAGE") {
+                return "storage";
+            }
+            if (item.statusName === "접수중" || item.status === "REGISTERED" || item.status === "RECEIVED") {
+                return "received";
+            }
             if (item.itemType === "found") {
                 return "storage";
             }
@@ -204,25 +174,43 @@
         }
 
         function getStatusText(item) {
-            return item.statusName || (getStatusKey(item) === "storage" ? "보관중" : "접수중");
+            if (item.statusName) return item.statusName;
+
+            const statusKey = getStatusKey(item);
+            if (statusKey === "returned") return "반환완료";
+            if (statusKey === "storage") return "보관중";
+            return "접수중";
         }
 
         function getIconByItemName(itemName) {
             const name = itemName || "";
-            if (name.includes("가방")) return "fa-briefcase";
-            if (name.includes("이어폰") || name.includes("에어팟")) return "fa-headphones";
-            if (name.includes("열쇠") || name.includes("키")) return "fa-key";
-            if (name.includes("학생증") || name.includes("카드")) return "fa-id-card";
-            if (name.includes("우산")) return "fa-umbrella";
-            if (name.includes("지갑")) return "fa-wallet";
+            if (name.includes("가방")) return "fa-box-open";
+            if (name.includes("이어폰") || name.includes("에어팟")) return "fa-box-open";
+            if (name.includes("열쇠") || name.includes("키")) return "fa-box-open";
+            if (name.includes("학생증") || name.includes("카드")) return "fa-box-open";
+            if (name.includes("우산")) return "fa-box-open";
+            if (name.includes("지갑")) return "fa-box-open";
             return "fa-box";
         }
 
+        function getItemImageHtml(item, cssClass, altText) {
+            if (item.imageUrl) {
+                return '<img src="' + escapeHtml(item.imageUrl) + '" alt="' + escapeHtml(altText) + '" class="' + cssClass + '">';
+            }
+            return "";
+        }
+
+        function getSelectedMarkerKey(item) {
+            if (selectedFilter === "lost") return "lost";
+            if (selectedFilter === "found") return "found";
+            return item.itemType === "lost" ? "lost" : "found";
+        }
+
         function getMarkerClass(item) {
-            const statusKey = getStatusKey(item);
-            if (statusKey === "storage") return "fc-marker-storage";
-            if (statusKey === "returned") return "fc-marker-returned";
-            return item.itemType === "lost" ? "fc-marker-lost" : "fc-marker-found";
+            const markerKey = getSelectedMarkerKey(item);
+            if (markerKey === "lost") return "fc-marker-lost";
+            if (markerKey === "found") return "fc-marker-found";
+            return "fc-marker-found";
         }
 
         function formatLocation(item) {
@@ -238,13 +226,17 @@
             const iconClass = getIconByItemName(item.itemName || item.title);
             const locationText = formatLocation(item);
 
+            const imageHtml = getItemImageHtml(item, "nearby-photo", typeText + " ?ъ쭊");
+            const imageClass = "nearby-image " + (item.itemType === "lost" ? "lost-image" : "found-image");
+
             const card = document.createElement("div");
             card.className = "nearby-card";
             card.dataset.index = String(index);
+            card.dataset.type = item.itemType;
             card.innerHTML =
-                '<div class="nearby-image">' +
+                '<div class="' + imageClass + '">' +
                     '<span class="status-badge status-' + statusKey + '">' + escapeHtml(statusText) + '</span>' +
-                    '<i class="fa-solid ' + iconClass + '"></i>' +
+                    (imageHtml || '<i class="fa-solid ' + iconClass + '"></i>') +
                 '</div>' +
                 '<div class="nearby-body">' +
                     '<span class="nearby-type ' + escapeHtml(item.itemType) + '">' + escapeHtml(typeText) + '</span>' +
@@ -256,6 +248,7 @@
                 '</div>';
             card.addEventListener("click", function () {
                 openPopup(item);
+                focusItemOnMap(item);
                 setActiveCard(card);
             });
             return card;
@@ -283,14 +276,14 @@
             });
         }
 
-        function createOverlayContent(item) {
+        function createOverlayContent(item, index) {
             const markerClass = getMarkerClass(item);
             const typeText = getTypeText(item.itemType);
             const statusText = getStatusText(item);
             const iconClass = getIconByItemName(item.itemName || item.title);
 
             return (
-                '<div class="fc-item-marker ' + markerClass + '">' +
+                '<div class="fc-item-marker ' + markerClass + '" data-index="' + index + '">' +
                     '<div class="fc-item-label">' +
                         '<span>' + escapeHtml(typeText + " · " + statusText) + '</span>' +
                         '<strong>' + escapeHtml(item.title || item.itemName) + '</strong>' +
@@ -310,22 +303,72 @@
             overlays = [];
         }
 
+        function getPositionKey(item) {
+            return Number(item.latitude).toFixed(7) + "," + Number(item.longitude).toFixed(7);
+        }
+
+        function buildPositionOffsets(list) {
+            const groups = new Map();
+
+            list.forEach(function (item, index) {
+                if (!hasItemPosition(item)) return;
+
+                const key = getPositionKey(item);
+                if (!groups.has(key)) {
+                    groups.set(key, []);
+                }
+                groups.get(key).push(index);
+            });
+
+            const offsets = new Map();
+            groups.forEach(function (indexes) {
+                if (indexes.length === 1) {
+                    offsets.set(indexes[0], { lat: 0, lng: 0 });
+                    return;
+                }
+
+                const radius = 0.000055;
+                indexes.forEach(function (itemIndex, order) {
+                    const angle = (Math.PI * 2 * order) / indexes.length;
+                    offsets.set(itemIndex, {
+                        lat: Math.sin(angle) * radius,
+                        lng: Math.cos(angle) * radius
+                    });
+                });
+            });
+
+            return offsets;
+        }
+
+        function getDisplayPosition(item, index, offsetMap) {
+            const offset = offsetMap.get(index) || { lat: 0, lng: 0 };
+            return {
+                latitude: Number(item.latitude) + offset.lat,
+                longitude: Number(item.longitude) + offset.lng
+            };
+        }
+
         function renderMarkers() {
-            if (!kakaoMap) return;
+            if (!kakaoMap) {
+                renderMockMarkers();
+                return;
+            }
             clearOverlays();
 
             const bounds = new kakao.maps.LatLngBounds();
             let hasPosition = false;
+            const offsetMap = buildPositionOffsets(items);
 
             items.forEach(function (item, index) {
-                if (item.latitude === null || item.longitude === null || item.latitude === undefined || item.longitude === undefined) {
+                if (!hasItemPosition(item)) {
                     return;
                 }
 
-                const position = new kakao.maps.LatLng(item.latitude, item.longitude);
+                const displayPosition = getDisplayPosition(item, index, offsetMap);
+                const position = new kakao.maps.LatLng(displayPosition.latitude, displayPosition.longitude);
                 const overlay = new kakao.maps.CustomOverlay({
                     position: position,
-                    content: createOverlayContent(item),
+                    content: createOverlayContent(item, index),
                     xAnchor: 0.5,
                     yAnchor: 1,
                     zIndex: 50
@@ -337,12 +380,12 @@
                 hasPosition = true;
 
                 setTimeout(function () {
-                    const markerElements = document.querySelectorAll(".fc-item-marker");
-                    const markerElement = markerElements[index];
+                    const markerElement = document.querySelector('.fc-item-marker[data-index="' + index + '"]');
                     if (markerElement) {
                         markerElement.style.pointerEvents = "auto";
                         markerElement.addEventListener("click", function () {
                             openPopup(item);
+                            focusItemOnMap(item);
                             const card = nearbyList.querySelector('[data-index="' + index + '"]');
                             if (card) setActiveCard(card);
                         });
@@ -355,37 +398,124 @@
             }
         }
 
+        function clearMockMarkers() {
+            mockMap.querySelectorAll(".marker.dynamic-marker").forEach(function (marker) {
+                marker.remove();
+            });
+        }
+
+        function renderMockMarkers() {
+            clearMockMarkers();
+
+            const fallbackMessage = mockMap.querySelector(".map-fallback");
+            if (fallbackMessage) {
+                fallbackMessage.hidden = items.length > 0;
+            }
+
+            const offsetMap = buildPositionOffsets(items);
+
+            items.forEach(function (item, index) {
+                if (!hasItemPosition(item)) return;
+
+                const displayPosition = getDisplayPosition(item, index, offsetMap);
+                const point = getMockPoint(displayPosition);
+                const marker = document.createElement("button");
+                marker.type = "button";
+                marker.className = "marker dynamic-marker " + getSelectedMarkerKey(item);
+                marker.style.left = point.x + "%";
+                marker.style.top = point.y + "%";
+                marker.title = item.title || item.itemName || "지도 물건";
+                marker.addEventListener("click", function () {
+                    openPopup(item);
+                    const card = nearbyList.querySelector('[data-index="' + index + '"]');
+                    if (card) setActiveCard(card);
+                });
+                mockMap.appendChild(marker);
+            });
+        }
+
+        function getMockPoint(position) {
+            const latitude = Number(position.latitude);
+            const longitude = Number(position.longitude);
+            const x = 50 + ((longitude - 129.1020) * 9000);
+            const y = 50 - ((latitude - 35.1225) * 9000);
+
+            return {
+                x: Math.max(8, Math.min(92, x)),
+                y: Math.max(8, Math.min(92, y))
+            };
+        }
+
+        function hasItemPosition(item) {
+            return item.latitude !== null &&
+                item.longitude !== null &&
+                item.latitude !== undefined &&
+                item.longitude !== undefined &&
+                !Number.isNaN(Number(item.latitude)) &&
+                !Number.isNaN(Number(item.longitude));
+        }
+
+        function focusItemOnMap(item) {
+            if (!kakaoMap || !hasItemPosition(item)) return;
+
+            const position = new kakao.maps.LatLng(Number(item.latitude), Number(item.longitude));
+            kakaoMap.panTo(position);
+            if (kakaoMap.getLevel && kakaoMap.getLevel() > 3) {
+                kakaoMap.setLevel(3);
+            }
+        }
+
         function openPopup(item) {
             const statusKey = getStatusKey(item);
             const statusText = getStatusText(item);
             const iconClass = getIconByItemName(item.itemName || item.title);
+            const typeText = getTypeText(item.itemType);
+            const typeClass = item.itemType === "lost" ? "lost" : "found";
+            const typeTitle = item.itemName ? item.itemName + " " + typeText : typeText;
 
             currentDetailUrl = item.detailUrl || "/";
             popup.classList.remove("hidden");
+            popup.classList.remove("popup-lost", "popup-found");
+            popup.classList.add("popup-" + typeClass);
 
-            popupStatus.className = "status-badge status-" + statusKey;
-            popupStatus.textContent = statusText;
-            popupType.className = "popup-type " + item.itemType;
-            popupType.textContent = getTypeText(item.itemType);
+            popupIcon.className = "popup-image " + typeClass + "-image";
+            popupType.className = "popup-type " + typeClass;
+            popupDetailBtn.className = "popup-btn detail " + typeClass;
+            popupType.textContent = typeTitle;
             popupTitle.textContent = item.title || item.itemName || "제목 없음";
             popupLocation.textContent = formatLocation(item);
-            popupDesc.textContent = item.itemName ? "물건명: " + item.itemName : "상세 정보가 없습니다.";
+            popupDesc.textContent = statusText + " · " + (item.itemName || typeText);
+            const popupImageHtml = getItemImageHtml(item, "popup-photo", typeText + " 사진");
             popupIcon.innerHTML =
                 '<span class="status-badge status-' + statusKey + '">' + escapeHtml(statusText) + '</span>' +
-                '<i class="fa-solid ' + iconClass + '"></i>';
+                (popupImageHtml || '<i class="fa-solid ' + iconClass + '"></i>');
 
-            if (kakaoMap && item.latitude !== null && item.longitude !== null && item.latitude !== undefined && item.longitude !== undefined) {
-                kakaoMap.panTo(new kakao.maps.LatLng(item.latitude, item.longitude));
-            }
+            focusItemOnMap(item);
         }
 
         async function loadMapItems() {
             const params = new URLSearchParams();
-            params.set("filter", selectedFilter);
+            const hasKeyword = currentKeyword.length > 0;
+            const hasFilter = selectedFilter.length > 0;
+
+            if (!hasKeyword && !hasFilter) {
+                items = [];
+                nearbyList.innerHTML = '<div class="map-list-empty">검색어를 입력하거나 카테고리를 선택하면 지도에 표시됩니다.</div>';
+                resultCount.textContent = "0건";
+                popup.classList.add("hidden");
+                clearOverlays();
+                clearMockMarkers();
+                return;
+            }
+
+            if (selectedFilter) {
+                params.set("filter", selectedFilter);
+            }
             if (currentKeyword) {
                 params.set("keyword", currentKeyword);
             }
 
+            popup.classList.add("hidden");
             nearbyList.innerHTML = '<div class="map-list-empty">등록된 물건을 불러오는 중입니다.</div>';
 
             try {
@@ -396,11 +526,16 @@
                 }
                 items = result.data || [];
                 renderList();
-                renderMarkers();
+                if (kakaoMap) {
+                    renderMarkers();
+                } else {
+                    renderMockMarkers();
+                }
             } catch (error) {
                 nearbyList.innerHTML = '<div class="map-list-empty">지도 데이터를 불러오지 못했습니다.</div>';
                 resultCount.textContent = "0건";
                 clearOverlays();
+                clearMockMarkers();
                 console.error(error);
             }
         }
@@ -461,16 +596,20 @@
         function initKakaoMap() {
             if (typeof kakao === "undefined" || !kakao.maps) {
                 console.error("Kakao 지도 SDK를 불러오지 못했습니다.");
+                loadMapItems();
                 return;
             }
 
-            kakaoMap = new kakao.maps.Map(kakaoMapArea, {
-                center: new kakao.maps.LatLng(35.1225, 129.1020),
-                level: 3
-            });
+            kakao.maps.load(function () {
+                kakaoMap = new kakao.maps.Map(kakaoMapArea, {
+                    center: new kakao.maps.LatLng(35.1225, 129.1020),
+                    level: 3
+                });
 
-            mockMap.style.display = "none";
-            apiGuide.style.display = "none";
+                mockMap.style.display = "none";
+                apiGuide.style.display = "none";
+                loadMapItems();
+            });
         }
 
         filterButtons.forEach(function (button) {
@@ -480,6 +619,7 @@
                 });
                 button.classList.add("active");
                 selectedFilter = button.dataset.filter;
+                popup.classList.add("hidden");
                 loadMapItems();
             });
         });
@@ -489,6 +629,7 @@
             window.clearTimeout(searchTimer);
             searchTimer = window.setTimeout(function () {
                 currentKeyword = searchInput.value.trim();
+                popup.classList.add("hidden");
                 loadMapItems();
             }, 250);
         });
@@ -514,7 +655,6 @@
         });
 
         initKakaoMap();
-        loadMapItems();
     });
 </script>
 

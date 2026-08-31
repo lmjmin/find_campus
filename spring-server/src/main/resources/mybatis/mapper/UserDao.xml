@@ -118,7 +118,7 @@
         FROM USERS
         <where>
             <if test="keyword != null and keyword != ''">
-                AND (LOGIN_ID LIKE '%' || #{keyword} || '%' OR USER_NAME LIKE '%' || #{keyword} || '%' OR EMAIL LIKE '%' || #{keyword} || '%')
+                AND (USER_NAME LIKE '%' || #{keyword} || '%' OR STUDENT_NO LIKE '%' || #{keyword} || '%')
             </if>
             <if test="status != null and status != ''">
                 AND STATUS = #{status}
@@ -132,7 +132,7 @@
         FROM USERS
         <where>
             <if test="keyword != null and keyword != ''">
-                AND (LOGIN_ID LIKE '%' || #{keyword} || '%' OR USER_NAME LIKE '%' || #{keyword} || '%' OR EMAIL LIKE '%' || #{keyword} || '%')
+                AND (USER_NAME LIKE '%' || #{keyword} || '%' OR STUDENT_NO LIKE '%' || #{keyword} || '%')
             </if>
             <if test="status != null and status != ''">
                 AND STATUS = #{status}

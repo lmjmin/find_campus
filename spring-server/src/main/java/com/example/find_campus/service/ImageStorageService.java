@@ -21,8 +21,8 @@ public class ImageStorageService {
 
     private final Path uploadRoot;
 
-    public ImageStorageService(@Value("${findcampus.upload-root:C:/img}") String uploadRoot) {
-        this.uploadRoot = Path.of(uploadRoot);
+    public ImageStorageService(@Value("${findcampus.upload-root:uploads}") String uploadRoot) {
+        this.uploadRoot = Path.of(uploadRoot).toAbsolutePath().normalize();
     }
 
     public List<ItemImageDto> store(String itemType, Long itemId, List<MultipartFile> images) {

@@ -18,9 +18,8 @@
 
 <div class="container edit-container">
 
-    <a th:href="@{/mypage}" class="back-link">
-        <i class="fa-solid fa-arrow-left"></i>
-        마이페이지로 돌아가기
+    <a th:href="@{/mypage}" class="back-link" aria-label="마이페이지로 돌아가기">
+        <i class="fa-solid fa-chevron-left"></i>
     </a>
 
     <div class="page-head edit-page-head">
@@ -29,13 +28,13 @@
     </div>
 
     <div class="profile-summary">
-        <div class="avatar">김</div>
+        <div class="avatar" th:text="${loginUser != null and loginUser.userName != null and not #strings.isEmpty(loginUser.userName) ? #strings.substring(loginUser.userName, 0, 1) : '?'}">?</div>
 
         <div class="profile-info">
-            <h2>김동명</h2>
+            <h2 th:text="${loginUser != null ? loginUser.userName : '사용자'}">사용자</h2>
             <p>
-                tongmyong@tu.ac.kr<br>
-                동명대학교
+                <span th:text="${loginUser != null and loginUser.studentNo != null ? '학번 ' + loginUser.studentNo : '동명대학교 사용자'}">동명대학교 사용자</span><br>
+                <span>동명대학교</span>
             </p>
         </div>
     </div>
@@ -64,31 +63,19 @@
                                id="name"
                                name="name"
                                class="input"
-                               value="김동명"
-                               required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">이메일 <span class="required">*</span></label>
-                        <input type="email"
-                               id="email"
-                               name="email"
-                               class="input"
-                               value="tongmyong@tu.ac.kr"
+                               th:value="${loginUser != null ? loginUser.userName : ''}"
                                required>
                     </div>
 
                     <div class="form-group full">
-                        <label for="phone">전화번호</label>
+                        <label for="phone">전화번호 <span class="required">*</span></label>
                         <input type="text"
                                id="phone"
                                name="phone"
                                class="input"
-                               value=""
-                               placeholder="010-0000-0000">
-                        <p class="help-text">
-                            선택 입력 항목입니다. 전화번호를 추가하면 비밀번호 찾기와 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
-                        </p>
+                               th:value="${loginUser != null ? loginUser.phone : ''}"
+                               placeholder="010-0000-0000"
+                               required>
                     </div>
 
                 </div>
@@ -124,9 +111,8 @@
                                id="studentNo"
                                name="studentNo"
                                class="input"
-                               value="20240001"
+                               th:value="${loginUser != null ? loginUser.studentNo : ''}"
                                readonly>
-                        <p class="help-text">학번은 본인 확인용 정보로 사용되며 변경할 수 없습니다.</p>
                     </div>
 
                     <div class="form-group full">
@@ -297,23 +283,9 @@
                 </div>
             </section>
 
-            <div class="notice-box">
-                <i class="fa-solid fa-circle-info"></i>
-                <div>
-                    전화번호와 학과는 선택 입력 항목입니다.
-                    정보를 추가하면 비밀번호 찾기, 분실물 확인, 본인 확인 과정에서 더 빠르게 확인할 수 있습니다.
-                    실제 저장 기능은 Controller, DTO, Service, DAO 작업 후 USERS 테이블과 연결하면 됩니다.
-                </div>
-            </div>
-
         </div>
 
         <div class="button-area">
-            <a th:href="@{/mypage}" class="cancel-btn">
-                <i class="fa-solid fa-xmark"></i>
-                취소
-            </a>
-
             <button type="submit" class="save-btn">
                 <i class="fa-solid fa-check"></i>
                 수정 내용 저장
@@ -363,7 +335,6 @@
                 }
             }
 
-            alert("정보 수정 화면입니다. 실제 저장 기능은 백엔드 연결 후 처리됩니다.");
         });
     });
 </script>

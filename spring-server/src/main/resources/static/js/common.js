@@ -1,4 +1,53 @@
+(() => {
+    const storageKey = "findCampusDisplaySettings";
+    const root = document.documentElement;
+
+    function normalizeSettings(settings) {
+        const fontSize = settings && settings.fontSize === "normal" ? "medium" : settings && settings.fontSize;
+
+        return {
+            theme: settings && settings.theme === "dark" ? "dark" : "light",
+            fontSize: fontSize || "medium"
+        };
+    }
+
+    function applyDisplaySettings(settings) {
+        const nextSettings = normalizeSettings(settings || {});
+
+        root.classList.toggle("fc-theme-dark", nextSettings.theme === "dark");
+        root.classList.toggle("fc-font-small", nextSettings.fontSize === "small");
+        root.classList.toggle("fc-font-large", nextSettings.fontSize === "large");
+        root.style.colorScheme = nextSettings.theme === "dark" ? "dark" : "light";
+    }
+
+    function readDisplaySettings() {
+        try {
+            return normalizeSettings(JSON.parse(localStorage.getItem(storageKey) || "{}"));
+        } catch (error) {
+            return normalizeSettings({});
+        }
+    }
+
+    applyDisplaySettings(readDisplaySettings());
+
+    window.addEventListener("storage", function (event) {
+        if (event.key === storageKey) {
+            applyDisplaySettings(readDisplaySettings());
+        }
+    });
+
+    window.FindCampusDisplaySettings = {
+        apply: applyDisplaySettings,
+        read: readDisplaySettings,
+        storageKey: storageKey
+    };
+})();
+
 document.addEventListener("DOMContentLoaded", function () {
+    if (window.FindCampusDisplaySettings) {
+        window.FindCampusDisplaySettings.apply(window.FindCampusDisplaySettings.read());
+    }
+
     initConfirmButtons();
     initActiveMenu();
     initSearchEnter();

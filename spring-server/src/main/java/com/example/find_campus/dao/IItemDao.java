@@ -62,6 +62,8 @@ public interface IItemDao {
 
     List<ReportViewDto> findReports(ItemSearchDto searchDto);
 
+    ReportViewDto findReportById(Long reportId);
+
     int countReports(ItemSearchDto searchDto);
 
     int updateReportStatus(@Param("reportId") Long reportId, @Param("status") String status);

@@ -52,6 +52,38 @@
         WHERE ROWNUM &lt;= 100
     </select>
 
+
+    <select id="findAdminNotifications" resultType="com.example.find_campus.dto.NotificationDto">
+        SELECT *
+        FROM (
+            SELECT
+                N.NOTIFICATION_ID,
+                N.USER_ID,
+                N.TITLE,
+                N.MESSAGE,
+                N.NOTIFICATION_TYPE,
+                N.TARGET_TYPE,
+                N.TARGET_ID,
+                N.READ_YN,
+                N.CREATED_AT
+            FROM NOTIFICATIONS N
+            LEFT JOIN USERS U ON U.USER_ID = N.USER_ID
+            WHERE (LOWER(NVL(U.LOGIN_ID, '-')) = 'admin_notifications' OR UPPER(NVL(U.ROLE, 'USER')) = 'ADMIN' OR LOWER(NVL(U.LOGIN_ID, '-')) IN ('admin', 'administrator') OR U.USER_NAME = '관리자')
+              AND LOWER(NVL(N.TARGET_TYPE, '-')) IN ('inquiry', 'report', 'claim', 'ai_match')
+            ORDER BY N.CREATED_AT DESC
+        )
+        WHERE ROWNUM &lt;= 200
+    </select>
+
+    <select id="countUnreadAdminNotifications" resultType="int">
+        SELECT COUNT(*)
+        FROM NOTIFICATIONS N
+        LEFT JOIN USERS U ON U.USER_ID = N.USER_ID
+        WHERE (LOWER(NVL(U.LOGIN_ID, '-')) = 'admin_notifications' OR UPPER(NVL(U.ROLE, 'USER')) = 'ADMIN' OR LOWER(NVL(U.LOGIN_ID, '-')) IN ('admin', 'administrator') OR U.USER_NAME = '관리자')
+          AND LOWER(NVL(N.TARGET_TYPE, '-')) IN ('inquiry', 'report', 'claim', 'ai_match')
+          AND N.READ_YN = 'N'
+    </select>
+
     <select id="countUnreadNotifications" parameterType="long" resultType="int">
         SELECT COUNT(*)
         FROM NOTIFICATIONS

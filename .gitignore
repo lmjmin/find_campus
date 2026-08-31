@@ -1,0 +1,28 @@
+# Build
+bin/
+build/
+.gradle/
+
+# Codex backup
+spring-server/.codex-backup-*/
+
+# Upload files
+spring-server/uploads/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.*

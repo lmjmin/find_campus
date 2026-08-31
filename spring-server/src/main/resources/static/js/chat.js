@@ -1,108 +1,121 @@
-document.addEventListener("DOMContentLoaded", function () {
-    initChatScroll();
-    initMessageForm();
-    initRoomSearch();
-});
-
-/* 채팅 화면 아래로 자동 스크롤 */
-function initChatScroll() {
-    const messages = document.querySelector(".messages");
-
-    if (!messages) {
-        return;
+document.addEventListener("DOMContentLoaded", () => {
+    const messageArea = document.getElementById("messageArea");
+    if (messageArea) {
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
 
-    messages.scrollTop = messages.scrollHeight;
-}
-
-/* 메시지 입력 */
-function initMessageForm() {
-    const form = document.querySelector(".message-form");
-
-    if (!form) {
-        return;
+    const selectedRoomListItem = document.querySelector(".chat-room-item.active");
+    if (selectedRoomListItem) {
+        selectedRoomListItem.scrollIntoView({ block: "nearest" });
     }
 
-    const input = form.querySelector("input[name='messageContent']");
+    const searchInput = document.getElementById("chatRoomSearchInput") || document.getElementById("chatSearchInput");
+    const roomItems = Array.from(document.querySelectorAll(".chat-room-item, .room-item"));
+    if (searchInput && roomItems.length > 0) {
+        searchInput.addEventListener("input", () => {
+            const keyword = searchInput.value.trim().toLowerCase();
+            roomItems.forEach((item) => {
+                const text = (item.dataset.searchText || item.textContent || "").toLowerCase();
+                item.hidden = keyword.length > 0 && !text.includes(keyword);
+            });
+        });
+    }
 
-    form.addEventListener("submit", function (event) {
-        if (!input || input.value.trim() === "") {
+    const moreButton = document.getElementById("moreMenuButton");
+    const moreMenu = document.getElementById("moreMenu");
+    if (moreButton && moreMenu) {
+        moreButton.setAttribute("aria-haspopup", "true");
+        moreButton.setAttribute("aria-expanded", "false");
+
+        moreButton.addEventListener("click", (event) => {
             event.preventDefault();
-            alert("메시지를 입력해주세요.");
-            return;
-        }
+            event.stopPropagation();
+            const nextVisible = !moreMenu.classList.contains("show");
+            moreMenu.classList.toggle("show", nextVisible);
+            moreButton.setAttribute("aria-expanded", String(nextVisible));
+        });
 
-        /*
-            실제 DB 저장은 Spring Boot Controller에서 처리.
-            화면에서만 바로 보이게 하고 싶으면 아래 코드 사용 가능.
-        */
-    });
-}
+        moreMenu.addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
 
-/* 채팅방 검색 */
-function initRoomSearch() {
-    const searchInput = document.querySelector(".chat-search-box input");
+        document.addEventListener("click", () => {
+            moreMenu.classList.remove("show");
+            moreButton.setAttribute("aria-expanded", "false");
+        });
 
-    if (!searchInput) {
-        return;
-    }
-
-    const roomItems = document.querySelectorAll(".room-item");
-
-    searchInput.addEventListener("input", function () {
-        const keyword = searchInput.value.trim().toLowerCase();
-
-        roomItems.forEach(function (room) {
-            const text = room.innerText.toLowerCase();
-
-            if (text.includes(keyword)) {
-                room.style.display = "flex";
-            } else {
-                room.style.display = "none";
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                moreMenu.classList.remove("show");
+                moreButton.setAttribute("aria-expanded", "false");
             }
         });
-    });
-}
-
-/* 프론트 화면에서 임시 메시지 추가용 */
-function appendMessage(content, isMine) {
-    const messages = document.querySelector(".messages");
-
-    if (!messages) {
-        return;
     }
 
-    const row = document.createElement("div");
-    row.className = isMine ? "message-row me" : "message-row other";
+    const messageForm = document.querySelector(".chat-input-area, .message-form");
+    if (messageForm) {
+        const messageInput = messageForm.querySelector("textarea[name='messageContent'], input[name='messageContent']");
 
-    const bubbleArea = document.createElement("div");
-    bubbleArea.className = "bubble-area";
+        const resizeMessageInput = () => {
+            if (!messageInput || messageInput.tagName.toLowerCase() !== "textarea") {
+                return;
+            }
+            messageInput.style.height = "46px";
+            const nextHeight = Math.min(messageInput.scrollHeight, 104);
+            messageInput.style.height = `${Math.max(46, nextHeight)}px`;
+        };
 
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.innerText = content;
+        if (messageInput) {
+            messageInput.addEventListener("input", resizeMessageInput);
+            messageInput.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+                    event.preventDefault();
+                    if (typeof messageForm.requestSubmit === "function") {
+                        messageForm.requestSubmit();
+                    } else {
+                        messageForm.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+                    }
+                }
+            });
+            resizeMessageInput();
+        }
 
-    const time = document.createElement("div");
-    time.className = "time";
-    time.innerText = getCurrentTimeText();
+        messageForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            if (!messageInput || !messageInput.value.trim()) {
+                alert("메시지를 입력해 주세요.");
+                return;
+            }
 
-    bubbleArea.appendChild(bubble);
-    bubbleArea.appendChild(time);
+            const formData = new FormData(messageForm);
+            const messageContent = String(formData.get("messageContent") || "").trim();
+            formData.set("messageContent", messageContent);
 
-    row.appendChild(bubbleArea);
-    messages.appendChild(row);
+            const action = messageForm.getAttribute("action");
+            if (!action) {
+                alert("채팅 전송 주소를 찾을 수 없습니다.");
+                return;
+            }
 
-    messages.scrollTop = messages.scrollHeight;
-}
+            try {
+                const response = await fetch(action, {
+                    method: "POST",
+                    body: formData,
+                    headers: { "X-Requested-With": "XMLHttpRequest" },
+                    credentials: "same-origin"
+                });
 
-function getCurrentTimeText() {
-    const now = new Date();
-    const hour = now.getHours();
-    const minute = now.getMinutes();
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
 
-    const period = hour < 12 ? "오전" : "오후";
-    const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-    const displayMinute = String(minute).padStart(2, "0");
-
-    return period + " " + displayHour + ":" + displayMinute;
-}
+                messageInput.value = "";
+                resizeMessageInput();
+                window.location.reload();
+            } catch (error) {
+                console.error(error);
+                alert("메시지를 보내지 못했습니다. 잠시 후 다시 시도해 주세요.");
+            }
+        });
+    }
+});

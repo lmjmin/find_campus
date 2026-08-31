@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>내 분실물 선택 | FindCampus</title>
+    <title>&#45236; &#48516;&#49892;&#47932; &#49440;&#53469; | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet"
@@ -18,180 +18,108 @@
 
 <div class="container">
 
-    <a th:href="@{/found/detail}" href="/found/detail" class="back-link">
+    <a th:href="@{/found/detail/{id}(id=${foundId})}" href="/found/list" class="back-link back-icon-link">
         <i class="fa-solid fa-arrow-left"></i>
-        습득물 상세로 돌아가기
     </a>
 
     <div class="page-head">
 
         <div class="page-badge">
             <i class="fa-solid fa-shield-halved"></i>
-            수령 신청 1단계
+            &#49688;&#47161; &#49888;&#52397; 1&#45800;&#44228;
         </div>
 
-        <h1>내 분실물 글 선택</h1>
+        <h1>&#45236; &#48516;&#49892;&#47932; &#44544; &#49440;&#53469;</h1>
 
         <p>
-            이 습득물이 본인의 물건이라고 생각되면, 먼저 본인이 등록한 분실물 글을 선택해 주세요.<br>
-            선택한 분실물 글과 습득물 글의 정보를 비교한 뒤 유사도 결과를 확인합니다.
+            &#51060; &#49845;&#46301;&#47932;&#51060; &#48376;&#51064;&#51032; &#47932;&#44148;&#51060;&#46972;&#44256; &#49373;&#44033;&#46104;&#47732;, &#47676;&#51200; &#48376;&#51064;&#51060; &#46321;&#47197;&#54620; &#48516;&#49892;&#47932; &#44544;&#51012; &#49440;&#53469;&#54644; &#51452;&#49464;&#50836;.<br>
+            &#49440;&#53469;&#54620; &#48516;&#49892;&#47932; &#44544;&#44284; &#49845;&#46301;&#47932; &#44544;&#51032; &#51221;&#48372;&#47484; AI&#44032; &#48708;&#44368;&#54644; &#50976;&#49324;&#46020; &#44208;&#44284;&#47484; &#54869;&#51064;&#54633;&#45768;&#45796;.
         </p>
 
     </div>
 
     <section class="flow-box">
-
         <div class="flow-title">
-
             <div class="flow-icon">
                 <i class="fa-solid fa-route"></i>
             </div>
-
             <div>
-                <h2>수령 신청 흐름</h2>
-                <p>분실물 글 선택 → 유사도 확인 → 보관 장소 안내 순서로 진행됩니다.</p>
+                <h2>&#49688;&#47161; &#49888;&#52397; &#55120;&#47492;</h2>
+                <p>&#48516;&#49892;&#47932; &#44544; &#49440;&#53469; &#8594; AI &#50976;&#49324;&#46020; &#54869;&#51064; &#8594; &#48372;&#44288; &#51109;&#49548; &#50504;&#45236; &#49692;&#49436;&#47196; &#51652;&#54665;&#46121;&#45768;&#45796;.</p>
             </div>
-
         </div>
 
         <div class="flow-steps">
-
             <div class="flow-step">
                 <div class="step-num">1</div>
-                <strong>분실글 선택</strong>
-                <span>본인이 등록한 분실물 글을 선택합니다.</span>
+                <strong>&#48516;&#49892;&#44544; &#49440;&#53469;</strong>
+                <span>&#48376;&#51064;&#51060; &#46321;&#47197;&#54620; &#48516;&#49892;&#47932; &#44544;&#51012; &#49440;&#53469;&#54633;&#45768;&#45796;.</span>
             </div>
-
             <div class="flow-step">
                 <div class="step-num">2</div>
-                <strong>유사도 확인</strong>
-                <span>물건명, 위치, 시간, 특징을 비교합니다.</span>
+                <strong>AI &#50976;&#49324;&#46020; &#54869;&#51064;</strong>
+                <span>AI&#44032; &#47932;&#44148;&#47749;, &#50948;&#52824;, &#45216;&#51676;, &#53945;&#51669;&#51012; &#48708;&#44368;&#54644; &#50976;&#49324;&#46020;&#47484; &#44228;&#49328;&#54633;&#45768;&#45796;.</span>
             </div>
-
             <div class="flow-step">
                 <div class="step-num">3</div>
-                <strong>보관장소 안내</strong>
-                <span>관리자 확인 후 수령 장소를 안내받습니다.</span>
+                <strong>&#48372;&#44288;&#51109;&#49548; &#50504;&#45236;</strong>
+                <span>&#48372;&#44288;&#52376;&#51032; &#54869;&#51064; &#51208;&#52264;&#47484; &#50504;&#45236;&#48155;&#49845;&#45768;&#45796;.</span>
             </div>
-
         </div>
-
     </section>
 
-    <div class="notice-box">
-        <i class="fa-solid fa-circle-info"></i>
-
-        <div>
-            <strong>분실물 글 등록이 필요합니다.</strong>
-            습득물을 수령하려면 먼저 본인의 분실물 글이 등록되어 있어야 합니다.
-            분실물 글에 작성한 색상, 위치, 시간, 고유 특징을 바탕으로 유사도를 확인합니다.
-        </div>
-    </div>
-
     <div class="section-title">
-        <h2>내가 등록한 분실물 글</h2>
-
+        <h2>&#45236;&#44032; &#46321;&#47197;&#54620; &#48516;&#49892;&#47932; &#44544;</h2>
         <a th:href="@{/lost/write}" href="/lost/write" class="write-lost-btn">
             <i class="fa-solid fa-pen"></i>
-            분실물 등록하기
+            &#48516;&#49892;&#47932; &#46321;&#47197;&#54616;&#44592;
         </a>
     </div>
 
     <div class="lost-list">
+        <div class="notice-box empty-match-box" th:if="${lostItems == null or #lists.isEmpty(lostItems)}">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                <strong>&#46321;&#47197;&#54620; &#48516;&#49892;&#47932;&#51060; &#50630;&#49845;&#45768;&#45796;.</strong>
+                &#49688;&#47161; &#49888;&#52397;&#51012; &#51652;&#54665;&#54616;&#47140;&#47732; &#47676;&#51200; &#48516;&#49892;&#47932; &#44544;&#51012; &#46321;&#47197;&#54644; &#51452;&#49464;&#50836;.
+            </div>
+        </div>
 
-        <div class="lost-card">
-
+        <div class="lost-card" th:each="lost : ${lostItems}">
             <div class="item-icon">
-                <i class="fa-solid fa-headphones"></i>
+                <img th:if="${lost.imageUrl != null}" th:src="@{${lost.imageUrl}}" alt="" class="match-item-photo">
+                <i th:if="${lost.imageUrl == null}" class="fa-solid fa-box-open"></i>
             </div>
 
             <div class="lost-info">
                 <div class="lost-top">
-                    <span class="lost-name">에어팟 프로</span>
-                    <span class="badge badge-lost">분실물</span>
-                    <span class="badge badge-wait">찾는중</span>
+                    <span class="lost-name" th:text="${lost.title != null ? lost.title : lost.itemName}">&#48516;&#49892;&#47932; &#51228;&#47785;</span>
+                    <span class="badge badge-lost">&#48516;&#49892;&#47932;</span>
+                    <span class="badge badge-received">&#51217;&#49688;&#51473;</span>
                 </div>
 
                 <div class="lost-meta">
                     <span>
                         <i class="fa-solid fa-location-dot"></i>
-                        ICT 2관
+                        <span th:text="${lost.locationName != null ? lost.locationName : '-'}">&#50948;&#52824;</span>
                     </span>
-
                     <span>
                         <i class="fa-regular fa-calendar"></i>
-                        2026.05.20
+                        <span th:text="${lost.itemDate != null ? #dates.format(lost.itemDate, 'yyyy.MM.dd') : '-'}">-</span>
                     </span>
-
-                    <span>
+                    <span th:if="${lost.categoryName != null}">
                         <i class="fa-solid fa-tag"></i>
-                        전자기기
+                        <span th:text="${lost.categoryName}">&#52852;&#53580;&#44256;&#47532;</span>
                     </span>
                 </div>
 
-                <div class="lost-desc">
-                    ICT 2관 강의실 근처에서 흰색 에어팟 프로를 분실했습니다.
-                </div>
+                <div class="lost-desc" th:text="${lost.description != null and not #strings.isEmpty(lost.description) ? lost.description : lost.itemName}">&#48516;&#49892;&#47932; &#49444;&#47749;</div>
             </div>
 
-            <a th:href="@{/match/result}" href="/match/result" class="select-btn">
-                이 분실글 선택
+            <a th:href="@{/match/result(foundId=${foundId}, lostId=${lost.id})}" href="/match/result" class="select-btn">
+                &#51060; &#48516;&#49892;&#44544; &#49440;&#53469;
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
-
-        </div>
-
-        <div class="lost-card">
-
-            <div class="item-icon">
-                <i class="fa-solid fa-briefcase"></i>
-            </div>
-
-            <div class="lost-info">
-                <div class="lost-top">
-                    <span class="lost-name">검정 노트북 가방</span>
-                    <span class="badge badge-lost">분실물</span>
-                    <span class="badge badge-wait">찾는중</span>
-                </div>
-
-                <div class="lost-meta">
-                    <span>
-                        <i class="fa-solid fa-location-dot"></i>
-                        중앙도서관
-                    </span>
-
-                    <span>
-                        <i class="fa-regular fa-calendar"></i>
-                        2026.05.18
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-tag"></i>
-                        가방
-                    </span>
-                </div>
-
-                <div class="lost-desc">
-                    중앙도서관 1층에서 검정색 노트북 가방을 잃어버렸습니다.
-                </div>
-            </div>
-
-            <a th:href="@{/match/result}" href="/match/result" class="select-btn">
-                이 분실글 선택
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
-
-        </div>
-
-    </div>
-
-    <div class="bottom-guide">
-        <i class="fa-solid fa-lock"></i>
-
-        <div>
-            <strong>다음 단계에서 유사도를 확인합니다.</strong>
-            분실물 글을 선택하면 습득물 글과 비교하여 유사도 결과가 표시됩니다.
-            이후 보관 장소 안내 페이지에서 수령 장소와 주의사항을 확인할 수 있습니다.
         </div>
     </div>
 

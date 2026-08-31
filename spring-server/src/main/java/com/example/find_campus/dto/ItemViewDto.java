@@ -24,6 +24,14 @@ public class ItemViewDto {
     private String itemTimeRange;
     private Long storageId;
     private String storageName;
+    private Long storageLocationId;
+    private String storageLocationName;
+    private Double storageLatitude;
+    private Double storageLongitude;
+    private String storageManagerName;
+    private String storagePhone;
+    private String storageOperatingHours;
+    private String storageDescription;
     private String description;
     private String status;
     private int viewCount;

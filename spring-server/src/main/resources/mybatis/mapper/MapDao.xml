@@ -18,6 +18,7 @@
                     L.STATUS,
                     CASE
                         WHEN L.STATUS IN ('RETURNED', 'COMPLETED') THEN '반환완료'
+                        WHEN L.STATUS IN ('STORED', 'STORAGE') THEN '보관중'
                         ELSE '접수중'
                     END AS STATUS_NAME,
                     LOC.LOCATION_NAME,
@@ -28,18 +29,28 @@
                     LOC.LATITUDE,
                     LOC.LONGITUDE,
                     '/lost/detail/' || L.LOST_ID AS DETAIL_URL,
+                    IMG.IMAGE_URL,
                     L.CREATED_AT
                 FROM LOST_ITEMS L
                 LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
+                LEFT JOIN (
+                    SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
+                    FROM ITEM_IMAGES
+                    WHERE ITEM_TYPE = 'lost'
+                    GROUP BY ITEM_ID
+                ) IMG ON IMG.ITEM_ID = L.LOST_ID
                 <where>
-                    AND L.STATUS != 'DELETED'
+                    AND L.STATUS NOT IN ('DELETED', 'HIDDEN')
                     <if test="filter != null and filter != '' and filter != 'all'">
                         <choose>
                             <when test="filter == 'lost'">
                                 AND 1 = 1
                             </when>
                             <when test="filter == 'received'">
-                                AND L.STATUS NOT IN ('RETURNED', 'COMPLETED')
+                                AND L.STATUS IN ('REGISTERED', 'RECEIVED')
+                            </when>
+                            <when test="filter == 'storage'">
+                                AND L.STATUS IN ('STORED', 'STORAGE')
                             </when>
                             <when test="filter == 'returned'">
                                 AND L.STATUS IN ('RETURNED', 'COMPLETED')
@@ -51,10 +62,10 @@
                     </if>
                     <if test="keyword != null and keyword != ''">
                         AND (
-                            L.TITLE LIKE '%' || #{keyword} || '%'
-                            OR L.ITEM_NAME LIKE '%' || #{keyword} || '%'
-                            OR L.LOST_LOCATION_DETAIL LIKE '%' || #{keyword} || '%'
-                            OR LOC.LOCATION_NAME LIKE '%' || #{keyword} || '%'
+                            LOWER(L.TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(L.ITEM_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(L.LOST_LOCATION_DETAIL) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(LOC.LOCATION_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
                         )
                     </if>
                 </where>
@@ -69,6 +80,7 @@
                     F.STATUS,
                     CASE
                         WHEN F.STATUS IN ('RETURNED', 'COMPLETED') THEN '반환완료'
+                        WHEN F.STATUS IN ('REGISTERED', 'RECEIVED') THEN '접수중'
                         ELSE '보관중'
                     END AS STATUS_NAME,
                     LOC.LOCATION_NAME,
@@ -79,15 +91,28 @@
                     LOC.LATITUDE,
                     LOC.LONGITUDE,
                     '/found/detail/' || F.FOUND_ID AS DETAIL_URL,
+                    IMG.IMAGE_URL,
                     F.CREATED_AT
                 FROM FOUND_ITEMS F
                 LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
+                LEFT JOIN (
+                    SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
+                    FROM ITEM_IMAGES
+                    WHERE ITEM_TYPE = 'found'
+                    GROUP BY ITEM_ID
+                ) IMG ON IMG.ITEM_ID = F.FOUND_ID
                 <where>
-                    AND F.STATUS != 'DELETED'
+                    AND F.STATUS NOT IN ('DELETED', 'HIDDEN')
                     <if test="filter != null and filter != '' and filter != 'all'">
                         <choose>
-                            <when test="filter == 'found' or filter == 'storage'">
-                                AND F.STATUS NOT IN ('RETURNED', 'COMPLETED')
+                            <when test="filter == 'found'">
+                                AND 1 = 1
+                            </when>
+                            <when test="filter == 'received'">
+                                AND F.STATUS IN ('REGISTERED', 'RECEIVED')
+                            </when>
+                            <when test="filter == 'storage'">
+                                AND F.STATUS IN ('STORED', 'STORAGE')
                             </when>
                             <when test="filter == 'returned'">
                                 AND F.STATUS IN ('RETURNED', 'COMPLETED')
@@ -99,10 +124,10 @@
                     </if>
                     <if test="keyword != null and keyword != ''">
                         AND (
-                            F.TITLE LIKE '%' || #{keyword} || '%'
-                            OR F.ITEM_NAME LIKE '%' || #{keyword} || '%'
-                            OR F.FOUND_LOCATION_DETAIL LIKE '%' || #{keyword} || '%'
-                            OR LOC.LOCATION_NAME LIKE '%' || #{keyword} || '%'
+                            LOWER(F.TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(F.ITEM_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(F.FOUND_LOCATION_DETAIL) LIKE '%' || LOWER(#{keyword}) || '%'
+                            OR LOWER(LOC.LOCATION_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
                         )
                     </if>
                 </where>

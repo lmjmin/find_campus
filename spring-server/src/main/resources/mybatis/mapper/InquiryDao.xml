@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.IInquiryDao">
+
+    <insert id="insertInquiry" parameterType="com.example.find_campus.dto.InquiryDto">
+        <selectKey keyProperty="inquiryId" resultType="long" order="BEFORE">
+            SELECT SEQ_INQUIRIES.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO INQUIRIES (
+            INQUIRY_ID,
+            USER_ID,
+            INQUIRY_TYPE,
+            TITLE,
+            CONTENT,
+            REPLY_EMAIL,
+            STATUS,
+            CREATED_AT
+        ) VALUES (
+            #{inquiryId,jdbcType=NUMERIC},
+            #{userId,jdbcType=NUMERIC},
+            #{inquiryType,jdbcType=VARCHAR},
+            #{title,jdbcType=VARCHAR},
+            #{content,jdbcType=VARCHAR},
+            #{replyEmail,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            SYSDATE
+        )
+    </insert>
+
+    <sql id="InquiryColumns">
+        I.INQUIRY_ID,
+        I.USER_ID,
+        U.USER_NAME,
+        U.LOGIN_ID,
+        U.STUDENT_NO,
+        I.INQUIRY_TYPE,
+        I.TITLE,
+        TO_CHAR(I.CONTENT) AS CONTENT,
+        I.REPLY_EMAIL,
+        NVL(I.STATUS, 'WAITING') AS STATUS,
+        TO_CHAR(I.ANSWER_CONTENT) AS ANSWER_CONTENT,
+        I.ANSWERED_AT,
+        I.ANSWER_ADMIN_ID,
+        A.USER_NAME AS ANSWER_ADMIN_NAME,
+        I.CREATED_AT,
+        I.UPDATED_AT
+    </sql>
+
+    <select id="findInquiryById" resultType="com.example.find_campus.dto.InquiryDto">
+        SELECT
+            <include refid="InquiryColumns"/>
+        FROM INQUIRIES I
+        LEFT JOIN USERS U ON U.USER_ID = I.USER_ID
+        LEFT JOIN USERS A ON A.USER_ID = I.ANSWER_ADMIN_ID
+        WHERE I.INQUIRY_ID = #{inquiryId,jdbcType=NUMERIC}
+          AND NVL(I.STATUS, 'WAITING') != 'DELETED'
+    </select>
+
+    <select id="findInquiries" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="com.example.find_campus.dto.InquiryDto">
+        SELECT * FROM (
+            SELECT
+                <include refid="InquiryColumns"/>
+            FROM INQUIRIES I
+            LEFT JOIN USERS U ON U.USER_ID = I.USER_ID
+            LEFT JOIN USERS A ON A.USER_ID = I.ANSWER_ADMIN_ID
+            <where>
+                NVL(I.STATUS, 'WAITING') != 'DELETED'
+                <if test="keyword != null and keyword != ''">
+                    AND (
+                        LOWER(I.TITLE) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(TO_CHAR(I.CONTENT)) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(TO_CHAR(I.ANSWER_CONTENT)) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(I.REPLY_EMAIL) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(U.USER_NAME) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(U.LOGIN_ID) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                        OR LOWER(U.STUDENT_NO) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    )
+                </if>
+                <if test="status != null and status != ''">
+                    AND NVL(I.STATUS, 'WAITING') = #{status,jdbcType=VARCHAR}
+                </if>
+            </where>
+            ORDER BY I.CREATED_AT DESC
+        )
+        WHERE ROWNUM &lt;= 200
+    </select>
+
+    <select id="findInquiriesByUserId" resultType="com.example.find_campus.dto.InquiryDto">
+        SELECT
+            <include refid="InquiryColumns"/>
+        FROM INQUIRIES I
+        LEFT JOIN USERS U ON U.USER_ID = I.USER_ID
+        LEFT JOIN USERS A ON A.USER_ID = I.ANSWER_ADMIN_ID
+        WHERE I.USER_ID = #{userId,jdbcType=NUMERIC}
+          AND NVL(I.STATUS, 'WAITING') != 'DELETED'
+        ORDER BY I.CREATED_AT DESC
+    </select>
+
+    <select id="countInquiries" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="int">
+        SELECT COUNT(*)
+        FROM INQUIRIES I
+        LEFT JOIN USERS U ON U.USER_ID = I.USER_ID
+        <where>
+            NVL(I.STATUS, 'WAITING') != 'DELETED'
+            <if test="keyword != null and keyword != ''">
+                AND (
+                    LOWER(I.TITLE) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(TO_CHAR(I.CONTENT)) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(TO_CHAR(I.ANSWER_CONTENT)) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(I.REPLY_EMAIL) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(U.USER_NAME) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(U.LOGIN_ID) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                    OR LOWER(U.STUDENT_NO) LIKE '%' || LOWER(#{keyword,jdbcType=VARCHAR}) || '%'
+                )
+            </if>
+            <if test="status != null and status != ''">
+                AND NVL(I.STATUS, 'WAITING') = #{status,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="countInquiriesByStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM INQUIRIES
+        WHERE NVL(STATUS, 'WAITING') = #{status,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateInquiryStatus">
+        UPDATE INQUIRIES
+        SET STATUS = #{status,jdbcType=VARCHAR},
+            UPDATED_AT = SYSDATE
+        WHERE INQUIRY_ID = #{inquiryId,jdbcType=NUMERIC}
+          AND NVL(STATUS, 'WAITING') != 'DELETED'
+    </update>
+
+    <update id="answerInquiry">
+        UPDATE INQUIRIES
+        SET ANSWER_CONTENT = #{answerContent,jdbcType=VARCHAR},
+            ANSWERED_AT = SYSDATE,
+            ANSWER_ADMIN_ID = #{answerAdminId,jdbcType=NUMERIC},
+            STATUS = 'ANSWERED',
+            UPDATED_AT = SYSDATE
+        WHERE INQUIRY_ID = #{inquiryId,jdbcType=NUMERIC}
+          AND NVL(STATUS, 'WAITING') != 'DELETED'
+    </update>
+
+</mapper>

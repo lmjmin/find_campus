@@ -3,17 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>채팅 | FindCampus</title>
+    <title>채팅 목록 | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/chat/rooms.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/common.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/chat/room.css(v=${#dates.createNow().time})}">
 </head>
 
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
 <main class="chat-main">
@@ -23,400 +21,193 @@
             <div class="chat-search-area">
                 <div class="chat-search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="채팅 검색...">
+                    <input type="text" id="chatRoomSearchInput" placeholder="채팅 검색">
                 </div>
             </div>
 
-            <div class="chat-room-list">
+            <div class="chat-room-list" id="chatRoomList" th:attr="data-selected-room-id=${selectedRoom != null ? selectedRoom.roomId : null}">
+                <div class="chat-room-empty" th:if="${#lists.isEmpty(rooms)}">
+                    <i class="fa-regular fa-comments"></i>
+                    <strong>아직 채팅이 없습니다.</strong>
+                    <span>습득물 상세페이지에서 채팅하기를 누르면 작성자와 바로 대화할 수 있습니다.</span>
+                </div>
 
-                <!-- 최신순 1: 방금 전 -->
-                <a th:href="@{/chat/room/1}" class="chat-room-item active unread">
+                <a th:each="room : ${rooms}"
+                   th:href="@{/chat/room/{id}(id=${room.roomId})}"
+                   class="chat-room-item"
+                   th:classappend="${(selectedRoom != null and selectedRoom.roomId == room.roomId ? ' active' : '') + (room.unreadCount > 0 ? ' unread' : '')}">
                     <div class="chat-avatar profile-indigo">
-                        <span>김</span>
+                        <span th:text="${room.otherInitial}">이</span>
                     </div>
+
                     <div class="chat-room-info">
                         <div class="chat-room-top">
                             <div class="chat-user-line">
-                                <strong>김동명</strong>
-                                <span class="department">컴퓨터공학과</span>
-                                <span class="recent-dot"></span>
+                                <strong th:text="${room.otherUserName}">상대방</strong>
+                                <span class="department" th:if="${room.otherStudentNo != null}" th:text="${room.otherStudentNo}">학번</span>
+                                <span class="recent-dot" th:if="${room.unreadCount > 0}"></span>
                             </div>
+
                             <div class="chat-room-side">
-                                <span class="chat-time recent">방금 전</span>
-                                <span class="unread-count">2</span>
+                                <span class="chat-time"
+                                      th:classappend="${room.unreadCount > 0 ? ' recent' : ''}"
+                                      th:if="${room.lastMessageAt != null}"
+                                      th:text="${#dates.format(room.lastMessageAt, 'MM.dd HH:mm')}">08.27</span>
+                                <span class="unread-count" th:if="${room.unreadCount > 0}" th:text="${room.unreadCount}">1</span>
+                                <span class="alarm-off-indicator" th:if="${room.muteYn == 'Y'}" title="알림 꺼짐">
+                                    <i class="fa-regular fa-bell-slash"></i>
+                                </span>
                             </div>
                         </div>
-                        <p class="chat-last-message">검은색 카드지갑 맞나요?</p>
-                    </div>
-                </a>
 
-                <!-- 최신순 2: 14:47 -->
-                <a th:href="@{/chat/room/2}" class="chat-room-item">
-                    <div class="chat-avatar profile-sky">
-                        <span>이</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>이민주</strong>
-                                <span class="department">컴퓨터공학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">14:47</span>
-                            </div>
+                        <div class="chat-related-line" th:classappend="${room.itemType == 'lost' ? ' lost' : ' found'}">
+                            <strong th:text="${room.itemTitle}">게시글 제목</strong>
                         </div>
-                        <p class="chat-last-message">학생회관 안내데스크에 맡겨뒀어요.</p>
+
+                        <p class="chat-last-message">
+                            <span th:if="${room.lastMessage != null and !#strings.isEmpty(room.lastMessage)}"
+                                  th:text="${room.lastMessage}">최근 메시지</span>
+                            <span th:if="${room.lastMessage == null or #strings.isEmpty(room.lastMessage)}">아직 메시지가 없습니다.</span>
+                        </p>
                     </div>
                 </a>
-
-                <!-- 최신순 3: 13:20 -->
-                <a th:href="@{/chat/room/3}" class="chat-room-item">
-                    <div class="chat-avatar profile-rose">
-                        <span>박</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>박창용</strong>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">13:20</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">혹시 사진 한 번 더 확인 가능할까요?</p>
-                    </div>
-                </a>
-
-                <!-- 최신순 4: 12:05 -->
-                <a th:href="@{/chat/room/4}" class="chat-room-item">
-                    <div class="chat-avatar profile-slate">
-                        <span>최</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>최수상</strong>
-                                <span class="department">정보보호학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">12:05</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">네, 내일 오전에 방문하겠습니다.</p>
-                    </div>
-                </a>
-
-                <!-- 최신순 5: 11:38 -->
-                <a th:href="@{/chat/room/5}" class="chat-room-item">
-                    <div class="chat-avatar profile-violet">
-                        <span>장</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>장연옥</strong>
-                                <span class="department">뷰티케어학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">11:38</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">보관 장소가 어디인지 알 수 있을까요?</p>
-                    </div>
-                </a>
-
-                <!-- 최신순 6: 10:22 -->
-                <a th:href="@{/chat/room/6}" class="chat-room-item unread">
-                    <div class="chat-avatar profile-green">
-                        <span>오</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>오지훈</strong>
-                                <span class="department">간호학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">10:22</span>
-                                <span class="unread-count">1</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">습득물 상세 페이지 보고 연락드렸습니다.</p>
-                    </div>
-                </a>
-
-                <!-- 최신순 7: 09:45 -->
-                <a th:href="@{/chat/room/7}" class="chat-room-item">
-                    <div class="chat-avatar profile-navy">
-                        <span>정</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>정다현</strong>
-                                <span class="department">경영학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">09:45</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">확인 후 다시 연락드릴게요.</p>
-                    </div>
-                </a>
-
-                <!-- 어제 대화: 최신순 -->
-                <a th:href="@{/chat/room/8}" class="chat-room-item">
-                    <div class="chat-avatar profile-stone">
-                        <span>한</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>한유림</strong>
-                                <span class="department">시각디자인학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">어제</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">분실 위치가 중앙도서관 근처 맞나요?</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/9}" class="chat-room-item">
-                    <div class="chat-avatar profile-mint">
-                        <span>강</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>강민석</strong>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">어제</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">네, 특징이 거의 비슷한 것 같아요.</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/10}" class="chat-room-item">
-                    <div class="chat-avatar profile-coral">
-                        <span>송</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>송하은</strong>
-                                <span class="department">상담심리학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">어제</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">학생증 확인 후 수령 가능하다고 합니다.</p>
-                    </div>
-                </a>
-
-                <!-- 월요일 대화 -->
-                <a th:href="@{/chat/room/11}" class="chat-room-item">
-                    <div class="chat-avatar profile-indigo">
-                        <span>윤</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>윤서준</strong>
-                                <span class="department">냉동공조공학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">월요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">분실물 보관소에 문의해보겠습니다.</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/12}" class="chat-room-item">
-                    <div class="chat-avatar profile-sky">
-                        <span>문</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>문지아</strong>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">월요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">혹시 안에 이름 적혀 있었나요?</p>
-                    </div>
-                </a>
-
-                <!-- 일요일 대화 -->
-                <a th:href="@{/chat/room/13}" class="chat-room-item unread">
-                    <div class="chat-avatar profile-rose">
-                        <span>배</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>배하늘</strong>
-                                <span class="department">식품영양학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">일요일</span>
-                                <span class="unread-count">3</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">사진 확인했습니다. 제 물건 같아요.</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/14}" class="chat-room-item">
-                    <div class="chat-avatar profile-slate">
-                        <span>남</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>남도윤</strong>
-                                <span class="department">기계공학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">일요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">오늘 오후에 찾으러 갈 수 있습니다.</p>
-                    </div>
-                </a>
-
-                <!-- 토요일 대화 -->
-                <a th:href="@{/chat/room/15}" class="chat-room-item">
-                    <div class="chat-avatar profile-violet">
-                        <span>신</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>신예린</strong>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">토요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">안내 감사합니다.</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/16}" class="chat-room-item">
-                    <div class="chat-avatar profile-green">
-                        <span>조</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>조현우</strong>
-                                <span class="department">AI학부</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">토요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">위치가 정확히 어디였나요?</p>
-                    </div>
-                </a>
-
-                <!-- 금요일 대화 -->
-                <a th:href="@{/chat/room/17}" class="chat-room-item unread">
-                    <div class="chat-avatar profile-navy">
-                        <span>서</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>서지민</strong>
-                                <span class="department">건축학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">금요일</span>
-                                <span class="unread-count">1</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">혹시 이어폰 케이스 색상이 흰색인가요?</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/18}" class="chat-room-item">
-                    <div class="chat-avatar profile-stone">
-                        <span>권</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>권민재</strong>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">금요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">사진 올려주셔서 감사합니다.</p>
-                    </div>
-                </a>
-
-                <!-- 목요일 대화 -->
-                <a th:href="@{/chat/room/19}" class="chat-room-item">
-                    <div class="chat-avatar profile-mint">
-                        <span>임</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>임수빈</strong>
-                                <span class="department">호텔관광학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">목요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">제가 등록한 분실글이랑 비슷해요.</p>
-                    </div>
-                </a>
-
-                <a th:href="@{/chat/room/20}" class="chat-room-item">
-                    <div class="chat-avatar profile-coral">
-                        <span>홍</span>
-                    </div>
-                    <div class="chat-room-info">
-                        <div class="chat-room-top">
-                            <div class="chat-user-line">
-                                <strong>홍예찬</strong>
-                                <span class="department">스포츠재활학과</span>
-                            </div>
-                            <div class="chat-room-side">
-                                <span class="chat-time">목요일</span>
-                            </div>
-                        </div>
-                        <p class="chat-last-message">확인했습니다!</p>
-                    </div>
-                </a>
-
             </div>
         </aside>
 
-        <section class="chat-empty-panel">
-            <div class="chat-empty-content">
-                <div class="chat-empty-icon">
-                    <i class="fa-regular fa-comment-dots"></i>
-                </div>
+        <section class="chat-room-panel" th:if="${selectedRoom == null}">
+            <div class="chat-empty-state">
+                <i class="fa-regular fa-comments"></i>
                 <h2>채팅방을 선택하세요</h2>
-                <p>왼쪽 목록에서 채팅방을 선택하면 대화를 볼 수 있습니다.</p>
+                <p>왼쪽 목록에서 대화할 상대를 선택하면 메시지를 확인할 수 있습니다.</p>
             </div>
         </section>
 
+        <section class="chat-room-panel" th:if="${selectedRoom != null}">
+            <div class="chat-room-header">
+                <div class="chat-header-left">
+                    <div class="chat-current-user">
+                        <div class="chat-avatar profile-indigo">
+                            <span th:text="${selectedRoom.otherInitial}">이</span>
+                        </div>
+
+                        <div class="chat-current-info">
+                            <div class="chat-current-top">
+                                <strong th:text="${selectedRoom.otherUserName}">상대방</strong>
+                                <span class="department" th:if="${selectedRoom.otherStudentNo != null}" th:text="${selectedRoom.otherStudentNo}">학번</span>
+                            </div>
+
+                            <p>
+                                <span th:text="${selectedRoom.itemTitle}">게시글</span>
+                                <span> 관련 대화입니다.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <a class="chat-related-card"
+                       th:href="@{${selectedRoom.itemDetailUrl}}"
+                       th:classappend="${selectedRoom.itemType == 'lost' ? ' lost' : ' found'}">
+                        <div class="related-post-icon" th:classappend="${selectedRoom.itemType == 'lost' ? ' lost' : ' found'}">
+                            <i th:class="${selectedRoom.itemType == 'lost' ? 'fa-solid fa-box-open' : 'fa-solid fa-box'}"></i>
+                        </div>
+
+                        <div class="related-post-info">
+                            <div class="related-post-meta">
+                                <span class="related-post-status"
+                                      th:classappend="${selectedRoom.itemStatusLabel == '반환완료' ? ' status-returned' : (selectedRoom.itemType == 'lost' ? ' status-registered' : ' status-storage')}"
+                                      th:text="${selectedRoom.itemStatusLabel}">보관중</span>
+                                <span class="related-post-type" th:text="${selectedRoom.itemTypeLabel}">습득물</span>
+                            </div>
+
+                            <strong th:text="${selectedRoom.itemTitle}">게시글 제목</strong>
+
+                            <p>
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span th:if="${selectedRoom.itemLocationName != null}" th:text="${selectedRoom.itemLocationName}">위치</span>
+                                <span th:if="${selectedRoom.itemLocationName == null}">위치 미입력</span>
+                            </p>
+                        </div>
+
+                        <i class="fa-solid fa-chevron-right related-post-arrow"></i>
+                    </a>
+                </div>
+
+                <div class="chat-room-actions">
+                    <button type="button" id="moreMenuButton" title="채팅방 메뉴">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    </button>
+
+                    <div class="chat-more-menu" id="moreMenu">
+                        <form th:action="@{/chat/room/{id}/mute(id=${selectedRoom.roomId})}" method="post">
+                            <input type="hidden" name="muteYn" th:value="${selectedRoom.muteYn == 'Y' ? 'N' : 'Y'}">
+                            <button type="submit">
+                                <i th:class="${selectedRoom.muteYn == 'Y' ? 'fa-regular fa-bell' : 'fa-regular fa-bell-slash'}"></i>
+                                <span th:text="${selectedRoom.muteYn == 'Y' ? '알림 켜기' : '알림 끄기'}">알림 끄기</span>
+                            </button>
+                        </form>
+
+                        <a th:href="@{/report/write(type='chat', id=${selectedRoom.otherUserId})}">
+                            <i class="fa-regular fa-flag"></i>
+                            <span>신고하기</span>
+                        </a>
+
+                        <form th:action="@{/chat/room/{id}/block(id=${selectedRoom.roomId})}" method="post"
+                              onsubmit="return confirm('이 사용자를 차단하고 채팅 목록에서 숨길까요?');">
+                            <button type="submit">
+                                <i class="fa-solid fa-ban"></i>
+                                <span>차단하기</span>
+                            </button>
+                        </form>
+
+                        <form th:action="@{/chat/room/{id}/leave(id=${selectedRoom.roomId})}" method="post"
+                              onsubmit="return confirm('이 채팅방을 나가시겠습니까?');">
+                            <button type="submit" class="danger">
+                                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                <span>채팅방 나가기</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-message-area" id="messageArea">
+                <div class="chat-date-line">
+                    <span>대화</span>
+                </div>
+
+                <div class="message-day" th:if="${#lists.isEmpty(messages)}">첫 메시지를 보내보세요.</div>
+
+                <div th:each="message : ${messages}"
+                     class="message-row"
+                     th:classappend="${message.mine ? ' me' : ' other'}">
+                    <div class="message-profile" th:if="${!message.mine}">
+                        <div class="mini-avatar profile-indigo">
+                            <span th:text="${selectedRoom.otherInitial}">이</span>
+                        </div>
+                    </div>
+
+                    <div class="message-content">
+                        <div class="message-bubble" th:text="${message.messageContent}">메시지 내용</div>
+                        <span class="message-time" th:text="${#dates.format(message.createdAt, 'HH:mm')}">12:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <form class="chat-input-area" th:action="@{/chat/room/{id}/messages(id=${selectedRoom.roomId})}" method="post">
+                <button type="button" class="chat-plus-btn" title="추가 기능">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <textarea name="messageContent" placeholder="메시지를 입력하세요" maxlength="1000" autocomplete="off" rows="1"></textarea>
+                <button type="submit" class="chat-send-btn chat-send-icon-btn" title="보내기" aria-label="메시지 보내기">
+                    <svg class="chat-send-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4.5 11.5L19 4.8c.7-.3 1.4.4 1.1 1.1l-6.7 14.5c-.3.7-1.3.6-1.5-.1l-1.7-5.2-5.2-1.7c-.7-.2-.8-1.2-.1-1.5Z"></path>
+                        <path d="M10.3 14.9 20 5.2"></path>
+                    </svg>
+                </button>
+            </form>
+        </section>
     </section>
 </main>
 
+<script th:src="@{/js/chat.js}"></script>
 </body>
 </html>

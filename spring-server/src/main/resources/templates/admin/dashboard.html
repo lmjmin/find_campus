@@ -6,7 +6,6 @@
     <title>관리자 대시보드 | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
@@ -16,9 +15,7 @@
 
 <div class="admin-page">
 
-    <!-- 상단바 -->
     <header class="admin-header">
-
         <a th:href="@{/admin/dashboard}" class="admin-logo">
             <span class="admin-logo-icon">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
@@ -36,21 +33,14 @@
                 로그아웃
             </a>
         </div>
-
     </header>
-
 
     <div class="admin-layout">
 
-        <!-- 사이드바 -->
         <aside class="sidebar">
-
-            <div class="sidebar-title">
-                메뉴
-            </div>
+            <div class="sidebar-title">메뉴</div>
 
             <nav class="side-menu">
-
                 <a th:href="@{/admin/dashboard}" class="side-link active">
                     <i class="fa-solid fa-chart-line"></i>
                     대시보드
@@ -91,26 +81,35 @@
                     신고 관리
                 </a>
 
+                <a th:href="@{/admin/inquiries}" class="side-link">
+                    <i class="fa-solid fa-headset"></i>
+                    문의 관리
+                </a>
+
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
+                </a>
             </nav>
 
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i>
+                    <span>사용자 페이지로 이동</span>
+                </a>
+            </div>
         </aside>
 
-
-        <!-- 본문 -->
         <main class="admin-content">
 
             <div class="page-title-wrap">
-                <h1 class="page-title">
-                    대시보드
-                </h1>
+                <h1 class="page-title">대시보드</h1>
 
                 <p class="page-desc">
-                    분실물, 습득물, 신고 현황을 한눈에 확인할 수 있습니다.
+                    실제 등록 데이터 기준으로 분실물, 습득물, 신고 현황을 확인합니다.
                 </p>
             </div>
 
-
-            <!-- 상태 카드 -->
             <section class="status-grid">
 
                 <div class="status-card">
@@ -122,14 +121,14 @@
                     </div>
 
                     <div class="status-count">
-                        128<span>건</span>
+                        <span class="status-number" th:text="${stats.lostCount + stats.foundCount}">0</span>
+                        <span>건</span>
                     </div>
 
                     <div class="status-sub">
-                        분실물 + 습득물 전체
+                        분실물 <strong th:text="${stats.lostCount}">0</strong>건 · 습득물 <strong th:text="${stats.foundCount}">0</strong>건
                     </div>
                 </div>
-
 
                 <div class="status-card">
                     <div class="status-card-top">
@@ -140,14 +139,14 @@
                     </div>
 
                     <div class="status-count">
-                        24<span>건</span>
+                        <span class="status-number" th:text="${stats.registeredCount}">0</span>
+                        <span>건</span>
                     </div>
 
                     <div class="status-sub">
-                        현재 처리 대기 상태
+                        분실물 접수중
                     </div>
                 </div>
-
 
                 <div class="status-card">
                     <div class="status-card-top">
@@ -158,14 +157,14 @@
                     </div>
 
                     <div class="status-count">
-                        18<span>건</span>
+                        <span class="status-number" th:text="${stats.storedCount}">0</span>
+                        <span>건</span>
                     </div>
 
                     <div class="status-sub">
-                        보관 장소에 보관 중
+                        습득물 보관중
                     </div>
                 </div>
-
 
                 <div class="status-card">
                     <div class="status-card-top">
@@ -176,14 +175,14 @@
                     </div>
 
                     <div class="status-count">
-                        64<span>건</span>
+                        <span class="status-number" th:text="${stats.returnedCount}">0</span>
+                        <span>건</span>
                     </div>
 
                     <div class="status-sub">
-                        주인에게 반환 완료
+                        반환 처리된 게시글
                     </div>
                 </div>
-
 
                 <div class="status-card">
                     <div class="status-card-top">
@@ -194,27 +193,22 @@
                     </div>
 
                     <div class="status-count">
-                        3<span>건</span>
+                        <span class="status-number" th:text="${stats.waitingReportCount}">0</span>
+                        <span>건</span>
                     </div>
 
                     <div class="status-sub">
-                        관리자 확인 필요
+                        관리자 확인 대기
                     </div>
                 </div>
 
             </section>
 
-
-            <!-- 최근 등록 / 최근 신고 -->
             <section class="dashboard-grid">
 
-                <!-- 최근 등록 게시글 -->
                 <div class="panel">
-
                     <div class="panel-head">
-                        <h2 class="panel-title">
-                            최근 등록 게시글
-                        </h2>
+                        <h2 class="panel-title">최근 등록 게시글</h2>
 
                         <a th:href="@{/admin/lost}" class="panel-more">
                             더보기
@@ -225,7 +219,7 @@
                         <thead>
                         <tr>
                             <th>구분</th>
-                            <th>물품명</th>
+                            <th>제목</th>
                             <th>위치</th>
                             <th>등록일</th>
                             <th>상태</th>
@@ -233,66 +227,36 @@
                         </thead>
 
                         <tbody>
-                        <tr>
-                            <td>
-                                <span class="type-badge lost">분실물</span>
-                            </td>
-                            <td class="item-name">검정 노트북 가방</td>
-                            <td>대학본관</td>
-                            <td>2026.05.30</td>
-                            <td>
-                                <span class="state-badge waiting">접수중</span>
-                            </td>
+                        <tr th:if="${recentItems == null or #lists.isEmpty(recentItems)}">
+                            <td colspan="5" class="empty-cell">최근 등록 게시글이 없습니다.</td>
                         </tr>
 
-                        <tr>
+                        <tr th:each="item : ${recentItems}">
                             <td>
-                                <span class="type-badge found">습득물</span>
+                                <span class="type-badge"
+                                      th:classappend="${item.itemType == 'found' ? ' found' : ' lost'}"
+                                      th:text="${item.itemType == 'found' ? '습득물' : '분실물'}">분실물</span>
                             </td>
-                            <td class="item-name">학생증</td>
-                            <td>중앙도서관</td>
-                            <td>2026.05.30</td>
-                            <td>
-                                <span class="state-badge storage">보관중</span>
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td>
-                                <span class="type-badge found">습득물</span>
-                            </td>
-                            <td class="item-name">무선 이어폰</td>
-                            <td>ICT관</td>
-                            <td>2026.05.29</td>
-                            <td>
-                                <span class="state-badge done">반환완료</span>
-                            </td>
-                        </tr>
+                            <td class="item-name" th:text="${item.title != null ? item.title : item.itemName}">제목</td>
 
-                        <tr>
+                            <td th:text="${item.locationName != null and item.locationName != '' ? item.locationName : '-'}">-</td>
+
+                            <td th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd') : '-'}">-</td>
+
                             <td>
-                                <span class="type-badge lost">분실물</span>
-                            </td>
-                            <td class="item-name">파란색 지갑</td>
-                            <td>학생복지관</td>
-                            <td>2026.05.29</td>
-                            <td>
-                                <span class="state-badge waiting">접수중</span>
+                                <span class="state-badge"
+                                      th:classappend="${item.status == 'RETURNED' ? ' done' : (item.itemType == 'found' ? ' storage' : ' waiting')}"
+                                      th:text="${item.status == 'RETURNED' ? '반환완료' : (item.itemType == 'found' ? '보관중' : '접수중')}">상태</span>
                             </td>
                         </tr>
                         </tbody>
                     </table>
-
                 </div>
 
-
-                <!-- 최근 신고 내역 -->
                 <div class="panel">
-
                     <div class="panel-head">
-                        <h2 class="panel-title">
-                            최근 신고 내역
-                        </h2>
+                        <h2 class="panel-title">최근 신고 내역</h2>
 
                         <a th:href="@{/admin/reports}" class="panel-more">
                             전체보기
@@ -300,79 +264,37 @@
                     </div>
 
                     <div class="activity-list">
+                        <div th:if="${recentReports == null or #lists.isEmpty(recentReports)}" class="activity-empty">
+                            최근 신고가 없습니다.
+                        </div>
 
-                        <div class="activity-item">
+                        <div class="activity-item" th:each="report : ${recentReports}">
                             <div class="activity-dot">
                                 <i class="fa-solid fa-flag"></i>
                             </div>
 
                             <div class="activity-content">
-                                <div class="activity-title">
-                                    허위 게시글 신고
+                                <div class="activity-title" th:text="${report.reason == 'FALSE_INFO' ? '허위 게시글' : report.reason == 'PRIVATE_INFO' ? '개인정보 노출' : report.reason == 'DUPLICATE' ? '중복 게시글' : report.reason == 'BAD_CONTENT' ? '부적절한 내용' : report.reason == 'SPAM' ? '광고/스팸' : report.reason == 'ETC' ? '기타' : (report.reason != null and report.reason != '' ? report.reason : '신고 접수')}">
+                                    신고 접수
                                 </div>
 
-                                <div class="activity-desc">
-                                    검정 노트북 가방 게시글에 대한 신고가 접수되었습니다.
+                                <div class="activity-desc"
+                                     th:text="${report.targetTitle != null and report.targetTitle != '' ? report.targetTitle : (report.detail != null and report.detail != '' ? report.detail : '신고 내용을 확인해 주세요.')}">
+                                    신고 내용을 확인해 주세요.
                                 </div>
 
-                                <div class="activity-time">
-                                    2분 전
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="activity-item">
-                            <div class="activity-dot">
-                                <i class="fa-solid fa-flag"></i>
-                            </div>
-
-                            <div class="activity-content">
-                                <div class="activity-title">
-                                    부적절한 내용 신고
-                                </div>
-
-                                <div class="activity-desc">
-                                    신고 내용을 확인하고 처리 상태를 변경해 주세요.
-                                </div>
-
-                                <div class="activity-time">
-                                    15분 전
+                                <div class="activity-time" th:text="${report.createdAt != null ? #dates.format(report.createdAt, 'yyyy.MM.dd HH:mm') : '-'}">
+                                    -
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="activity-item">
-                            <div class="activity-dot">
-                                <i class="fa-solid fa-flag"></i>
-                            </div>
-
-                            <div class="activity-content">
-                                <div class="activity-title">
-                                    중복 게시글 신고
-                                </div>
-
-                                <div class="activity-desc">
-                                    동일한 물품으로 의심되는 게시글이 신고되었습니다.
-                                </div>
-
-                                <div class="activity-time">
-                                    1시간 전
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
-
                 </div>
 
             </section>
 
         </main>
-
     </div>
-
 </div>
 
 </body>

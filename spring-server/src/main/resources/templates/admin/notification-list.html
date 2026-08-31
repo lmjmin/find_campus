@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>알림 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-page">
+    <header class="admin-header">
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+            <span>FindCampus Admin</span>
+        </a>
+        <div class="admin-header-right">
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
+        </div>
+    </header>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-title">메뉴</div>
+            <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
+                <a th:href="@{/admin/notifications}" class="side-link active"><i class="fa-regular fa-bell"></i>알림 관리</a>
+            </nav>
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="page-title-wrap">
+                <h1 class="page-title">알림 관리</h1>
+                <p class="page-desc">문의, 신고, 수령 신청처럼 관리자가 확인해야 하는 일을 모아봅니다.</p>
+            </div>
+
+            <section class="panel admin-notification-panel claim-notification-section" th:if="${claimAlerts != null and !#lists.isEmpty(claimAlerts)}">
+                <div class="panel-head">
+                    <h2 class="panel-title">수령 신청 알림</h2>
+                    <span class="panel-more" th:text="'대기 ' + ${claimAlertCount} + '건'">대기 0건</span>
+                </div>
+                <div class="admin-alert-list">
+                    <article class="admin-alert-card unread claim-alert-card" th:each="claim : ${claimAlerts}">
+                        <div class="admin-alert-icon claim">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="admin-alert-body">
+                            <div class="admin-alert-title"
+                                 th:text="|${claim['foundTitle'] ?: '습득물'} 수령 신청이 접수되었습니다.|">수령 신청이 접수되었습니다.</div>
+                            <div class="admin-alert-message"
+                                 th:text="|신청자 ${claim['requesterName'] ?: '-'}님이 '${claim['lostTitle'] ?: '분실물'}' 글을 근거로 수령을 요청했습니다. AI 유사도 ${claim['matchScore'] ?: 0}%입니다.|">
+                                신청 내용을 확인한 뒤 승인, 반려, 반환완료 중 하나로 처리하세요.
+                            </div>
+                            <div class="admin-alert-meta"
+                                 th:text="${claim['createdAt'] != null ? #dates.format(claim['createdAt'], 'yyyy.MM.dd HH:mm') : '-'}">-</div>
+                        </div>
+                        <div class="admin-alert-actions">
+                            <span class="admin-alert-state">처리 대기</span>
+                            <a class="admin-alert-open" th:href="@{/admin/found(status='CLAIM_WAITING')}">게시물 확인하기</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel admin-notification-panel admin-general-notification-section">
+                <div class="panel-head">
+                    <h2 class="panel-title">관리자 알림</h2>
+                    <span class="panel-more" th:text="'안 읽은 알림 ' + (${unreadCount ?: 0}) + '건'">안 읽은 알림 0건</span>
+                </div>
+                <div class="admin-alert-list">
+                    <div class="empty-cell"
+                         th:if="${notifications == null or #lists.isEmpty(notifications)}">
+                        확인할 관리자 알림이 없습니다.
+                    </div>
+                    <article class="admin-alert-card" th:each="item : ${notifications}" th:classappend="${item.readYn == 'N'} ? ' unread' : ''">
+                        <div class="admin-alert-icon">
+                            <i th:class="${item.targetType == 'inquiry' ? 'fa-solid fa-headset' : (item.targetType == 'report' ? 'fa-solid fa-triangle-exclamation' : (item.targetType == 'ai_match' ? 'fa-solid fa-wand-magic-sparkles' : 'fa-regular fa-bell'))}"></i>
+                        </div>
+                        <div class="admin-alert-body">
+                            <div class="admin-alert-title" th:text="${item.title}">알림 제목</div>
+                            <div class="admin-alert-message" th:text="${item.message}">알림 내용</div>
+                            <div class="admin-alert-meta" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd HH:mm') : '-'}">-</div>
+                        </div>
+                        <div class="admin-alert-actions">
+                            <span class="admin-alert-state" th:classappend="${item.readYn == 'Y'} ? ' read' : ''" th:text="${item.readYn == 'Y' ? '확인됨' : '새 알림'}">새 알림</span>
+                            <a class="admin-alert-open"
+                               th:href="@{/admin/notifications/open/{id}(id=${item.notificationId})}"
+                               th:text="${item.targetType == 'inquiry' ? '문의 확인하기' : (item.targetType == 'report' ? '신고 확인하기' : (item.targetType == 'ai_match' ? '매칭 확인' : '확인하기'))}">
+                                확인하기
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+</body>
+</html>

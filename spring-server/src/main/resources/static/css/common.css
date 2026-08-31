@@ -249,22 +249,610 @@ footer .footer-divider {
     }
 }
 .login-user-name {
+    max-width: 96px;
+    padding: 8px 2px;
+
     color: #111827;
     font-size: 14px;
     font-weight: 900;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .logout-btn {
-    padding: 11px 16px;
+    padding: 10px 14px;
     border: none;
-    border-radius: 12px;
-    background: #f3f4f6;
-    color: #374151;
+    border-radius: 999px;
+
+    background: #eef2ff;
+    color: #4f46e5;
+
     font-size: 14px;
     font-weight: 800;
+
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .logout-btn:hover {
-    background: #e5e7eb;
+    background: #e0e7ff;
+    transform: translateY(-1px);
+}
+
+.auth .logout-btn {
+    background: #eef2ff !important;
+    color: #4f46e5 !important;
+}
+
+.auth .logout-btn:hover {
+    background: #e0e7ff !important;
+}
+
+@media (max-width: 700px) {
+    .login-user-name {
+        display: none;
+    }
+
+    .logout-btn {
+        padding: 9px 12px;
+        font-size: 13px;
+    }
+}
+
+/* =========================
+   전체 화면 설정
+========================= */
+
+html.fc-font-small body {
+    zoom: 0.9;
+}
+
+html.fc-font-large body {
+    zoom: 1.08;
+}
+
+html.fc-theme-dark body {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+html.fc-theme-dark .page,
+html.fc-theme-dark .page-wrapper,
+html.fc-theme-dark .main-wrapper,
+html.fc-theme-dark .main-container,
+html.fc-theme-dark .mypage-page,
+html.fc-theme-dark .setting-page,
+html.fc-theme-dark .setting-detail-page,
+html.fc-theme-dark .setting-page-container,
+html.fc-theme-dark .search-page,
+html.fc-theme-dark .chat-page,
+html.fc-theme-dark .lost-page,
+html.fc-theme-dark .found-page {
+    background: #0f172a !important;
+    color: #e5e7eb !important;
+}
+
+html.fc-theme-dark header {
+    background: #111827 !important;
+    border-bottom-color: #263244 !important;
+}
+
+html.fc-theme-dark .header-inner,
+html.fc-theme-dark .container,
+html.fc-theme-dark main,
+html.fc-theme-dark section,
+html.fc-theme-dark aside {
+    color: #e5e7eb;
+}
+
+html.fc-theme-dark .logo {
+    color: #93c5fd !important;
+}
+
+html.fc-theme-dark .logo-icon,
+html.fc-theme-dark .auth .header-icon,
+html.fc-theme-dark .logout-btn,
+html.fc-theme-dark .login:hover {
+    background: #1f2937 !important;
+    color: #a5b4fc !important;
+}
+
+html.fc-theme-dark .nav a,
+html.fc-theme-dark .login-user-name {
+    color: #e5e7eb !important;
+}
+
+html.fc-theme-dark .nav a:hover,
+html.fc-theme-dark .nav a.active,
+html.fc-theme-dark .login {
+    color: #93c5fd !important;
+}
+
+html.fc-theme-dark .join,
+html.fc-theme-dark .save-btn,
+html.fc-theme-dark .display-save-btn,
+html.fc-theme-dark .submit-btn,
+html.fc-theme-dark .search-btn,
+html.fc-theme-dark .filter-submit-btn {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+}
+
+html.fc-theme-dark .profile-card,
+html.fc-theme-dark .content-card,
+html.fc-theme-dark .side-card,
+html.fc-theme-dark .setting-card,
+html.fc-theme-dark .setting-detail-card,
+html.fc-theme-dark .setting-container,
+html.fc-theme-dark .setting-section,
+html.fc-theme-dark .side-area,
+html.fc-theme-dark .side-menu,
+html.fc-theme-dark .display-card,
+html.fc-theme-dark .privacy-card,
+html.fc-theme-dark .edit-card,
+html.fc-theme-dark .app-main-card,
+html.fc-theme-dark .app-info-card,
+html.fc-theme-dark .form-card,
+html.fc-theme-dark .search-card,
+html.fc-theme-dark .result-card,
+html.fc-theme-dark .post-card,
+html.fc-theme-dark .stat-card,
+html.fc-theme-dark .item-card,
+html.fc-theme-dark .list-card,
+html.fc-theme-dark .detail-card,
+html.fc-theme-dark .modal,
+html.fc-theme-dark .chat-shell,
+html.fc-theme-dark .chat-list,
+html.fc-theme-dark .chat-main,
+html.fc-theme-dark .room-list,
+html.fc-theme-dark .admin-card,
+html.fc-theme-dark .table-card,
+html.fc-theme-dark .setting-row,
+html.fc-theme-dark .option-item,
+html.fc-theme-dark .option-row,
+html.fc-theme-dark .auth-box,
+html.fc-theme-dark .password-box,
+html.fc-theme-dark .notice-box,
+html.fc-theme-dark .summary-box,
+html.fc-theme-dark .description-box,
+html.fc-theme-dark .feature-card,
+html.fc-theme-dark .status-card,
+html.fc-theme-dark .info-row,
+html.fc-theme-dark .display-preview {
+    background: #111827 !important;
+    border-color: #263244 !important;
+    color: #e5e7eb !important;
+    box-shadow: none !important;
+}
+
+html.fc-theme-dark .left-section,
+html.fc-theme-dark .mypage-profile-card,
+html.fc-theme-dark .setting-top-profile,
+html.fc-theme-dark .profile-summary,
+html.fc-theme-dark .summary {
+    background: linear-gradient(135deg, #1e1b4b, #111827) !important;
+}
+
+html.fc-theme-dark .setting-top-profile,
+html.fc-theme-dark .setting-top-profile h1,
+html.fc-theme-dark .setting-top-profile p,
+html.fc-theme-dark .setting-top-profile span {
+    color: #ffffff !important;
+}
+
+html.fc-theme-dark .setting-top-profile .setting-top-edit-btn {
+    background: #f8fafc !important;
+    color: #4f46e5 !important;
+}
+
+html.fc-theme-dark h1,
+html.fc-theme-dark h2,
+html.fc-theme-dark h3,
+html.fc-theme-dark h4,
+html.fc-theme-dark strong,
+html.fc-theme-dark label,
+html.fc-theme-dark .form-title,
+html.fc-theme-dark .section-title h2,
+html.fc-theme-dark .display-section-title h2,
+html.fc-theme-dark .setting-text strong,
+html.fc-theme-dark .option-text strong,
+html.fc-theme-dark .post-title,
+html.fc-theme-dark .item-title,
+html.fc-theme-dark .detail-title {
+    color: #f9fafb !important;
+}
+
+html.fc-theme-dark p,
+html.fc-theme-dark span,
+html.fc-theme-dark li,
+html.fc-theme-dark .form-subtitle,
+html.fc-theme-dark .section-title p,
+html.fc-theme-dark .display-section-title p,
+html.fc-theme-dark .setting-text span,
+html.fc-theme-dark .option-text span,
+html.fc-theme-dark .post-desc,
+html.fc-theme-dark .post-meta,
+html.fc-theme-dark .help-text,
+html.fc-theme-dark footer {
+    color: #cbd5e1 !important;
+}
+
+html.fc-theme-dark input,
+html.fc-theme-dark select,
+html.fc-theme-dark textarea,
+html.fc-theme-dark .input,
+html.fc-theme-dark .select,
+html.fc-theme-dark .textarea,
+html.fc-theme-dark .search-input,
+html.fc-theme-dark .filter-input {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f9fafb !important;
+}
+
+html.fc-theme-dark input::placeholder,
+html.fc-theme-dark textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+html.fc-theme-dark .cancel-btn,
+html.fc-theme-dark .display-back-btn,
+html.fc-theme-dark .reset-btn,
+html.fc-theme-dark .action-btn,
+html.fc-theme-dark .tab,
+html.fc-theme-dark .size-btn,
+html.fc-theme-dark .segment-btn,
+html.fc-theme-dark .back-link,
+html.fc-theme-dark .setting-back-btn,
+html.fc-theme-dark .notice-back-link {
+    background: #1f2937 !important;
+    border-color: #334155 !important;
+    color: #dbeafe !important;
+}
+
+html.fc-theme-dark .tab.active,
+html.fc-theme-dark .size-btn.active,
+html.fc-theme-dark .segment-btn.active {
+    background: #4f46e5 !important;
+    border-color: #4f46e5 !important;
+    color: #ffffff !important;
+}
+:root {
+    --fc-header-height: 64px;
+    --fc-header-max-width: 1300px;
+    --fc-header-side-padding: 24px;
+}
+
+body > header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 3000 !important;
+    width: 100% !important;
+    height: var(--fc-header-height) !important;
+    min-height: var(--fc-header-height) !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    font-family: "Pretendard", "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+body > header *,
+body > header *::before,
+body > header *::after {
+    box-sizing: border-box !important;
+    letter-spacing: 0 !important;
+}
+
+body > header .header-inner {
+    width: 100% !important;
+    max-width: var(--fc-header-max-width) !important;
+    height: var(--fc-header-height) !important;
+    min-height: var(--fc-header-height) !important;
+    margin: 0 auto !important;
+    padding: 0 var(--fc-header-side-padding) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 22px !important;
+}
+
+body > header .logo {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 11px !important;
+    flex: 0 0 auto !important;
+    height: var(--fc-header-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #3f4fd8 !important;
+    font-size: 25px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+body > header .logo-icon {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 13px !important;
+    background: #f1f3ff !important;
+    color: #4f46e5 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+body > header .logo-icon i {
+    color: inherit !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+body > header .nav {
+    flex: 1 1 auto !important;
+    height: var(--fc-header-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 32px !important;
+}
+
+body > header .nav a {
+    height: var(--fc-header-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #111827 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+body > header .nav a:hover,
+body > header .nav a.active {
+    color: #4f46e5 !important;
+}
+
+body > header .auth {
+    flex: 0 0 auto !important;
+    height: var(--fc-header-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 10px !important;
+    white-space: nowrap !important;
+}
+
+body > header .header-icon {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    background: #f5f6fb !important;
+    color: #4f46e5 !important;
+    box-shadow: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+}
+
+body > header .header-icon i {
+    color: inherit !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+body > header .login-user-name {
+    margin: 0 4px !important;
+    padding: 0 !important;
+    color: #111827 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+body > header .logout-btn,
+body > header .login,
+body > header .join {
+    height: 46px !important;
+    min-width: 76px !important;
+    margin: 0 !important;
+    padding: 0 18px !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+body > header .logout-btn {
+    background: #f1f3ff !important;
+    color: #4f46e5 !important;
+}
+
+body > header .login {
+    background: transparent !important;
+    color: #4f46e5 !important;
+}
+
+body > header .join {
+    background: #4f63e6 !important;
+    color: #ffffff !important;
+}
+
+html.fc-theme-dark body > header {
+    background: #111827 !important;
+    border-bottom-color: #263143 !important;
+}
+
+html.fc-theme-dark body > header .logo {
+    color: #dbe4ff !important;
+}
+
+html.fc-theme-dark body > header .logo-icon,
+html.fc-theme-dark body > header .header-icon,
+html.fc-theme-dark body > header .logout-btn {
+    background: #1f2937 !important;
+    color: #aebdff !important;
+}
+
+html.fc-theme-dark body > header .nav a,
+html.fc-theme-dark body > header .login-user-name {
+    color: #f9fafb !important;
+}
+
+html.fc-theme-dark body > header .nav a:hover,
+html.fc-theme-dark body > header .nav a.active,
+html.fc-theme-dark body > header .login,
+html.fc-theme-dark body > header .logout-btn {
+    color: #aebdff !important;
+}
+
+html.fc-theme-dark body > header .join {
+    background: #5b6ff0 !important;
+    color: #ffffff !important;
+}
+
+@media (max-width: 900px) {
+    body > header {
+        height: auto !important;
+        min-height: 58px !important;
+    }
+
+    body > header .header-inner {
+        height: auto !important;
+        min-height: 58px !important;
+        padding: 9px 16px !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+    }
+
+    body > header .logo {
+        height: 40px !important;
+        font-size: 21px !important;
+    }
+
+    body > header .logo-icon {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        border-radius: 12px !important;
+    }
+
+    body > header .nav {
+        order: 3 !important;
+        width: 100% !important;
+        height: 36px !important;
+        gap: 18px !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+    }
+
+    body > header .nav::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    body > header .nav a {
+        height: 36px !important;
+        font-size: 14px !important;
+    }
+
+    body > header .auth {
+        height: 40px !important;
+        gap: 8px !important;
+    }
+
+    body > header .header-icon,
+    body > header .logout-btn,
+    body > header .login,
+    body > header .join {
+        height: 38px !important;
+        min-width: 38px !important;
+        padding-left: 13px !important;
+        padding-right: 13px !important;
+        font-size: 14px !important;
+    }
+}
+body > header .header-notification-link {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+body > header .header-notification-badge {
+    position: absolute !important;
+    top: 7px !important;
+    right: 7px !important;
+    min-width: 17px !important;
+    height: 17px !important;
+    padding: 0 5px !important;
+    border-radius: 999px !important;
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.28) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    pointer-events: none !important;
+}
+
+html.fc-theme-dark body > header .header-notification-badge {
+    border-color: #111827 !important;
+}
+html {
+    overflow-y: scroll !important;
+    scrollbar-gutter: stable !important;
+}
+
+body {
+    overflow-x: hidden !important;
+}
+
+body > header {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+}
+
+body > header .header-inner {
+    width: min(100%, var(--fc-header-max-width, 1300px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }

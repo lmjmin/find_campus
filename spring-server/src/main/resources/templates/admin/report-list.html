@@ -5,219 +5,111 @@
     <meta charset="UTF-8">
     <title>신고 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
-
 <div class="admin-page">
-
-    <!-- 상단바 -->
     <header class="admin-header">
-
         <a th:href="@{/admin/dashboard}" class="admin-logo">
-            <span class="admin-logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
             <span>FindCampus Admin</span>
         </a>
-
         <div class="admin-header-right">
-            <span>
-                <i class="fa-regular fa-user"></i>
-                관리자
-            </span>
-
-            <a th:href="@{/admin/login}" class="logout-btn">
-                로그아웃
-            </a>
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
         </div>
-
     </header>
 
-
     <div class="admin-layout">
-
-        <!-- 사이드바 -->
         <aside class="sidebar">
-
-            <div class="sidebar-title">
-                메뉴
-            </div>
-
+            <div class="sidebar-title">메뉴</div>
             <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link active"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
 
-                <a th:href="@{/admin/dashboard}" class="side-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    대시보드
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
                 </a>
-
-                <a th:href="@{/admin/users}" class="side-link">
-                    <i class="fa-solid fa-users"></i>
-                    사용자 관리
-                </a>
-
-                <a th:href="@{/admin/lost}" class="side-link">
-                    <i class="fa-solid fa-circle-question"></i>
-                    분실물 관리
-                </a>
-
-                <a th:href="@{/admin/found}" class="side-link">
-                    <i class="fa-solid fa-box-open"></i>
-                    습득물 관리
-                </a>
-
-                <a th:href="@{/admin/storage}" class="side-link">
-                    <i class="fa-solid fa-warehouse"></i>
-                    보관 장소 관리
-                </a>
-
-                <a th:href="@{/admin/locations}" class="side-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    위치 관리
-                </a>
-
-                <a th:href="@{/admin/categories}" class="side-link">
-                    <i class="fa-solid fa-tags"></i>
-                    카테고리 관리
-                </a>
-
-                <a th:href="@{/admin/reports}" class="side-link active">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    신고 관리
-                </a>
-
             </nav>
-
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
         </aside>
 
-
-        <!-- 본문 -->
         <main class="admin-content">
-
             <div class="page-title-wrap">
-                <h1 class="page-title">
-                    신고 관리
-                </h1>
-
-                <p class="page-desc">
-                    사용자 신고 내역을 확인하고 게시글 숨김, 처리 완료, 무시 처리를 할 수 있습니다.
-                </p>
+                <h1 class="page-title">신고 관리</h1>
+                <p class="page-desc">접수된 신고를 확인하고 게시글 숨김, 계정 정지, 신고 반려를 처리합니다.</p>
             </div>
 
+            <div th:if="${message}" class="admin-alert success" th:text="${message}">처리되었습니다.</div>
+            <div th:if="${error}" class="admin-alert error" th:text="${error}">처리 중 오류가 발생했습니다.</div>
 
-            <!-- 요약 카드 -->
             <section class="summary-grid">
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">전체 신고</div>
-                        <div class="summary-icon total">
-                            <i class="fa-solid fa-flag"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">18<span>건</span></div>
+                    <div class="summary-top"><div class="summary-label">전체 신고</div><div class="summary-icon total"><i class="fa-solid fa-flag"></i></div></div>
+                    <div class="summary-count" th:text="${totalCount}">0</div>
                     <div class="summary-sub">접수된 전체 신고</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">미처리 신고</div>
-                        <div class="summary-icon waiting">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
+                    <div class="summary-top"><div class="summary-label">접수 대기</div><div class="summary-icon waiting"><i class="fa-solid fa-triangle-exclamation"></i></div></div>
+                    <div class="summary-count" th:text="${waitingCount}">0</div>
                     <div class="summary-sub">관리자 확인 필요</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">처리 완료</div>
-                        <div class="summary-icon done">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">12<span>건</span></div>
-                    <div class="summary-sub">확인 후 처리 완료</div>
+                    <div class="summary-top"><div class="summary-label">조치된 신고</div><div class="summary-icon done"><i class="fa-solid fa-circle-check"></i></div></div>
+                    <div class="summary-count" th:text="${doneCount}">0</div>
+                    <div class="summary-sub">숨김 또는 계정 조치</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">숨김 처리</div>
-                        <div class="summary-icon hidden">
-                            <i class="fa-solid fa-eye-slash"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">3<span>건</span></div>
-                    <div class="summary-sub">신고로 인해 숨김 처리</div>
+                    <div class="summary-top"><div class="summary-label">신고 반려</div><div class="summary-icon hidden"><i class="fa-solid fa-ban"></i></div></div>
+                    <div class="summary-count" th:text="${rejectedCount}">0</div>
+                    <div class="summary-sub">문제 없음으로 종료</div>
                 </div>
-
             </section>
 
-
-            <!-- 검색 / 필터 -->
             <section class="filter-panel">
-
-                <div class="filter-row">
-
+                <form class="filter-row" th:action="@{/admin/reports}" method="get">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="신고 사유, 게시글 제목, 신고자로 검색">
+                        <input type="text" name="keyword" th:value="${search.keyword}" placeholder="신고 사유, 내용, 신고자로 검색">
                     </div>
-
                     <div class="filter-actions">
-
-                        <select class="filter-select">
-                            <option>구분 전체</option>
-                            <option>분실물</option>
-                            <option>습득물</option>
+                        <select class="filter-select" name="status">
+                            <option value="" th:selected="${search.status == null or search.status == ''}">상태 전체</option>
+                            <option value="WAITING" th:selected="${search.status == 'WAITING'}">접수 대기</option>
+                            <option value="REVIEWING" th:selected="${search.status == 'REVIEWING'}">검토중</option>
+                            <option value="DONE" th:selected="${search.status == 'DONE'}">처리 완료</option>
+                            <option value="POST_HIDDEN" th:selected="${search.status == 'POST_HIDDEN'}">게시글 숨김</option>
+                            <option value="POST_RESTORED" th:selected="${search.status == 'POST_RESTORED'}">게시글 복구</option>
+                            <option value="ACCOUNT_SUSPENDED" th:selected="${search.status == 'ACCOUNT_SUSPENDED'}">계정 정지</option>
+                            <option value="ACCOUNT_RESTORED" th:selected="${search.status == 'ACCOUNT_RESTORED'}">정지 해제</option>
+                            <option value="REJECTED" th:selected="${search.status == 'REJECTED'}">신고 반려</option>
                         </select>
-
-                        <select class="filter-select">
-                            <option>상태 전체</option>
-                            <option>미처리</option>
-                            <option>처리완료</option>
-                            <option>무시</option>
-                        </select>
-
-                        <button type="button" class="search-btn">
-                            검색
-                        </button>
-
+                        <button type="submit" class="search-btn">검색</button>
                     </div>
-
-                </div>
-
+                </form>
             </section>
 
-
-            <!-- 신고 목록 -->
             <section class="table-panel">
-
                 <div class="table-head">
-                    <h2 class="table-title">
-                        신고 목록
-                    </h2>
-
-                    <div class="table-count">
-                        총 18건
-                    </div>
+                    <h2 class="table-title">신고 목록</h2>
+                    <div class="table-count" th:text="|총 ${totalCount}건|">총 0건</div>
                 </div>
 
                 <table class="report-table">
-
                     <thead>
                     <tr>
                         <th>번호</th>
@@ -230,192 +122,111 @@
                         <th>관리</th>
                     </tr>
                     </thead>
-
                     <tbody>
+                    <tr th:if="${#lists.isEmpty(reports)}">
+                        <td colspan="8" class="empty-cell">접수된 신고가 없습니다.</td>
+                    </tr>
 
-                    <tr>
-                        <td>1</td>
-
+                    <tr th:each="report, stat : ${reports}"
+                        class="clickable-row"
+                        th:attr="data-href=${report.targetType == 'lost' ? '/lost/detail/' + report.targetId : (report.targetType == 'found' ? '/found/detail/' + report.targetId : '')}">
+                        <td th:text="${stat.count}">1</td>
                         <td>
-                            <span class="type-badge lost">분실물</span>
+                            <span class="type-badge"
+                                  th:classappend="${report.targetType == 'lost' ? ' lost' : (report.targetType == 'found' ? ' found' : ' etc')}"
+                                  th:text="${report.targetType == 'lost' ? '분실물' : (report.targetType == 'found' ? '습득물' : (report.targetType == 'chat' ? '채팅' : '기타'))}">분실물</span>
                         </td>
-
                         <td>
-                            <div class="report-title">검정 노트북 가방</div>
-                            <div class="report-desc">허위 게시글로 의심된다는 신고가 접수되었습니다.</div>
+                            <div class="report-title" th:text="${report.targetTitle != null and report.targetTitle != '' ? report.targetTitle : '대상 정보 없음'}">대상 제목</div>
+                            <div class="report-desc" th:text="${report.targetUserName != null and report.targetUserName != '' ? '대상 계정: ' + report.targetUserName : '대상 계정 정보 없음'}">대상 계정</div>
                         </td>
-
                         <td>
-                            <span class="reason-badge">허위 게시글</span>
+                            <span class="reason-badge" th:text="${report.reason == 'FALSE_INFO' ? '허위 게시글' : report.reason == 'PRIVATE_INFO' ? '개인정보 노출' : report.reason == 'DUPLICATE' ? '중복 게시글' : report.reason == 'BAD_CONTENT' ? '부적절한 내용' : report.reason == 'SPAM' ? '광고/스팸' : report.reason == 'ETC' ? '기타' : (report.reason != null and report.reason != '' ? report.reason : '신고 접수')}">신고 접수</span>
+                            <div class="report-desc" th:if="${report.detail != null and report.detail != ''}" th:text="${report.detail}">상세 내용</div>
                         </td>
-
-                        <td>김민주</td>
-
-                        <td>2026.05.30</td>
-
+                        <td th:text="${report.reporterName != null ? report.reporterName : '-'}">신고자</td>
+                        <td th:text="${report.createdAt != null ? #dates.format(report.createdAt, 'yyyy.MM.dd') : '-'}">-</td>
                         <td>
-                            <span class="status-badge waiting">미처리</span>
+                            <span class="status-badge"
+                                  th:classappend="${report.status == 'WAITING' ? ' waiting' :
+                                                   report.status == 'REVIEWING' ? ' reviewing' :
+                                                   report.status == 'POST_HIDDEN' ? ' hidden' :
+                                                   report.status == 'ACCOUNT_SUSPENDED' ? ' suspended' :
+                                                   report.status == 'ACCOUNT_RESTORED' ? ' active' :
+                                                   report.status == 'POST_RESTORED' ? ' active' :
+                                                   report.status == 'DONE' ? ' done' :
+                                                   (report.status == 'REJECTED' or report.status == 'IGNORE') ? ' rejected' : ' inactive'}"
+                                  th:text="${report.status == 'WAITING' ? '접수 대기' :
+                                           report.status == 'REVIEWING' ? '검토중' :
+                                           report.status == 'POST_HIDDEN' ? '게시글 숨김' :
+                                           report.status == 'ACCOUNT_SUSPENDED' ? '계정 정지' :
+                                           report.status == 'ACCOUNT_RESTORED' ? '정지 해제' :
+                                           report.status == 'POST_RESTORED' ? '게시글 복구' :
+                                           report.status == 'DONE' ? '처리 완료' :
+                                           (report.status == 'REJECTED' or report.status == 'IGNORE') ? '신고 반려' : '확인 필요'}">접수 대기</span>
                         </td>
-
                         <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
+                            <div class="action-group report-actions">
+                                <form th:if="${(report.targetType == 'lost' or report.targetType == 'found') and report.status != 'POST_HIDDEN'}"
+                                      th:action="@{/admin/reports/hide-target}" method="post"
+                                      onsubmit="return confirm('신고 대상 게시글을 사용자 화면에서 숨길까요?');">
+                                    <input type="hidden" name="reportId" th:value="${report.reportId}">
+                                    <input type="hidden" name="targetType" th:value="${report.targetType}">
+                                    <input type="hidden" name="targetId" th:value="${report.targetId}">
+                                    <button type="submit" class="action-btn hide-btn"><i class="fa-regular fa-eye-slash"></i><span>게시글 숨김</span></button>
+                                </form>
 
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
+                                <form th:if="${(report.targetType == 'lost' or report.targetType == 'found') and report.status == 'POST_HIDDEN'}"
+                                      th:action="@{/admin/reports/show-target}" method="post"
+                                      onsubmit="return confirm('숨김 처리된 게시글을 다시 사용자 화면에 보이게 할까요?');">
+                                    <input type="hidden" name="reportId" th:value="${report.reportId}">
+                                    <input type="hidden" name="targetType" th:value="${report.targetType}">
+                                    <input type="hidden" name="targetId" th:value="${report.targetId}">
+                                    <button type="submit" class="action-btn show-btn"><i class="fa-regular fa-eye"></i><span>게시글 복구</span></button>
+                                </form>
 
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
-                                </button>
+                                <form th:if="${report.targetUserId != null and report.targetUserStatus != 'SUSPENDED'}"
+                                      th:action="@{/admin/reports/suspend-target}" method="post"
+                                      onsubmit="return confirm('신고 대상 계정을 정지할까요?');">
+                                    <input type="hidden" name="reportId" th:value="${report.reportId}">
+                                    <input type="hidden" name="userId" th:value="${report.targetUserId}">
+                                    <button type="submit" class="action-btn stop-btn"><i class="fa-solid fa-user-lock"></i><span>계정 정지</span></button>
+                                </form>
+
+                                <form th:if="${report.targetUserId != null and report.targetUserStatus == 'SUSPENDED'}"
+                                      th:action="@{/admin/reports/activate-target}" method="post"
+                                      onsubmit="return confirm('신고 대상 계정의 정지를 해제할까요?');">
+                                    <input type="hidden" name="reportId" th:value="${report.reportId}">
+                                    <input type="hidden" name="userId" th:value="${report.targetUserId}">
+                                    <button type="submit" class="action-btn restore-btn"><i class="fa-solid fa-user-check"></i><span>정지 해제</span></button>
+                                </form>
+
+                                <form th:action="@{/admin/reports/status}" method="post">
+                                    <input type="hidden" name="reportId" th:value="${report.reportId}">
+                                    <input type="hidden" name="status" value="REJECTED">
+                                    <button type="submit" class="action-btn reject-btn"><i class="fa-solid fa-ban"></i><span>신고 반려</span></button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-
-
-                    <tr>
-                        <td>2</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="report-title">학생증</div>
-                            <div class="report-desc">개인정보가 노출되어 있다는 신고가 접수되었습니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="reason-badge">개인정보 노출</span>
-                        </td>
-
-                        <td>이시현</td>
-
-                        <td>2026.05.30</td>
-
-                        <td>
-                            <span class="status-badge waiting">미처리</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-
-                                <button type="button" class="action-btn ignore-btn">
-                                    무시
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>3</td>
-
-                        <td>
-                            <span class="type-badge lost">분실물</span>
-                        </td>
-
-                        <td>
-                            <div class="report-title">파란색 지갑</div>
-                            <div class="report-desc">같은 내용의 게시글이 여러 번 등록되었다는 신고입니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="reason-badge">중복 게시글</span>
-                        </td>
-
-                        <td>박지훈</td>
-
-                        <td>2026.05.29</td>
-
-                        <td>
-                            <span class="status-badge done">처리완료</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn process-btn">
-                                    완료
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>4</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="report-title">회색 파우치</div>
-                            <div class="report-desc">신고 확인 결과 문제가 없는 게시글로 판단되었습니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="reason-badge">부적절한 내용</span>
-                        </td>
-
-                        <td>최유림</td>
-
-                        <td>2026.05.28</td>
-
-                        <td>
-                            <span class="status-badge ignore">무시</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
                     </tbody>
-
                 </table>
-
-
-                <!-- 페이지네이션 -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-left"></i>
-                    </a>
-
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-right"></i>
-                    </a>
-                </div>
-
             </section>
-
         </main>
-
     </div>
-
 </div>
 
+<script>
+    document.addEventListener("click", function (event) {
+        if (event.target.closest(".action-group, button, a, input, select")) {
+            return;
+        }
+        const row = event.target.closest(".clickable-row");
+        if (!row || !row.dataset.href) {
+            return;
+        }
+        window.location.href = row.dataset.href;
+    });
+</script>
 </body>
-
 </html>

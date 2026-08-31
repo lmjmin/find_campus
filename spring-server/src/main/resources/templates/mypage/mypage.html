@@ -23,14 +23,13 @@
         <div class="profile-left">
 
             <div class="profile-avatar">
-                김
+                <span th:text="${loginUser != null and loginUser.userName != null and not #strings.isEmpty(loginUser.userName) ? #strings.substring(loginUser.userName, 0, 1) : '?'}">?</span>
             </div>
 
             <div class="profile-info">
-                <h1>김동명</h1>
+                <h1 th:text="${loginUser != null ? loginUser.userName : '사용자'}">사용자</h1>
                 <p>
-                    tongmyong@tu.ac.kr<br>
-                    동명대학교 컴퓨터공학과
+                    <span th:text="${loginUser != null and loginUser.studentNo != null ? '학번 ' + loginUser.studentNo : '동명대학교 사용자'}">동명대학교 사용자</span>
                 </p>
             </div>
 
@@ -46,23 +45,23 @@
     <section class="stats">
 
         <div class="stat-card">
-            <strong>5</strong>
+            <strong th:text="${(lostItems != null ? #lists.size(lostItems) : 0) + (foundItems != null ? #lists.size(foundItems) : 0)}">0</strong>
             <span>등록한 글</span>
         </div>
 
         <div class="stat-card">
-            <strong>3</strong>
-            <span>반환 완료</span>
+            <strong th:text="${lostItems != null ? #lists.size(lostItems) : 0}">0</strong>
+            <span>분실물</span>
         </div>
 
         <div class="stat-card">
-            <strong>2</strong>
-            <span>보관중</span>
+            <strong th:text="${foundItems != null ? #lists.size(foundItems) : 0}">0</strong>
+            <span>습득물</span>
         </div>
 
         <div class="stat-card">
-            <strong>2</strong>
-            <span>접수중</span>
+            <strong th:text="${(lostItems != null ? #lists.size(lostItems) : 0) + (foundItems != null ? #lists.size(foundItems) : 0)}">0</strong>
+            <span>전체</span>
         </div>
 
     </section>
@@ -116,21 +115,6 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a th:href="@{/mypage/setting/privacy}" class="menu-item">
-                <div class="menu-left">
-                    <div class="menu-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-
-                    <div class="menu-text">
-                        <strong>개인정보 보호</strong>
-                        <span>정보 공개 범위 설정</span>
-                    </div>
-                </div>
-
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
-
             <a th:href="@{/mypage/setting}" class="menu-item">
                 <div class="menu-left">
                     <div class="menu-icon">
@@ -170,174 +154,81 @@
             </div>
 
             <div class="tabs">
-                <a href="#" class="tab active">전체 5</a>
-                <a href="#" class="tab">분실물 3</a>
-                <a href="#" class="tab">습득물 2</a>
-                <a href="#" class="tab">접수중 2</a>
-                <a href="#" class="tab">보관중 2</a>
-                <a href="#" class="tab">반환완료 3</a>
+                <button type="button" class="tab active" data-post-filter="all" th:text="${'전체 ' + ((lostItems != null ? #lists.size(lostItems) : 0) + (foundItems != null ? #lists.size(foundItems) : 0))}">전체 0</button>
+                <button type="button" class="tab" data-post-filter="lost" th:text="${'분실물 ' + (lostItems != null ? #lists.size(lostItems) : 0)}">분실물 0</button>
+                <button type="button" class="tab" data-post-filter="found" th:text="${'습득물 ' + (foundItems != null ? #lists.size(foundItems) : 0)}">습득물 0</button>
             </div>
 
             <div class="post-list">
 
-                <div class="post-card">
+                <div th:if="${(lostItems == null or #lists.isEmpty(lostItems)) and (foundItems == null or #lists.isEmpty(foundItems))}" class="mypage-empty">
+                    등록한 글이 없습니다.
+                </div>
+
+                <div class="mypage-empty post-filter-empty" hidden>
+                    선택한 종류의 게시글이 없습니다.
+                </div>
+
+                <div class="post-card" data-post-type="lost" th:each="item : ${lostItems}">
 
                     <div class="post-thumb lost-thumb">
-                        <span class="status-badge status-received">접수중</span>
-                        <i class="fa-solid fa-briefcase"></i>
+                        <span class="status-badge"
+                              th:classappend="${item.status == 'RETURNED' ? ' status-returned' : (item.status == 'STORED' ? ' status-storage' : ' status-received')}"
+                              th:text="${item.status == 'REGISTERED' ? '접수중' : (item.status == 'STORED' ? '보관중' : (item.status == 'RETURNED' ? '반환완료' : item.status))}">접수중</span>
+                        <img th:if="${item.imageUrl != null}" th:src="@{${item.imageUrl}}" alt="분실물 사진" class="post-photo"><i th:if="${item.imageUrl == null}" class="fa-solid fa-box-open"></i>
                     </div>
 
                     <div class="post-info">
                         <span class="post-type lost">분실물</span>
 
-                        <div class="post-title">
-                            검정 노트북 가방 분실
-                        </div>
+                        <div class="post-title" th:text="${item.title}">분실물 제목</div>
 
-                        <div class="post-desc">
-                            맥북 프로 13인치와 충전기가 들어 있는 검정 노트북 가방을 분실했습니다.
-                        </div>
+                        <div class="post-desc" th:text="${item.itemName + (item.color != null and item.color != '' ? ' · ' + item.color : '') + (item.brand != null and item.brand != '' ? ' · ' + item.brand : '')}">item summary</div>
 
                         <div class="post-meta">
-                            <span><i class="fa-solid fa-location-dot"></i> 중앙도서관</span>
-                            <span><i class="fa-regular fa-calendar"></i> 2026.05.09</span>
-                            <span><i class="fa-regular fa-eye"></i> 42</span>
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</span></span>
+                            <span><i class="fa-regular fa-calendar"></i> <span th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd') : ''}">날짜</span></span>
+                            <span><i class="fa-regular fa-eye"></i> <span th:text="${item.viewCount}">0</span></span>
                         </div>
                     </div>
 
                     <div class="post-actions">
-                        <a th:href="@{/lost/detail}" class="action-btn detail">상세보기</a>
-                        <a th:href="@{/lost/write}" class="action-btn edit">수정</a>
-                        <button type="button" class="action-btn delete">삭제</button>
+                        <a th:href="@{/lost/edit/{id}(id=${item.id})}" class="action-btn edit">수정</a>
+                        <form th:action="@{/lost/delete/{id}(id=${item.id})}" method="post">
+                            <button type="submit" class="action-btn delete" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                        </form>
                     </div>
 
                 </div>
 
-                <div class="post-card">
-
-                    <div class="post-thumb lost-thumb">
-                        <span class="status-badge status-storage">보관중</span>
-                        <i class="fa-solid fa-key"></i>
-                    </div>
-
-                    <div class="post-info">
-                        <span class="post-type lost">분실물</span>
-
-                        <div class="post-title">
-                            기숙사 열쇠 분실
-                        </div>
-
-                        <div class="post-desc">
-                            동명생활관 2호관 근처에서 기숙사 열쇠를 잃어버렸습니다.
-                        </div>
-
-                        <div class="post-meta">
-                            <span><i class="fa-solid fa-location-dot"></i> 동명생활관 2호관</span>
-                            <span><i class="fa-regular fa-calendar"></i> 2026.05.12</span>
-                            <span><i class="fa-regular fa-eye"></i> 18</span>
-                        </div>
-                    </div>
-
-                    <div class="post-actions">
-                        <a th:href="@{/lost/detail}" class="action-btn detail">상세보기</a>
-                        <a th:href="@{/lost/write}" class="action-btn edit">수정</a>
-                        <button type="button" class="action-btn delete">삭제</button>
-                    </div>
-
-                </div>
-
-                <div class="post-card">
+                <div class="post-card" data-post-type="found" th:each="item : ${foundItems}">
 
                     <div class="post-thumb found-thumb">
-                        <span class="status-badge status-returned">반환완료</span>
-                        <i class="fa-solid fa-id-card"></i>
+                        <span class="status-badge"
+                              th:classappend="${item.status == 'RETURNED' ? ' status-returned' : (item.status == 'STORED' ? ' status-storage' : ' status-received')}"
+                              th:text="${item.status == 'REGISTERED' ? '접수중' : (item.status == 'STORED' ? '보관중' : (item.status == 'RETURNED' ? '반환완료' : item.status))}">보관중</span>
+                        <img th:if="${item.imageUrl != null}" th:src="@{${item.imageUrl}}" alt="습득물 사진" class="post-photo"><i th:if="${item.imageUrl == null}" class="fa-solid fa-box-open"></i>
                     </div>
 
                     <div class="post-info">
                         <span class="post-type found">습득물</span>
 
-                        <div class="post-title">
-                            학생증 습득
-                        </div>
+                        <div class="post-title" th:text="${item.title}">습득물 제목</div>
 
-                        <div class="post-desc">
-                            학생복지관 근처에서 학생증을 습득해 보관처에 인계했습니다.
-                        </div>
+                        <div class="post-desc" th:text="${item.itemName + (item.color != null and item.color != '' ? ' · ' + item.color : '') + (item.brand != null and item.brand != '' ? ' · ' + item.brand : '')}">item summary</div>
 
                         <div class="post-meta">
-                            <span><i class="fa-solid fa-location-dot"></i> 학생복지관</span>
-                            <span><i class="fa-regular fa-calendar"></i> 2026.05.10</span>
-                            <span><i class="fa-regular fa-eye"></i> 29</span>
+                            <span><i class="fa-solid fa-location-dot"></i> <span th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</span></span>
+                            <span><i class="fa-regular fa-calendar"></i> <span th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd') : ''}">날짜</span></span>
+                            <span><i class="fa-regular fa-eye"></i> <span th:text="${item.viewCount}">0</span></span>
                         </div>
                     </div>
 
                     <div class="post-actions">
-                        <a th:href="@{/found/detail}" class="action-btn detail">상세보기</a>
-                        <button type="button" class="action-btn delete">삭제</button>
-                    </div>
-
-                </div>
-
-                <div class="post-card">
-
-                    <div class="post-thumb found-thumb">
-                        <span class="status-badge status-returned">반환완료</span>
-                        <i class="fa-solid fa-umbrella"></i>
-                    </div>
-
-                    <div class="post-info">
-                        <span class="post-type found">습득물</span>
-
-                        <div class="post-title">
-                            우산 습득
-                        </div>
-
-                        <div class="post-desc">
-                            셔틀버스 정류장 근처에서 파란색 접이식 우산을 습득했습니다.
-                        </div>
-
-                        <div class="post-meta">
-                            <span><i class="fa-solid fa-location-dot"></i> 셔틀버스 정류장</span>
-                            <span><i class="fa-regular fa-calendar"></i> 2026.05.08</span>
-                            <span><i class="fa-regular fa-eye"></i> 11</span>
-                        </div>
-                    </div>
-
-                    <div class="post-actions">
-                        <a th:href="@{/found/detail}" class="action-btn detail">상세보기</a>
-                        <button type="button" class="action-btn delete">삭제</button>
-                    </div>
-
-                </div>
-
-                <div class="post-card">
-
-                    <div class="post-thumb lost-thumb">
-                        <span class="status-badge status-returned">반환완료</span>
-                        <i class="fa-solid fa-mobile-screen-button"></i>
-                    </div>
-
-                    <div class="post-info">
-                        <span class="post-type lost">분실물</span>
-
-                        <div class="post-title">
-                            아이폰 분실
-                        </div>
-
-                        <div class="post-desc">
-                            ICT 2관 강의실 근처에서 아이폰을 분실했습니다.
-                        </div>
-
-                        <div class="post-meta">
-                            <span><i class="fa-solid fa-location-dot"></i> ICT 2관</span>
-                            <span><i class="fa-regular fa-calendar"></i> 2026.04.30</span>
-                            <span><i class="fa-regular fa-eye"></i> 67</span>
-                        </div>
-                    </div>
-
-                    <div class="post-actions">
-                        <a th:href="@{/lost/detail}" class="action-btn detail">상세보기</a>
-                        <button type="button" class="action-btn delete">삭제</button>
+                        <a th:href="@{/found/edit/{id}(id=${item.id})}" class="action-btn edit">수정</a>
+                        <form th:action="@{/found/delete/{id}(id=${item.id})}" method="post">
+                            <button type="submit" class="action-btn delete" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                        </form>
                     </div>
 
                 </div>
@@ -354,5 +245,72 @@
 
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".tabs .tab");
+        const posts = document.querySelectorAll(".post-card[data-post-type]");
+        const filterEmpty = document.querySelector(".post-filter-empty");
+
+        tabs.forEach(function (tab) {
+            tab.addEventListener("click", function () {
+                const filter = tab.dataset.postFilter;
+                let visibleCount = 0;
+
+                tabs.forEach(function (item) {
+                    item.classList.remove("active");
+                });
+                tab.classList.add("active");
+
+                posts.forEach(function (post) {
+                    const visible = filter === "all" || post.dataset.postType === filter;
+                    post.hidden = !visible;
+                    if (visible) visibleCount += 1;
+                });
+
+                if (filterEmpty) {
+                    filterEmpty.hidden = visibleCount !== 0;
+                }
+            });
+        });
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".mypage-main-container .tabs .tab");
+    const posts = document.querySelectorAll(".mypage-main-container .post-card[data-post-type]");
+    const postList = document.querySelector(".mypage-main-container .post-list");
+
+    if (!tabs.length || !posts.length) return;
+
+    function applyPostFilter(filter) {
+        posts.forEach(function (post) {
+            const show = filter === "all" || post.dataset.postType === filter;
+            post.hidden = !show;
+            post.classList.toggle("is-filter-hidden", !show);
+        });
+
+        if (postList) {
+            postList.scrollTop = 0;
+        }
+    }
+
+    tabs.forEach(function (tab) {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+            const filter = tab.dataset.postFilter || "all";
+
+            tabs.forEach(function (item) {
+                item.classList.remove("active");
+            });
+            tab.classList.add("active");
+
+            applyPostFilter(filter);
+        });
+    });
+
+    const activeTab = document.querySelector(".mypage-main-container .tabs .tab.active") || tabs[0];
+    applyPostFilter(activeTab.dataset.postFilter || "all");
+});
+</script>
 </body>
 </html>

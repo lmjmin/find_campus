@@ -10,4 +10,7 @@ public class DashboardStatsDto {
     private int foundCount;
     private int reportCount;
     private int waitingReportCount;
+    private int registeredCount;
+    private int storedCount;
+    private int returnedCount;
 }

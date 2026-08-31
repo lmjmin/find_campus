@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>분실물 등록 | FindCampus</title>
+    <title th:text="${editMode == true ? '분실물 수정 | FindCampus' : '분실물 등록 | FindCampus'}">분실물 등록 | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet"
@@ -11,42 +11,227 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/lost.css}">
     <style>
-        .upload-preview { margin-top: 12px; display: none; gap: 10px; flex-direction: column; }
+        .form-card { --upload-accent: #c9534d; }
+        .upload-preview { margin-top: 14px; display: none; gap: 12px; flex-direction: column; }
         .upload-preview.active { display: flex; }
-        .upload-preview-title { font-size: 13px; font-weight: 900; color: #2563eb; }
-        .upload-file-list { display: grid; gap: 8px; }
-        .upload-file-item { padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; color: #374151; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .upload-preview-title { font-size: 13px; font-weight: 900; color: var(--upload-accent); }
+        .upload-file-list { display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 10px; scroll-snap-type: x proximity; }
+        .upload-file-list::-webkit-scrollbar { height: 8px; }
+        .upload-file-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 999px; }
+        .upload-thumb-card { position: relative; flex: 0 0 124px; width: 124px; border: 1px solid #e5e7eb; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08); cursor: pointer; scroll-snap-align: start; text-align: left; }
+        .upload-thumb-card img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: #f8fafc; }
+        .upload-thumb-card:focus-visible { outline: 3px solid color-mix(in srgb, var(--upload-accent) 35%, transparent); outline-offset: 3px; }
+        .upload-thumb-meta { padding: 9px 10px 10px; min-height: 48px; display: flex; flex-direction: column; gap: 4px; }
+        .upload-thumb-name { color: #111827; font-size: 12px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .current-photo-preview { margin: 12px 0 14px; display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+        .current-photo-card { flex: 0 0 124px; width: 124px; border: 1px solid #e5e7eb; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08); }
+        .current-photo-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: #f8fafc; }
+        .current-photo-label { padding: 9px 10px 10px; color: var(--upload-accent); font-size: 12px; font-weight: 900; }
+        .upload-main-badge { position: absolute; left: 8px; top: 8px; padding: 5px 8px; border-radius: 999px; background: var(--upload-accent); color: #fff; font-size: 11px; font-weight: 900; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16); }
+        .upload-remove-button { position: absolute; right: 7px; top: 7px; width: 30px; height: 30px; border: 0; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; color: #991b1b; background: rgba(254, 226, 226, 0.94); cursor: pointer; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16); }
+        .upload-remove-button:hover { background: #fecaca; }
+        .photo-editor-backdrop { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(15, 23, 42, 0.58); backdrop-filter: blur(4px); }
+        .photo-editor-backdrop.active { display: flex; }
+        .photo-editor-panel { width: min(720px, 100%); border-radius: 24px; background: #fff; box-shadow: 0 28px 80px rgba(15, 23, 42, 0.28); overflow: hidden; }
+        .photo-editor-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; border-bottom: 1px solid #edf0f5; }
+        .photo-editor-head strong { font-size: 18px; font-weight: 950; color: #111827; }
+        .photo-editor-head span { display: block; margin-top: 4px; color: #6b7280; font-size: 13px; font-weight: 700; }
+        .photo-editor-close { border: 0; width: 36px; height: 36px; border-radius: 999px; background: #f3f4f6; color: #4b5563; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .photo-editor-body { padding: 18px 20px 20px; }
+        .photo-editor-stage { height: min(58vh, 460px); border-radius: 18px; background: #111827; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #d8dee9; touch-action: none; }
+        .photo-editor-crop-box { position: relative; width: min(72vw, 380px); aspect-ratio: 1 / 1; overflow: hidden; border-radius: 18px; background: #f8fafc; box-shadow: 0 0 0 999px rgba(15, 23, 42, 0.46), 0 0 0 2px rgba(255, 255, 255, 0.96); cursor: grab; }
+        .photo-editor-crop-box.dragging { cursor: grabbing; }
+        .photo-editor-crop-box img { position: absolute; left: 50%; top: 50%; max-width: none; max-height: none; transform-origin: center center; user-select: none; -webkit-user-drag: none; will-change: transform; }
+        .photo-editor-grid { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(to right, rgba(255,255,255,.44) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.44) 1px, transparent 1px); background-size: 33.333% 100%, 100% 33.333%; }
+        .photo-editor-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .photo-editor-actions button { border: 0; border-radius: 999px; min-height: 42px; padding: 0 15px; display: inline-flex; align-items: center; gap: 8px; font-weight: 900; cursor: pointer; background: #f3f4f6; color: #374151; }
+        .photo-editor-actions button:hover { background: #e5e7eb; }
+        .photo-editor-actions .primary { margin-left: auto; background: var(--upload-accent); color: #fff; }
+        .photo-editor-actions .primary:hover { filter: brightness(0.96); }
+        .photo-editor-range { flex: 1 1 180px; min-height: 42px; padding: 0 14px; border-radius: 999px; background: #f3f4f6; display: flex; align-items: center; gap: 10px; color: #374151; font-weight: 900; }
+        .photo-editor-range input { width: 100%; accent-color: var(--upload-accent); }
+        @media (max-width: 640px) {
+            .upload-thumb-card { flex-basis: 108px; width: 108px; }
+            .photo-editor-actions .primary { margin-left: 0; width: 100%; justify-content: center; } .photo-editor-range { flex-basis: 100%; }
+        }
         .empty-select-alert { padding: 16px; border-radius: 16px; background: #fff7ed; color: #c2410c; font-size: 14px; font-weight: 800; line-height: 1.5; }
-    </style>
+        .form-error-alert { margin-bottom: 22px; padding: 14px 16px; border-radius: 16px; background: #fef2f2; color: #b91c1c; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 9px; }
+        .form-error-alert[hidden] { display: none; }
+        .form-group.field-invalid .input,
+        .form-group.field-invalid .select,
+        .form-group.field-invalid .textarea { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12); }
+        .form-group.field-invalid > label { color: #b91c1c; }
+.current-photo-preview {
+            display: none !important;
+        }
+
+        .upload-preview.active {
+            display: block;
+        }
+
+        .upload-file-list {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 12px !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            padding: 4px 2px 12px !important;
+            scroll-snap-type: x proximity;
+        }
+
+        .upload-thumb-card {
+            position: relative;
+            flex: 0 0 132px !important;
+            width: 132px !important;
+            min-height: 176px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08);
+            scroll-snap-align: start;
+            cursor: pointer;
+        }
+
+        .upload-thumb-card img {
+            width: 100% !important;
+            aspect-ratio: 1 / 1 !important;
+            height: auto !important;
+            display: block;
+            object-fit: cover;
+            background: #f8fafc;
+        }
+
+        .upload-thumb-name {
+            display: block;
+            padding: 10px 10px 12px;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .upload-thumb-meta {
+            display: none !important;
+        }
+
+        .upload-main-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            border-radius: 999px;
+            padding: 6px 9px;
+            background: var(--upload-accent);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 950;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+        }
+
+        .upload-remove-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--upload-accent);
+            font-weight: 950;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+        }
+
+        .upload-order-buttons {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 42px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .upload-order-button {
+            pointer-events: auto;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(17, 24, 39, 0.72);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
+        }
+
+        .upload-order-button:disabled {
+            opacity: 0.28;
+            cursor: default;
+        }
+
+        .photo-editor-actions .primary {
+            margin-left: auto;
+            min-width: 172px;
+            justify-content: center;
+            background: var(--upload-accent) !important;
+            color: #fff !important;
+            opacity: 1 !important;
+            box-shadow: 0 14px 28px color-mix(in srgb, var(--upload-accent) 35%, transparent);
+            border: 2px solid color-mix(in srgb, var(--upload-accent) 88%, #ffffff 12%);
+        }
+
+        .photo-editor-actions .primary:hover {
+            filter: brightness(0.95);
+            transform: translateY(-1px);
+        }
+
+        .photo-editor-actions .primary i {
+            color: inherit !important;
+        }
+/* codex-v73-photo-editor-visible-save-start */
+        .photo-editor-actions .primary {
+            background: #4b5563 !important;
+            color: #ffffff !important;
+            border: 2px solid #374151 !important;
+            opacity: 1 !important;
+            box-shadow: 0 14px 28px rgba(17, 24, 39, 0.24) !important;
+        }
+
+        .photo-editor-actions .primary:hover {
+            background: #374151 !important;
+            color: #ffffff !important;
+            filter: none !important;
+        }
+
+        .photo-editor-actions .primary:disabled {
+            background: #6b7280 !important;
+            color: #ffffff !important;
+            opacity: 0.9 !important;
+        }
+
+        .photo-editor-actions .primary i {
+            color: #ffffff !important;
+        }
+</style>
 </head>
 
 <body>
 
-<header>
-    <div class="header-inner">
-        <a th:href="@{/}" class="logo">
-            <span class="logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
-            FindCampus
-        </a>
-
-        <nav class="nav">
-            <a th:href="@{/lost/list}" class="active">분실물</a>
-            <a th:href="@{/found/list}">습득물</a>
-            <a th:href="@{/search}">검색</a>
-            <a th:href="@{/map}">지도</a>
-        </nav>
-
-        <div class="user-menu">
-            <a th:href="@{/notification}" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
-            <a th:href="@{/mypage}" class="icon-btn"><i class="fa-solid fa-user"></i></a>
-        </div>
-    </div>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container">
     <div class="page-title">
-        <h1>분실물 등록</h1>
-        <p>잃어버린 물건의 특징과 위치를 자세히 작성하면 유사한 습득물을 더 쉽게 찾을 수 있습니다.</p>
+        <h1 th:text="${editMode == true ? '분실물 수정' : '분실물 등록'}">분실물 등록</h1>
     </div>
 
     <section class="match-flow">
@@ -54,18 +239,33 @@
             <div class="flow-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div>
                 <h2>자세히 작성할수록 매칭 정확도가 올라갑니다</h2>
-                <p>색상, 위치, 시간, 사진 정보를 함께 등록해 주세요.</p>
+                <p>물건의 특징과 위치, 사진 정보를 함께 등록해 주세요.</p>
             </div>
         </div>
     </section>
 
-    <form th:action="@{/lost/write}" method="post" enctype="multipart/form-data" class="form-card" id="lostForm">
+    <form th:action="${editMode == true} ? @{/lost/edit/{id}(id=${item.id})} : @{/lost/write}"
+          method="post"
+          enctype="multipart/form-data"
+          class="form-card"
+          novalidate
+          id="lostForm"
+          th:attr="data-error-field=${errorField}">
         <div class="notice">
             <i class="fa-solid fa-triangle-exclamation"></i>
             <span>
                 <strong>허위 등록은 제한될 수 있습니다.</strong>
                 실제로 잃어버린 물건의 정보만 작성해 주세요.
             </span>
+        </div>
+
+        <div class="form-error-alert" th:if="${error != null}">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span th:text="${error}">입력값을 확인해 주세요.</span>
+        </div>
+        <div class="form-error-alert" id="lostClientError" hidden>
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>필수 항목을 입력해 주세요.</span>
         </div>
 
         <div class="section-title">
@@ -75,22 +275,26 @@
 
         <div class="form-group">
             <label>제목 <span class="required">*</span></label>
-            <input type="text" name="title" class="input" placeholder="예: 중앙도서관에서 검정 노트북 가방을 잃어버렸어요" required>
+            <input type="text" name="title" class="input" placeholder="예: 중앙도서관에서 검정 노트북 가방을 잃어버렸어요" th:value="${formData != null ? formData.title : (editMode == true ? item.title : '')}" required>
         </div>
 
         <div class="form-group">
             <label>물건명 <span class="required">*</span></label>
-            <input type="text" name="itemName" class="input" placeholder="예: 노트북 가방, 에어팟, 학생증" required>
+            <input type="text" name="itemName" class="input" placeholder="예: 노트북 가방, 에어팟, 학생증" th:value="${formData != null ? formData.itemName : (editMode == true ? item.itemName : '')}" required>
         </div>
 
         <div class="form-group">
             <label>카테고리 <span class="required">*</span></label>
             <div class="empty-select-alert" th:if="${categories == null or #lists.isEmpty(categories)}">
-                카테고리 데이터가 없습니다. `seed_common_data.sql`을 먼저 실행해 주세요.
+                카테고리 정보를 불러오지 못했습니다.
             </div>
-            <div class="category-list" th:if="${categories != null and !#lists.isEmpty(categories)}">
-                <label th:each="category : ${categories}">
-                    <input type="radio" name="categoryId" th:value="${category.categoryId}" required>
+            <div class="category-list" th:if="${categories != null and not #lists.isEmpty(categories)}">
+                <label th:each="category : ${categories}" th:if="${category.categoryName != '기타'}">
+                    <input type="radio" name="categoryId" th:value="${category.categoryId}" th:checked="${formData != null ? formData.categoryId == category.categoryId : (editMode == true and item.categoryId == category.categoryId)}" required>
+                    <span th:text="${category.categoryName}">카테고리</span>
+                </label>
+                <label th:each="category : ${categories}" th:if="${category.categoryName == '기타'}">
+                    <input type="radio" name="categoryId" th:value="${category.categoryId}" th:checked="${formData != null ? formData.categoryId == category.categoryId : (editMode == true and item.categoryId == category.categoryId)}" required>
                     <span th:text="${category.categoryName}">카테고리</span>
                 </label>
             </div>
@@ -103,78 +307,34 @@
 
         <div class="feature-grid">
             <div class="form-group">
-                <label>색상 <span class="required">*</span></label>
-                <input type="text" name="color" class="input" placeholder="예: 검정, 흰색, 남색" required>
+                <label>색상 <span class="optional">선택</span></label>
+                <input type="text" name="color" class="input" placeholder="예: 검정, 흰색, 남색" th:value="${formData != null ? formData.color : (editMode == true ? item.color : '')}">
             </div>
 
             <div class="form-group">
                 <label>브랜드 <span class="optional">선택</span></label>
-                <input type="text" name="brand" class="input" placeholder="예: Apple, Nike">
+                <input type="text" name="brand" class="input" placeholder="예: Apple, Nike" th:value="${formData != null ? formData.brand : (editMode == true ? item.brand : '')}">
             </div>
 
             <div class="form-group">
                 <label>무늬/디자인 <span class="optional">선택</span></label>
-                <input type="text" name="pattern" class="input" placeholder="예: 캐릭터 스티커, 줄무늬">
+                <input type="text" name="pattern" class="input" placeholder="예: 캐릭터 스티커, 줄무늬" th:value="${formData != null ? formData.pattern : ''}">
             </div>
 
             <div class="form-group">
                 <label>흠집/사용 흔적 <span class="optional">선택</span></label>
-                <input type="text" name="damageInfo" class="input" placeholder="예: 모서리 흠집">
+                <input type="text" name="damageInfo" class="input" placeholder="예: 모서리 흠집" th:value="${formData != null ? formData.damageInfo : ''}">
             </div>
 
             <div class="form-group">
                 <label>부착물/스티커 <span class="optional">선택</span></label>
-                <input type="text" name="attachmentInfo" class="input" placeholder="예: 파란 키링">
+                <input type="text" name="attachmentInfo" class="input" placeholder="예: 파란 키링" th:value="${formData != null ? formData.attachmentInfo : ''}">
             </div>
 
             <div class="form-group">
                 <label>내용물 <span class="optional">선택</span></label>
-                <input type="text" name="insideItem" class="input" placeholder="예: 충전기, 카드">
+                <input type="text" name="insideItem" class="input" placeholder="예: 충전기, 카드" th:value="${formData != null ? formData.insideItem : ''}">
             </div>
-        </div>
-
-        <div class="form-group">
-            <label>상세 설명 <span class="required">*</span></label>
-            <textarea name="description" class="textarea" placeholder="본인 물건을 확인할 수 있는 특징을 자세히 적어주세요." required></textarea>
-        </div>
-
-        <div class="section-title">
-            <div class="section-icon"><i class="fa-solid fa-location-dot"></i></div>
-            <h2>분실 위치와 시간</h2>
-        </div>
-
-        <div class="form-group">
-            <label>분실 위치 <span class="required">*</span></label>
-            <select name="lostLocationId" class="select" required>
-                <option value="">위치를 선택하세요</option>
-                <option th:each="location : ${locations}" th:value="${location.locationId}"
-                        th:text="${location.buildingName != null ? location.buildingName + ' - ' + location.locationName : location.locationName}">
-                    위치
-                </option>
-            </select>
-            <p class="help-text">위치 목록은 DB의 LOCATIONS 테이블에서 조회됩니다.</p>
-        </div>
-
-        <div class="form-group">
-            <label>상세 위치 <span class="required">*</span></label>
-            <input type="text" name="lostLocationDetail" class="input" placeholder="예: 중앙도서관 3층 열람실" required>
-        </div>
-
-        <div class="row">
-            <div class="form-group">
-                <label>분실 날짜 <span class="required">*</span></label>
-                <input type="date" name="lostDate" class="input" required>
-            </div>
-
-            <div class="form-group">
-                <label>분실 시간 <span class="optional">선택</span></label>
-                <input type="time" name="lostTime" class="input">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>분실 시간대 <span class="optional">선택</span></label>
-            <input type="text" name="lostTimeRange" class="input" placeholder="예: 오후 2시~3시 사이">
         </div>
 
         <div class="section-title">
@@ -185,25 +345,70 @@
         <div class="form-group">
             <label>물건 사진 <span class="optional">선택</span></label>
             <label class="upload-box">
-                <input type="file" name="images" id="lostImages" multiple hidden accept="image/*">
+                <input type="file" name="images" id="lostImages" multiple hidden accept="image/*"
+                       th:attr="data-existing-url=${editMode == true and item.imageUrl != null ? item.imageUrl : ''}, data-existing-name=${editMode == true and item.imageUrl != null ? '현재 대표 사진' : ''}">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <strong>사진을 클릭해서 업로드</strong>
-                <span>JPG, PNG 최대 10MB</span>
+                <span>여러 장 업로드 가능 · 첫 번째 사진이 대표 사진으로 표시됩니다.</span>
             </label>
-
-            <div class="upload-preview" id="lostImagePreview">
-                <div class="upload-preview-title" id="lostImageCount">선택된 사진 0장</div>
-                <div class="upload-file-list" id="lostImageList"></div>
+            <div class="current-photo-preview" th:if="${editMode == true and item.imageUrl != null}">
+                <div class="current-photo-card">
+                    <img th:src="@{${item.imageUrl}}" alt="분실물 현재 사진">
+                    <div class="current-photo-label">현재 대표 사진</div>
+                </div>
             </div>
 
-            <p class="help-text">사진을 선택하면 아래에 파일명이 표시됩니다. 등록 전 선택 여부를 확인해 주세요.</p>
+            <div class="upload-preview" id="lostImagePreview">
+                <div class="upload-preview-title" id="lostImageCount">선택된 사진 0장 · 첫 번째 사진이 대표 사진</div>
+                <div class="upload-file-list" id="lostImageList"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>상세 설명 <span class="optional">선택</span></label>
+            <textarea name="description" class="textarea" placeholder="본인 물건을 확인할 수 있는 특징을 자세히 적어주세요." th:text="${formData != null ? formData.description : (editMode == true ? item.description : '')}"></textarea>
+        </div>
+
+        <div class="section-title">
+            <div class="section-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h2>분실 위치와 시간</h2>
+        </div>
+
+        <div class="form-group">
+            <label>분실 위치 <span class="optional">선택</span></label>
+            <select name="lostLocationName" class="select">
+                <option value="">&#50948;&#52824;&#47484; &#49440;&#53469;&#54616;&#49464;&#50836;</option>
+                <option th:each="locationName : ${locationOptions}"
+                        th:value="${locationName}"
+                        th:selected="${formData != null ? formData.lostLocationName == locationName : (editMode == true and item.locationName == locationName)}"
+                        th:text="${locationName}">
+                    location
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>상세 위치 <span class="optional">선택</span></label>
+            <input type="text" name="lostLocationDetail" class="input" placeholder="예: 중앙도서관 3층 열람실" th:value="${formData != null ? formData.lostLocationDetail : (editMode == true ? item.locationDetail : '')}">
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <label>분실 날짜 <span class="optional">선택</span></label>
+                <input type="date" name="lostDate" class="input" th:value="${formData != null ? formData.lostDate : (editMode == true and item.itemDate != null ? #dates.format(item.itemDate, 'yyyy-MM-dd') : '')}">
+            </div>
+
+            <div class="form-group">
+                <label>분실 시간 <span class="optional">선택</span></label>
+                <input type="time" name="lostTime" class="input" th:value="${formData != null ? formData.lostTime : (editMode == true ? item.itemTime : '')}">
+            </div>
         </div>
 
         <div class="button-area">
-            <a th:href="@{/lost/list}" class="cancel-btn">취소</a>
+            <a th:href="${editMode == true} ? @{/mypage} : @{/lost/list}" class="cancel-btn">취소</a>
             <button type="submit" class="submit-btn">
                 <i class="fa-solid fa-check"></i>
-                분실물 등록하기
+                <span th:text="${editMode == true ? '분실물 수정하기' : '분실물 등록하기'}">분실물 등록하기</span>
             </button>
         </div>
     </form>
@@ -215,21 +420,410 @@
         const preview = document.getElementById(previewId);
         const count = document.getElementById(countId);
         const list = document.getElementById(listId);
-        input.addEventListener("change", function () {
+        if (!input || !preview || !count || !list) return;
+
+        const selectedFiles = [];
+        const objectUrls = new WeakMap();
+        let existingImported = false;
+
+        function getObjectUrl(file) {
+            if (!objectUrls.has(file)) {
+                objectUrls.set(file, URL.createObjectURL(file));
+            }
+            return objectUrls.get(file);
+        }
+
+        function revokeFileUrl(file) {
+            const url = objectUrls.get(file);
+            if (url) {
+                URL.revokeObjectURL(url);
+                objectUrls.delete(file);
+            }
+        }
+
+        function syncInputFiles() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach((file) => dataTransfer.items.add(file));
+            input.files = dataTransfer.files;
+        }
+
+        function shortName(file, index) {
+            const raw = file.displayName || file.name || `사진 ${index + 1}`;
+            return index === 0 ? `대표 · ${raw}` : raw;
+        }
+
+        function moveFile(from, to) {
+            if (to < 0 || to >= selectedFiles.length || from === to) return;
+            const [file] = selectedFiles.splice(from, 1);
+            selectedFiles.splice(to, 0, file);
+            syncInputFiles();
+            renderFiles();
+        }
+
+        function renderFiles() {
             list.innerHTML = "";
-            const files = Array.from(input.files || []);
-            count.textContent = "선택된 사진 " + files.length + "장";
-            preview.classList.toggle("active", files.length > 0);
-            files.forEach(function (file) {
-                const item = document.createElement("div");
-                item.className = "upload-file-item";
-                item.innerHTML = '<i class="fa-solid fa-image"></i><span>' + file.name + '</span>';
-                list.appendChild(item);
+
+            if (selectedFiles.length === 0) {
+                preview.classList.remove("active");
+                count.textContent = "";
+                syncInputFiles();
+                return;
+            }
+
+            preview.classList.add("active");
+            count.textContent = `선택된 사진 ${selectedFiles.length}장 · 첫 번째 사진이 대표 사진`;
+
+            selectedFiles.forEach((file, index) => {
+                const card = document.createElement("button");
+                card.type = "button";
+                card.className = "upload-thumb-card";
+                card.title = "사진 편집";
+
+                const image = document.createElement("img");
+                image.src = getObjectUrl(file);
+                image.alt = file.name || "선택한 사진";
+
+                const name = document.createElement("span");
+                name.className = "upload-thumb-name";
+                name.textContent = shortName(file, index);
+
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.className = "upload-remove-button";
+                removeButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                removeButton.setAttribute("aria-label", "사진 삭제");
+                removeButton.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    const [removed] = selectedFiles.splice(index, 1);
+                    revokeFileUrl(removed);
+                    syncInputFiles();
+                    renderFiles();
+                });
+
+                const orderButtons = document.createElement("div");
+                orderButtons.className = "upload-order-buttons";
+
+                const leftButton = document.createElement("button");
+                leftButton.type = "button";
+                leftButton.className = "upload-order-button";
+                leftButton.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+                leftButton.disabled = index === 0;
+                leftButton.setAttribute("aria-label", "앞으로 이동");
+                leftButton.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    moveFile(index, index - 1);
+                });
+
+                const rightButton = document.createElement("button");
+                rightButton.type = "button";
+                rightButton.className = "upload-order-button";
+                rightButton.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+                rightButton.disabled = index === selectedFiles.length - 1;
+                rightButton.setAttribute("aria-label", "뒤로 이동");
+                rightButton.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    moveFile(index, index + 1);
+                });
+
+                orderButtons.appendChild(leftButton);
+                orderButtons.appendChild(rightButton);
+
+                if (index === 0) {
+                    const badge = document.createElement("span");
+                    badge.className = "upload-main-badge";
+                    badge.textContent = "대표";
+                    card.appendChild(badge);
+                }
+
+                card.appendChild(image);
+                card.appendChild(name);
+                card.appendChild(removeButton);
+                card.appendChild(orderButtons);
+                card.addEventListener("click", () => openPhotoEditor(file, index));
+                list.appendChild(card);
             });
+        }
+
+        function createPhotoEditor() {
+            let backdrop = document.querySelector(".photo-editor-backdrop");
+            if (!backdrop) {
+                backdrop = document.createElement("div");
+                backdrop.className = "photo-editor-backdrop";
+                backdrop.innerHTML =
+                    '<div class="photo-editor-panel" role="dialog" aria-modal="true" aria-label="사진 편집">' +
+                    '  <div class="photo-editor-head">' +
+                    '    <div><strong>사진 편집</strong><span>정사각형 영역에 맞춰 대표 이미지를 정리합니다.</span></div>' +
+                    '    <button type="button" class="photo-editor-close" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>' +
+                    '  </div>' +
+                    '  <div class="photo-editor-body">' +
+                    '    <div class="photo-editor-stage">' +
+                    '      <div class="photo-editor-crop-box">' +
+                    '        <img alt="편집 중인 사진">' +
+                    '        <div class="photo-editor-grid"></div>' +
+                    '      </div>' +
+                    '    </div>' +
+                    '    <div class="photo-editor-actions">' +
+                    '      <button type="button" data-action="rotate-left"><i class="fa-solid fa-rotate-left"></i>왼쪽 회전</button>' +
+                    '      <button type="button" data-action="rotate-right"><i class="fa-solid fa-rotate-right"></i>오른쪽 회전</button>' +
+                    '      <label class="photo-editor-range"><i class="fa-solid fa-magnifying-glass-plus"></i><input type="range" min="1" max="2.4" step="0.05" value="1" data-action="zoom"></label>' +
+                    '      <button type="button" data-action="reset"><i class="fa-solid fa-arrow-rotate-left"></i>초기화</button>' +
+                    '      <button type="button" class="primary" data-action="apply"><i class="fa-solid fa-check"></i>사진 저장하기</button>' +
+                    '    </div>' +
+                    '  </div>' +
+                    '</div>';
+                document.body.appendChild(backdrop);
+            }
+
+            return {
+                backdrop,
+                cropBox: backdrop.querySelector(".photo-editor-crop-box"),
+                image: backdrop.querySelector(".photo-editor-crop-box img"),
+                close: backdrop.querySelector(".photo-editor-close"),
+                zoom: backdrop.querySelector('[data-action="zoom"]'),
+                rotateLeft: backdrop.querySelector('[data-action="rotate-left"]'),
+                rotateRight: backdrop.querySelector('[data-action="rotate-right"]'),
+                reset: backdrop.querySelector('[data-action="reset"]'),
+                apply: backdrop.querySelector('[data-action="apply"]')
+            };
+        }
+
+        function openPhotoEditor(file, index) {
+            const editor = createPhotoEditor();
+            let rotation = 0;
+            let scale = 1;
+            let offsetX = 0;
+            let offsetY = 0;
+            let dragging = false;
+            let dragStartX = 0;
+            let dragStartY = 0;
+            let startX = 0;
+            let startY = 0;
+
+            function updateTransform() {
+                editor.image.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) rotate(${rotation}deg) scale(${scale})`;
+            }
+
+            function resetState() {
+                rotation = 0;
+                scale = 1;
+                offsetX = 0;
+                offsetY = 0;
+                editor.zoom.value = "1";
+                updateTransform();
+            }
+
+            function closeEditor() {
+                editor.backdrop.classList.remove("active");
+                editor.image.removeAttribute("src");
+            }
+
+            function canvasFromEditedImage() {
+                const size = 900;
+                const canvas = document.createElement("canvas");
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = "#f8fafc";
+                ctx.fillRect(0, 0, size, size);
+
+                const image = editor.image;
+                const box = editor.cropBox.getBoundingClientRect();
+                const naturalWidth = image.naturalWidth || 1;
+                const naturalHeight = image.naturalHeight || 1;
+                const baseScale = Math.max(box.width / naturalWidth, box.height / naturalHeight);
+                const renderScale = baseScale * scale * (size / box.width);
+
+                ctx.save();
+                ctx.translate(size / 2 + offsetX * (size / box.width), size / 2 + offsetY * (size / box.width));
+                ctx.rotate(rotation * Math.PI / 180);
+                ctx.scale(renderScale, renderScale);
+                ctx.drawImage(image, -naturalWidth / 2, -naturalHeight / 2);
+                ctx.restore();
+
+                return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+            }
+
+            editor.image.onload = () => {
+                const box = editor.cropBox.getBoundingClientRect();
+                const fit = Math.max(box.width / editor.image.naturalWidth, box.height / editor.image.naturalHeight);
+                editor.image.style.width = `${editor.image.naturalWidth * fit}px`;
+                editor.image.style.height = `${editor.image.naturalHeight * fit}px`;
+                resetState();
+            };
+            editor.image.src = getObjectUrl(file);
+            editor.backdrop.classList.add("active");
+
+            editor.rotateLeft.onclick = () => { rotation -= 90; updateTransform(); };
+            editor.rotateRight.onclick = () => { rotation += 90; updateTransform(); };
+            editor.reset.onclick = resetState;
+            editor.zoom.oninput = () => { scale = Number(editor.zoom.value); updateTransform(); };
+            editor.close.onclick = closeEditor;
+            editor.backdrop.onclick = (event) => {
+                if (event.target === editor.backdrop) closeEditor();
+            };
+
+            editor.cropBox.onpointerdown = (event) => {
+                dragging = true;
+                editor.cropBox.classList.add("dragging");
+                dragStartX = event.clientX;
+                dragStartY = event.clientY;
+                startX = offsetX;
+                startY = offsetY;
+                editor.cropBox.setPointerCapture(event.pointerId);
+            };
+            editor.cropBox.onpointermove = (event) => {
+                if (!dragging) return;
+                offsetX = startX + event.clientX - dragStartX;
+                offsetY = startY + event.clientY - dragStartY;
+                updateTransform();
+            };
+            editor.cropBox.onpointerup = () => {
+                dragging = false;
+                editor.cropBox.classList.remove("dragging");
+            };
+            editor.cropBox.onpointercancel = editor.cropBox.onpointerup;
+
+            editor.apply.onclick = () => {
+                const button = editor.apply;
+                button.disabled = true;
+                button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>저장 중';
+
+                canvasFromEditedImage()
+                    .then((blob) => {
+                        if (!blob) return;
+                        const originalName = file.name || `photo-${index + 1}.jpg`;
+                        const editedName = originalName.replace(/\.[^.]+$/, "") + "-edited.jpg";
+                        const editedFile = new File([blob], editedName, { type: "image/jpeg", lastModified: Date.now() });
+                        editedFile.displayName = file.displayName || editedName;
+                        revokeFileUrl(file);
+                        selectedFiles[index] = editedFile;
+                        syncInputFiles();
+                        renderFiles();
+                        closeEditor();
+                    })
+                    .finally(() => {
+                        button.disabled = false;
+                        button.innerHTML = '<i class="fa-solid fa-check"></i>사진 저장하기';
+                    });
+            };
+        }
+
+        function fileNameFromUrl(url) {
+            try {
+                const last = decodeURIComponent(url.split("?")[0].split("/").filter(Boolean).pop() || "현재-대표-사진.jpg");
+                return last.includes(".") ? last : `${last}.jpg`;
+            } catch (error) {
+                return "현재-대표-사진.jpg";
+            }
+        }
+
+        function importExistingImage() {
+            const existingUrl = (input.dataset.existingUrl || "").trim();
+            if (!existingUrl || existingImported) return;
+            existingImported = true;
+
+            fetch(existingUrl, { cache: "no-store" })
+                .then((response) => {
+                    if (!response.ok) throw new Error("기존 사진을 불러오지 못했습니다.");
+                    return response.blob();
+                })
+                .then((blob) => {
+                    if (!blob || !blob.type || !blob.type.startsWith("image/")) return;
+                    const name = fileNameFromUrl(existingUrl);
+                    const file = new File([blob], name, { type: blob.type, lastModified: Date.now() });
+                    file.displayName = input.dataset.existingName || "현재 대표 사진";
+                    selectedFiles.push(file);
+                    syncInputFiles();
+                    renderFiles();
+                })
+                .catch(() => {
+                    preview.classList.remove("active");
+                });
+        }
+
+        input.addEventListener("change", () => {
+            Array.from(input.files || []).forEach((file) => {
+                if (file && file.type && file.type.startsWith("image/")) {
+                    selectedFiles.push(file);
+                }
+            });
+            syncInputFiles();
+            renderFiles();
         });
+
+        importExistingImage();
     }
 
     bindImagePreview("lostImages", "lostImagePreview", "lostImageCount", "lostImageList");
+
+    function focusInvalidField(fieldName) {
+        if (!fieldName) return;
+
+        const fields = document.querySelectorAll('[name="' + fieldName + '"]');
+        if (!fields.length) return;
+
+        const target = fields[0];
+        const group = target.closest(".form-group") || target.closest(".category-list") || target;
+        document.querySelectorAll(".field-invalid").forEach(function (item) {
+            item.classList.remove("field-invalid");
+        });
+        if (group.classList) {
+            group.classList.add("field-invalid");
+        }
+
+        group.scrollIntoView({ behavior: "smooth", block: "center" });
+        window.setTimeout(function () {
+            if (target.type !== "radio" && target.type !== "file") {
+                target.focus({ preventScroll: true });
+            }
+        }, 350);
+    }
+
+    function getRequiredValue(form, fieldName) {
+        const fields = Array.from(form.querySelectorAll('[name="' + fieldName + '"]'));
+        if (!fields.length) return "";
+
+        if (fields[0].type === "radio") {
+            return fields.some(function (field) { return field.checked; }) ? "checked" : "";
+        }
+
+        return (fields[0].value || "").trim();
+    }
+
+    function findMissingRequiredField(form) {
+        const requiredFields = [
+            { name: "title", label: "제목" },
+            { name: "itemName", label: "물건명" },
+            { name: "categoryId", label: "카테고리" }
+        ];
+
+        return requiredFields.find(function (field) {
+            return !getRequiredValue(form, field.name);
+        });
+    }
+
+    function showClientError(message) {
+        const errorBox = document.getElementById("lostClientError");
+        if (!errorBox) return;
+        errorBox.querySelector("span").textContent = message;
+        errorBox.hidden = false;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("lostForm");
+        focusInvalidField(form.dataset.errorField || "");
+
+        form.addEventListener("submit", function (event) {
+            const missingField = findMissingRequiredField(form);
+            if (!missingField) {
+                return;
+            }
+
+            event.preventDefault();
+            showClientError(missingField.label + " 항목을 입력해야 등록할 수 있습니다.");
+            focusInvalidField(missingField.name);
+        });
+    });
 </script>
 
 </body>

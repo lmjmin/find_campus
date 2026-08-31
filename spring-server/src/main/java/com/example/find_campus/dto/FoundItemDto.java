@@ -16,6 +16,7 @@ public class FoundItemDto {
     private String brand;
     private String description;
     private Long foundLocationId;
+    private String foundLocationName;
     private String foundLocationDetail;
     private LocalDate foundDate;
     private String foundTime;

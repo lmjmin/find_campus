@@ -1,404 +1,173 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>사용자 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
-
 <body>
-
 <div class="admin-page">
-
-    <!-- 상단바 -->
     <header class="admin-header">
-
         <a th:href="@{/admin/dashboard}" class="admin-logo">
-            <span class="admin-logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
             <span>FindCampus Admin</span>
         </a>
-
         <div class="admin-header-right">
-            <span>
-                <i class="fa-regular fa-user"></i>
-                관리자
-            </span>
-
-            <a th:href="@{/admin/login}" class="logout-btn">
-                로그아웃
-            </a>
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
         </div>
-
     </header>
 
-
     <div class="admin-layout">
-
-        <!-- 사이드바 -->
         <aside class="sidebar">
-
-            <div class="sidebar-title">
-                메뉴
-            </div>
-
+            <div class="sidebar-title">메뉴</div>
             <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link active"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
 
-                <a th:href="@{/admin/dashboard}" class="side-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    대시보드
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
                 </a>
-
-                <a th:href="@{/admin/users}" class="side-link active">
-                    <i class="fa-solid fa-users"></i>
-                    사용자 관리
-                </a>
-
-                <a th:href="@{/admin/lost}" class="side-link">
-                    <i class="fa-solid fa-circle-question"></i>
-                    분실물 관리
-                </a>
-
-                <a th:href="@{/admin/found}" class="side-link">
-                    <i class="fa-solid fa-box-open"></i>
-                    습득물 관리
-                </a>
-
-                <a th:href="@{/admin/storage}" class="side-link">
-                    <i class="fa-solid fa-warehouse"></i>
-                    보관 장소 관리
-                </a>
-
-                <a th:href="@{/admin/locations}" class="side-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    위치 관리
-                </a>
-
-                <a th:href="@{/admin/categories}" class="side-link">
-                    <i class="fa-solid fa-tags"></i>
-                    카테고리 관리
-                </a>
-
-                <a th:href="@{/admin/reports}" class="side-link">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    신고 관리
-                </a>
-
             </nav>
-
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
         </aside>
 
-
-        <!-- 본문 -->
         <main class="admin-content">
-
             <div class="page-title-wrap">
-                <h1 class="page-title">
-                    사용자 관리
-                </h1>
-
-                <p class="page-desc">
-                    가입한 사용자의 상태를 확인하고 계정을 관리할 수 있습니다.
-                </p>
+                <h1 class="page-title">사용자 관리</h1>
+                <p class="page-desc">가입한 사용자를 이름 또는 학번으로 검색하고 계정 상태를 관리합니다.</p>
             </div>
 
+            <div th:if="${message}" class="admin-alert success" th:text="${message}">처리되었습니다.</div>
+            <div th:if="${error}" class="admin-alert error" th:text="${error}">처리 중 오류가 발생했습니다.</div>
 
-            <!-- 요약 카드 -->
-            <section class="summary-grid">
-
+            <section class="summary-grid user-summary-grid">
                 <div class="summary-card">
-                    <div class="summary-label">전체 사용자</div>
-                    <div class="summary-count">86<span>명</span></div>
-                    <div class="summary-sub">가입된 전체 계정</div>
+                    <div class="summary-top">
+                        <div class="summary-label">전체 사용자</div>
+                        <div class="summary-icon total"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                    <div class="summary-count"><span th:text="${allUserCount}">0</span><span>명</span></div>
+                    <div class="summary-sub">실제 사용자 계정</div>
                 </div>
-
                 <div class="summary-card">
-                    <div class="summary-label">정상 사용자</div>
-                    <div class="summary-count">81<span>명</span></div>
+                    <div class="summary-top">
+                        <div class="summary-label">정상 사용자</div>
+                        <div class="summary-icon active"><i class="fa-solid fa-user-check"></i></div>
+                    </div>
+                    <div class="summary-count"><span th:text="${activeCount}">0</span><span>명</span></div>
                     <div class="summary-sub">현재 서비스 이용 가능</div>
                 </div>
-
                 <div class="summary-card">
-                    <div class="summary-label">정지 사용자</div>
-                    <div class="summary-count">3<span>명</span></div>
+                    <div class="summary-top">
+                        <div class="summary-label">정지 사용자</div>
+                        <div class="summary-icon report"><i class="fa-solid fa-user-lock"></i></div>
+                    </div>
+                    <div class="summary-count"><span th:text="${suspendedCount}">0</span><span>명</span></div>
                     <div class="summary-sub">관리자에 의해 이용 제한</div>
                 </div>
-
-                <div class="summary-card">
-                    <div class="summary-label">오늘 가입</div>
-                    <div class="summary-count">2<span>명</span></div>
-                    <div class="summary-sub">오늘 새로 가입한 사용자</div>
-                </div>
-
             </section>
 
-
-            <!-- 검색 / 필터 -->
             <section class="filter-panel">
-
-                <div class="filter-row">
-
+                <form class="filter-row" th:action="@{/admin/users}" method="get">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="이름, 아이디, 이메일로 검색">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="이름 또는 학번으로 검색">
                     </div>
-
                     <div class="filter-actions">
-                        <select class="filter-select">
-                            <option>상태 전체</option>
-                            <option>정상</option>
-                            <option>정지</option>
-                            <option>인증대기</option>
+                        <select class="filter-select" name="status">
+                            <option value="" th:selected="${status == null or status == ''}">상태 전체</option>
+                            <option value="ACTIVE" th:selected="${status == 'ACTIVE'}">정상</option>
+                            <option value="SUSPENDED" th:selected="${status == 'SUSPENDED'}">정지</option>
+                            <option value="PENDING" th:selected="${status == 'PENDING'}">인증대기</option>
                         </select>
-
-                        <button type="button" class="search-btn">
-                            검색
-                        </button>
+                        <button type="submit" class="search-btn">검색</button>
                     </div>
-
-                </div>
-
+                </form>
             </section>
 
-
-            <!-- 사용자 목록 -->
             <section class="table-panel">
-
                 <div class="table-head">
-                    <h2 class="table-title">
-                        사용자 목록
-                    </h2>
-
-                    <div class="table-count">
-                        총 86명
-                    </div>
+                    <h2 class="table-title">사용자 목록</h2>
+                    <div class="table-count" th:text="|총 ${totalCount}명|">총 0명</div>
                 </div>
 
                 <table class="user-table">
-
                     <thead>
                     <tr>
                         <th>사용자</th>
-                        <th>이메일</th>
+                        <th>학번</th>
                         <th>권한</th>
                         <th>가입일</th>
                         <th>상태</th>
                         <th>관리</th>
                     </tr>
                     </thead>
-
                     <tbody>
-
-                    <tr>
+                    <tr th:if="${#lists.isEmpty(users)}">
+                        <td colspan="6" class="empty-cell">표시할 실제 사용자가 없습니다.</td>
+                    </tr>
+                    <tr th:each="user : ${users}" class="clickable-row" th:attr="data-href=@{/admin/users/detail(userId=${user.userId})}">
                         <td>
-                            <div class="user-name">이민주</div>
-                            <div class="user-id">user_001</div>
+                            <div class="user-name" th:text="${user.userName != null ? user.userName : '-'}">사용자</div>
+                            <div class="user-id" th:text="${user.loginId != null ? user.loginId : '-'}">login</div>
                         </td>
-
-                        <td class="email-text">
-                            minju@example.com
-                        </td>
-
                         <td>
-                            <span class="role-badge user">사용자</span>
+                            <div class="email-text" th:text="${user.studentNo != null and user.studentNo != '' ? user.studentNo : '-'}">-</div><div class="user-id" th:text="${user.phone != null and user.phone != '' ? user.phone : ''}"></div>
                         </td>
-
                         <td>
-                            2026.05.01
+                            <span class="role-badge"
+                                  th:classappend="${user.role == 'ADMIN' ? ' admin' : ' user'}"
+                                  th:text="${user.role == 'ADMIN' ? '관리자' : '사용자'}">사용자</span>
                         </td>
-
+                        <td th:text="${user.createdAt != null ? #dates.format(user.createdAt, 'yyyy.MM.dd') : '-'}">-</td>
                         <td>
-                            <span class="status-badge active">정상</span>
+                            <span class="status-badge"
+                                  th:classappend="${user.status == 'SUSPENDED' ? ' suspended' : (user.status == 'PENDING' ? ' waiting' : ' active')}"
+                                  th:text="${user.status == 'SUSPENDED' ? '정지' : (user.status == 'PENDING' ? '인증대기' : '정상')}">정상</span>
                         </td>
-
                         <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
+                            <div class="action-group user-action-group">
+                                
 
-                                <button type="button" class="action-btn stop-btn">
-                                    정지
-                                </button>
+                                <form th:if="${user.role != 'ADMIN' and user.status != 'SUSPENDED'}"
+                                      th:action="@{/admin/users/status}" method="post"
+                                      onsubmit="return confirm('이 사용자를 정지할까요?');">
+                                    <input type="hidden" name="userId" th:value="${user.userId}">
+                                    <input type="hidden" name="status" value="SUSPENDED">
+                                    <button type="submit" class="action-btn stop-btn">정지</button>
+                                </form>
+
+                                <form th:if="${user.role != 'ADMIN' and user.status == 'SUSPENDED'}"
+                                      th:action="@{/admin/users/status}" method="post"
+                                      onsubmit="return confirm('이 사용자의 정지를 해제할까요?');">
+                                    <input type="hidden" name="userId" th:value="${user.userId}">
+                                    <input type="hidden" name="status" value="ACTIVE">
+                                    <button type="submit" class="action-btn restore-btn">해제</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-
-
-                    <tr>
-                        <td>
-                            <div class="user-name">이승현</div>
-                            <div class="user-id">user_002</div>
-                        </td>
-
-                        <td class="email-text">
-                            sihyeon@example.com
-                        </td>
-
-                        <td>
-                            <span class="role-badge user">사용자</span>
-                        </td>
-
-                        <td>
-                            2026.05.03
-                        </td>
-
-                        <td>
-                            <span class="status-badge active">정상</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn stop-btn">
-                                    정지
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>
-                            <div class="user-name">박지훈</div>
-                            <div class="user-id">user_003</div>
-                        </td>
-
-                        <td class="email-text">
-                            jihoon@example.com
-                        </td>
-
-                        <td>
-                            <span class="role-badge user">사용자</span>
-                        </td>
-
-                        <td>
-                            2026.05.10
-                        </td>
-
-                        <td>
-                            <span class="status-badge suspended">정지</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn restore-btn">
-                                    해제
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>
-                            <div class="user-name">최유림</div>
-                            <div class="user-id">user_004</div>
-                        </td>
-
-                        <td class="email-text">
-                            yurim@example.com
-                        </td>
-
-                        <td>
-                            <span class="role-badge user">사용자</span>
-                        </td>
-
-                        <td>
-                            2026.05.14
-                        </td>
-
-                        <td>
-                            <span class="status-badge waiting">인증대기</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn stop-btn">
-                                    정지
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>
-                            <div class="user-name">관리자</div>
-                            <div class="user-id">admin</div>
-                        </td>
-
-                        <td class="email-text">
-                            admin@findcampus.com
-                        </td>
-
-                        <td>
-                            <span class="role-badge admin">관리자</span>
-                        </td>
-
-                        <td>
-                            2026.04.20
-                        </td>
-
-                        <td>
-                            <span class="status-badge active">정상</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
                     </tbody>
-
                 </table>
-
-
-                <!-- 페이지네이션 -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-left"></i>
-                    </a>
-
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-right"></i>
-                    </a>
-                </div>
-
             </section>
-
         </main>
-
     </div>
-
 </div>
-
 </body>
-
 </html>

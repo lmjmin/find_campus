@@ -6,56 +6,202 @@
 <mapper namespace="com.example.find_campus.dao.ICommonDao">
 
     <select id="findCategories" resultType="com.example.find_campus.dto.CategoryDto">
-        SELECT
-            CATEGORY_ID,
-            CATEGORY_NAME,
-            DESCRIPTION,
-            USE_YN,
-            CREATED_AT
+        SELECT CATEGORY_ID, CATEGORY_NAME, DESCRIPTION, USE_YN, CREATED_AT
         FROM CATEGORIES
         WHERE USE_YN = 'Y'
-        ORDER BY CATEGORY_ID
+        ORDER BY CASE WHEN CATEGORY_NAME = '기타' THEN 9999 ELSE CATEGORY_ID END, CATEGORY_NAME
     </select>
+
+    <select id="findAllCategories" resultType="com.example.find_campus.dto.CategoryDto">
+        SELECT CATEGORY_ID, CATEGORY_NAME, DESCRIPTION, USE_YN, CREATED_AT
+        FROM CATEGORIES
+        WHERE USE_YN != 'D'
+        ORDER BY CASE WHEN USE_YN = 'Y' THEN 0 ELSE 1 END, CATEGORY_ID
+    </select>
+
+    <select id="findCategoryById" parameterType="long" resultType="com.example.find_campus.dto.CategoryDto">
+        SELECT CATEGORY_ID, CATEGORY_NAME, DESCRIPTION, USE_YN, CREATED_AT
+        FROM CATEGORIES
+        WHERE CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
+    </select>
+
+    <insert id="insertCategory" parameterType="com.example.find_campus.dto.CategoryDto">
+        <selectKey keyProperty="categoryId" resultType="long" order="BEFORE">
+            SELECT NVL(MAX(CATEGORY_ID), 0) + 1 FROM CATEGORIES
+        </selectKey>
+        INSERT INTO CATEGORIES (CATEGORY_ID, CATEGORY_NAME, DESCRIPTION, USE_YN, CREATED_AT)
+        VALUES (#{categoryId,jdbcType=NUMERIC}, #{categoryName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 'Y', SYSDATE)
+    </insert>
+
+    <update id="updateCategory" parameterType="com.example.find_campus.dto.CategoryDto">
+        UPDATE CATEGORIES
+        SET CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+            DESCRIPTION = #{description,jdbcType=VARCHAR},
+            USE_YN = 'Y'
+        WHERE CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="updateCategoryUseYn">
+        UPDATE CATEGORIES
+        SET USE_YN = #{useYn,jdbcType=VARCHAR}
+        WHERE CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="deleteCategory" parameterType="long">
+        UPDATE CATEGORIES
+        SET USE_YN = 'D'
+        WHERE CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
+    </update>
 
     <select id="findLocations" resultType="com.example.find_campus.dto.LocationDto">
-        SELECT
-            LOCATION_ID,
-            LOCATION_NAME,
-            BUILDING_NAME,
-            FLOOR,
-            DETAIL,
-            LATITUDE,
-            LONGITUDE,
-            USE_YN,
-            CREATED_AT
+        SELECT LOCATION_ID, LOCATION_NAME, BUILDING_NAME, FLOOR, DETAIL, LATITUDE, LONGITUDE, USE_YN, CREATED_AT
         FROM LOCATIONS
         WHERE USE_YN = 'Y'
-        ORDER BY BUILDING_NAME, FLOOR, LOCATION_NAME
+        ORDER BY CASE WHEN REGEXP_LIKE(LOCATION_NAME, '^[0-9]+\.') THEN TO_NUMBER(REGEXP_SUBSTR(LOCATION_NAME, '^[0-9]+')) ELSE 9999 END, LOCATION_NAME
     </select>
 
+    <select id="findAllLocations" resultType="com.example.find_campus.dto.LocationDto">
+        SELECT LOCATION_ID, LOCATION_NAME, BUILDING_NAME, FLOOR, DETAIL, LATITUDE, LONGITUDE, USE_YN, CREATED_AT
+        FROM LOCATIONS
+        WHERE USE_YN != 'D'
+        ORDER BY CASE WHEN USE_YN = 'Y' THEN 0 ELSE 1 END, CASE WHEN REGEXP_LIKE(LOCATION_NAME, '^[0-9]+\.') THEN TO_NUMBER(REGEXP_SUBSTR(LOCATION_NAME, '^[0-9]+')) ELSE 9999 END, LOCATION_NAME
+    </select>
+
+    <select id="findLocationById" parameterType="long" resultType="com.example.find_campus.dto.LocationDto">
+        SELECT LOCATION_ID, LOCATION_NAME, BUILDING_NAME, FLOOR, DETAIL, LATITUDE, LONGITUDE, USE_YN, CREATED_AT
+        FROM LOCATIONS
+        WHERE LOCATION_ID = #{locationId,jdbcType=NUMERIC}
+    </select>
+
+    <select id="findLocationByName" parameterType="string" resultType="com.example.find_campus.dto.LocationDto">
+        SELECT LOCATION_ID, LOCATION_NAME, BUILDING_NAME, FLOOR, DETAIL, LATITUDE, LONGITUDE, USE_YN, CREATED_AT
+        FROM LOCATIONS
+        WHERE USE_YN = 'Y'
+          AND LOCATION_NAME = #{value,jdbcType=VARCHAR}
+          AND ROWNUM = 1
+    </select>
+
+    <insert id="insertLocation" parameterType="com.example.find_campus.dto.LocationDto">
+        <selectKey keyProperty="locationId" resultType="long" order="BEFORE">
+            SELECT NVL(MAX(LOCATION_ID), 0) + 1 FROM LOCATIONS
+        </selectKey>
+        INSERT INTO LOCATIONS (
+            LOCATION_ID, LOCATION_NAME, BUILDING_NAME, FLOOR, DETAIL,
+            LATITUDE, LONGITUDE, USE_YN, CREATED_AT
+        ) VALUES (
+            #{locationId,jdbcType=NUMERIC}, #{locationName,jdbcType=VARCHAR}, #{buildingName,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR},
+            #{latitude,jdbcType=NUMERIC}, #{longitude,jdbcType=NUMERIC}, 'Y', SYSDATE
+        )
+    </insert>
+
+    <update id="updateLocation" parameterType="com.example.find_campus.dto.LocationDto">
+        UPDATE LOCATIONS
+        SET LOCATION_NAME = #{locationName,jdbcType=VARCHAR},
+            BUILDING_NAME = #{buildingName,jdbcType=VARCHAR},
+            FLOOR = #{floor,jdbcType=VARCHAR},
+            DETAIL = #{detail,jdbcType=VARCHAR},
+            LATITUDE = #{latitude,jdbcType=NUMERIC},
+            LONGITUDE = #{longitude,jdbcType=NUMERIC},
+            USE_YN = 'Y'
+        WHERE LOCATION_ID = #{locationId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="updateLocationUseYn">
+        UPDATE LOCATIONS
+        SET USE_YN = #{useYn,jdbcType=VARCHAR}
+        WHERE LOCATION_ID = #{locationId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="deleteLocation" parameterType="long">
+        UPDATE LOCATIONS
+        SET USE_YN = 'D'
+        WHERE LOCATION_ID = #{locationId,jdbcType=NUMERIC}
+    </update>
+
     <select id="findStoragePlaces" resultType="com.example.find_campus.dto.StoragePlaceDto">
-        SELECT
-            S.STORAGE_ID,
-            S.STORAGE_NAME,
-            S.LOCATION_ID,
-            L.LOCATION_NAME,
-            S.MANAGER_NAME,
-            S.PHONE,
-            S.OPERATING_HOURS,
-            S.DESCRIPTION,
-            S.USE_YN,
-            S.CREATED_AT
+        SELECT S.STORAGE_ID, S.STORAGE_NAME, S.LOCATION_ID, L.LOCATION_NAME,
+               S.MANAGER_NAME, S.PHONE, S.OPERATING_HOURS, S.DESCRIPTION, S.USE_YN, S.CREATED_AT
         FROM STORAGE_PLACES S
         LEFT JOIN LOCATIONS L ON L.LOCATION_ID = S.LOCATION_ID
         WHERE S.USE_YN = 'Y'
-        ORDER BY S.STORAGE_NAME
+        ORDER BY
+            CASE
+                WHEN S.STORAGE_NAME = '학생복지관 2층 학생·장학봉사팀' THEN 1
+                WHEN S.STORAGE_NAME = '중앙도서관 안내데스크(1층 데스크)' THEN 2
+                WHEN S.STORAGE_NAME = '대학본관 1층' THEN 3
+                WHEN S.STORAGE_NAME LIKE '학과사무실 - %' THEN 4
+                ELSE 99
+            END,
+            S.STORAGE_NAME
     </select>
+
+    <select id="findAllStoragePlaces" resultType="com.example.find_campus.dto.StoragePlaceDto">
+        SELECT S.STORAGE_ID, S.STORAGE_NAME, S.LOCATION_ID, L.LOCATION_NAME,
+               S.MANAGER_NAME, S.PHONE, S.OPERATING_HOURS, S.DESCRIPTION, S.USE_YN, S.CREATED_AT
+        FROM STORAGE_PLACES S
+        LEFT JOIN LOCATIONS L ON L.LOCATION_ID = S.LOCATION_ID
+        WHERE S.USE_YN != 'D'
+        ORDER BY
+            CASE WHEN S.USE_YN = 'Y' THEN 0 ELSE 1 END,
+            CASE
+                WHEN S.STORAGE_NAME = '학생복지관 2층 학생·장학봉사팀' THEN 1
+                WHEN S.STORAGE_NAME = '중앙도서관 안내데스크(1층 데스크)' THEN 2
+                WHEN S.STORAGE_NAME = '대학본관 1층' THEN 3
+                WHEN S.STORAGE_NAME LIKE '학과사무실 - %' THEN 4
+                ELSE 99
+            END,
+            S.STORAGE_NAME
+    </select>
+
+    <select id="findStoragePlaceById" parameterType="long" resultType="com.example.find_campus.dto.StoragePlaceDto">
+        SELECT S.STORAGE_ID, S.STORAGE_NAME, S.LOCATION_ID, L.LOCATION_NAME,
+               S.MANAGER_NAME, S.PHONE, S.OPERATING_HOURS, S.DESCRIPTION, S.USE_YN, S.CREATED_AT
+        FROM STORAGE_PLACES S
+        LEFT JOIN LOCATIONS L ON L.LOCATION_ID = S.LOCATION_ID
+        WHERE S.STORAGE_ID = #{storageId,jdbcType=NUMERIC}
+    </select>
+
+    <insert id="insertStoragePlace" parameterType="com.example.find_campus.dto.StoragePlaceDto">
+        <selectKey keyProperty="storageId" resultType="long" order="BEFORE">
+            SELECT NVL(MAX(STORAGE_ID), 0) + 1 FROM STORAGE_PLACES
+        </selectKey>
+        INSERT INTO STORAGE_PLACES (
+            STORAGE_ID, STORAGE_NAME, LOCATION_ID, MANAGER_NAME, PHONE, OPERATING_HOURS, DESCRIPTION, USE_YN, CREATED_AT
+        ) VALUES (
+            #{storageId,jdbcType=NUMERIC}, #{storageName,jdbcType=VARCHAR}, #{locationId,jdbcType=NUMERIC},
+            #{managerName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{operatingHours,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 'Y', SYSDATE
+        )
+    </insert>
+
+    <update id="updateStoragePlace" parameterType="com.example.find_campus.dto.StoragePlaceDto">
+        UPDATE STORAGE_PLACES
+        SET STORAGE_NAME = #{storageName,jdbcType=VARCHAR},
+            LOCATION_ID = #{locationId,jdbcType=NUMERIC},
+            MANAGER_NAME = #{managerName,jdbcType=VARCHAR},
+            PHONE = #{phone,jdbcType=VARCHAR},
+            OPERATING_HOURS = #{operatingHours,jdbcType=VARCHAR},
+            DESCRIPTION = #{description,jdbcType=VARCHAR},
+            USE_YN = 'Y'
+        WHERE STORAGE_ID = #{storageId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="updateStoragePlaceUseYn">
+        UPDATE STORAGE_PLACES
+        SET USE_YN = #{useYn,jdbcType=VARCHAR}
+        WHERE STORAGE_ID = #{storageId,jdbcType=NUMERIC}
+    </update>
+
+    <update id="deleteStoragePlace" parameterType="long">
+        UPDATE STORAGE_PLACES
+        SET USE_YN = 'D'
+        WHERE STORAGE_ID = #{storageId,jdbcType=NUMERIC}
+    </update>
 
     <select id="getDashboardStats" resultType="com.example.find_campus.dto.DashboardStatsDto">
         SELECT
             (SELECT COUNT(*) FROM USERS WHERE STATUS = 'ACTIVE') AS USER_COUNT,
-            (SELECT COUNT(*) FROM LOST_ITEMS) AS LOST_COUNT,
-            (SELECT COUNT(*) FROM FOUND_ITEMS) AS FOUND_COUNT,
+            (SELECT COUNT(*) FROM LOST_ITEMS WHERE STATUS != 'DELETED') AS LOST_COUNT,
+            (SELECT COUNT(*) FROM FOUND_ITEMS WHERE STATUS != 'DELETED') AS FOUND_COUNT,
             (SELECT COUNT(*) FROM REPORTS) AS REPORT_COUNT,
             (SELECT COUNT(*) FROM REPORTS WHERE STATUS = 'WAITING') AS WAITING_REPORT_COUNT
         FROM DUAL

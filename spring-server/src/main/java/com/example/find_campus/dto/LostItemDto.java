@@ -20,6 +20,7 @@ public class LostItemDto {
     private String insideItem;
     private String description;
     private Long lostLocationId;
+    private String lostLocationName;
     private String lostLocationDetail;
     private LocalDate lostDate;
     private String lostTime;

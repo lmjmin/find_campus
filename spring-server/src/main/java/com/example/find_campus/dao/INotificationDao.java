@@ -14,6 +14,10 @@ public interface INotificationDao {
 
     List<NotificationDto> findNotificationsByUserId(Long userId);
 
+    List<NotificationDto> findAdminNotifications();
+
+    int countUnreadAdminNotifications();
+
     int countUnreadNotifications(Long userId);
 
     int markNotificationRead(@Param("notificationId") Long notificationId, @Param("userId") Long userId);

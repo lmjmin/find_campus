@@ -1,405 +1,160 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>보관 장소 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
-
 <body>
-
 <div class="admin-page">
-
-    <!-- 상단바 -->
     <header class="admin-header">
-
         <a th:href="@{/admin/dashboard}" class="admin-logo">
-            <span class="admin-logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
             <span>FindCampus Admin</span>
         </a>
-
         <div class="admin-header-right">
-            <span>
-                <i class="fa-regular fa-user"></i>
-                관리자
-            </span>
-
-            <a th:href="@{/admin/login}" class="logout-btn">
-                로그아웃
-            </a>
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
         </div>
-
     </header>
 
-
     <div class="admin-layout">
-
-        <!-- 사이드바 -->
         <aside class="sidebar">
-
-            <div class="sidebar-title">
-                메뉴
-            </div>
-
+            <div class="sidebar-title">메뉴</div>
             <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link active"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
 
-                <a th:href="@{/admin/dashboard}" class="side-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    대시보드
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
                 </a>
-
-                <a th:href="@{/admin/users}" class="side-link">
-                    <i class="fa-solid fa-users"></i>
-                    사용자 관리
-                </a>
-
-                <a th:href="@{/admin/lost}" class="side-link">
-                    <i class="fa-solid fa-circle-question"></i>
-                    분실물 관리
-                </a>
-
-                <a th:href="@{/admin/found}" class="side-link">
-                    <i class="fa-solid fa-box-open"></i>
-                    습득물 관리
-                </a>
-
-                <a th:href="@{/admin/storage}" class="side-link active">
-                    <i class="fa-solid fa-warehouse"></i>
-                    보관 장소 관리
-                </a>
-
-                <a th:href="@{/admin/locations}" class="side-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    위치 관리
-                </a>
-
-                <a th:href="@{/admin/categories}" class="side-link">
-                    <i class="fa-solid fa-tags"></i>
-                    카테고리 관리
-                </a>
-
-                <a th:href="@{/admin/reports}" class="side-link">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    신고 관리
-                </a>
-
             </nav>
-
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
         </aside>
 
-
-        <!-- 본문 -->
         <main class="admin-content">
+            <div th:if="${message}" class="admin-alert success" th:text="${message}"></div>
+            <div th:if="${error}" class="admin-alert error" th:text="${error}"></div>
 
             <div class="page-title-wrap">
-                <h1 class="page-title">
-                    보관 장소 관리
-                </h1>
-
-                <p class="page-desc">
-                    습득물을 실제로 보관하는 교내 보관처를 등록하고 관리합니다.
-                </p>
+                <h1 class="page-title">보관 장소 관리</h1>
+                <p class="page-desc">습득물 등록과 수령 안내에 노출되는 보관처 정보를 관리합니다.</p>
             </div>
 
-
-            <!-- 요약 카드 -->
             <section class="summary-grid">
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">전체 보관처</div>
-                        <div class="summary-icon total">
-                            <i class="fa-solid fa-warehouse"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">7<span>곳</span></div>
+                    <div class="summary-top"><div class="summary-label">전체 보관처</div><div class="summary-icon total"><i class="fa-solid fa-warehouse"></i></div></div>
+                    <div class="summary-count"><span th:text="${totalCount}">0</span><span>곳</span></div>
                     <div class="summary-sub">등록된 전체 보관 장소</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">사용중</div>
-                        <div class="summary-icon active">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">6<span>곳</span></div>
-                    <div class="summary-sub">현재 선택 가능한 보관처</div>
+                    <div class="summary-top"><div class="summary-label">사용중</div><div class="summary-icon active"><i class="fa-solid fa-circle-check"></i></div></div>
+                    <div class="summary-count"><span th:text="${activeCount}">0</span><span>곳</span></div>
+                    <div class="summary-sub">사용자 화면에 표시</div>
                 </div>
-
-
-                <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">보관중 물품</div>
-                        <div class="summary-icon storage">
-                            <i class="fa-solid fa-box-archive"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">18<span>건</span></div>
-                    <div class="summary-sub">전체 보관처 기준 보관중</div>
-                </div>
-
             </section>
 
-
-            <section class="manage-grid">
-
-                <!-- 보관 장소 등록 -->
-                <div class="form-panel">
-
-                    <div class="panel-head">
-                        <h2 class="panel-title">
-                            보관 장소 등록
-                        </h2>
-                    </div>
-
+            <section class="manage-grid storage-manage-grid">
+                <form class="form-panel" th:action="@{/admin/storage/save}" method="post">
+                    <div class="panel-head"><h2 class="panel-title" th:text="${editStorage != null ? '보관 장소 수정' : '보관 장소 등록'}">보관 장소 등록</h2></div>
                     <div class="form-body">
-
+                        <input type="hidden" name="storageId" th:value="${editStorage != null ? editStorage.storageId : ''}">
                         <div class="form-group">
                             <label for="storageName">보관 장소명</label>
-                            <input
-                                    type="text"
-                                    id="storageName"
-                                    placeholder="예: 학생지원팀">
+                            <input type="text" id="storageName" name="storageName" th:value="${editStorage != null ? editStorage.storageName : ''}" placeholder="보관 장소명을 입력하세요" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="buildingName">건물명</label>
-                            <input
-                                    type="text"
-                                    id="buildingName"
-                                    placeholder="예: 학생복지관">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="storageLocation">상세 위치</label>
-                            <input
-                                    type="text"
-                                    id="storageLocation"
-                                    placeholder="예: 학생복지관 1층">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="storagePhone">연락처</label>
-                            <input
-                                    type="text"
-                                    id="storagePhone"
-                                    placeholder="예: 051-629-0514">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="storageStatus">사용 여부</label>
-                            <select id="storageStatus">
-                                <option>사용중</option>
-                                <option>사용안함</option>
+                            <label for="locationId">연결 위치</label>
+                            <select id="locationId" name="locationId">
+                                <option value="">위치 선택 안함</option>
+                                <option th:each="location : ${locations}" th:value="${location.locationId}" th:selected="${editStorage != null and editStorage.locationId == location.locationId}" th:text="${location.locationName}">위치</option>
                             </select>
-
-                            <p class="form-help">
-                                사용중인 보관 장소만 습득물 등록 시 선택할 수 있도록 처리할 예정입니다.
-                            </p>
                         </div>
-
-                        <button type="button" class="submit-btn">
-                            보관 장소 등록
-                        </button>
-
+                        <div class="form-group">
+                            <label for="phone">연락처</label>
+                            <input type="text" id="phone" name="phone" th:value="${editStorage != null ? editStorage.phone : ''}" placeholder="051-000-0000">
+                        </div>
+                        <div class="form-group">
+                            <label for="operatingHours">운영 시간</label>
+                            <input type="text" id="operatingHours" name="operatingHours" th:value="${editStorage != null ? editStorage.operatingHours : ''}" placeholder="평일 09:00 ~ 17:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">안내 문구</label>
+                            <input type="text" id="description" name="description" th:value="${editStorage != null ? editStorage.description : ''}" placeholder="수령 안내에 표시할 문구를 입력하세요">
+                        </div>
+                        <p class="form-help">새로 등록한 보관 장소는 사용중으로 저장됩니다. 중지와 삭제는 목록에서 처리하세요.</p>
+                        <button type="submit" class="submit-btn" th:text="${editStorage != null ? '보관 장소 수정' : '보관 장소 등록'}">보관 장소 등록</button>
                     </div>
+                </form>
 
-                </div>
-
-
-                <!-- 보관 장소 목록 -->
                 <div class="table-panel">
-
-                    <div class="panel-head">
-                        <h2 class="panel-title">
-                            보관 장소 목록
-                        </h2>
-                    </div>
-
-                    <div class="filter-bar">
-
-                        <div class="search-box">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="보관 장소명, 건물명으로 검색">
-                        </div>
-
-                        <select class="filter-select">
-                            <option>상태 전체</option>
-                            <option>사용중</option>
-                            <option>사용안함</option>
-                        </select>
-
-                    </div>
-
-                    <table class="storage-table">
-
+                    <div class="panel-head"><h2 class="panel-title">보관 장소 목록</h2></div>
+                    <table class="storage-table storage-admin-table">
                         <thead>
                         <tr>
                             <th>번호</th>
                             <th>보관 장소</th>
+                            <th>연결 위치</th>
                             <th>연락처</th>
-                            <th>보관중</th>
                             <th>상태</th>
                             <th>관리</th>
                         </tr>
                         </thead>
-
                         <tbody>
-
-                        <tr>
-                            <td>1</td>
-
+                        <tr th:if="${#lists.isEmpty(storagePlaces)}">
+                            <td colspan="6" class="empty-cell">등록된 보관 장소가 없습니다.</td>
+                        </tr>
+                        <tr th:each="storage, stat : ${storagePlaces}">
+                            <td th:text="${stat.count}">1</td>
                             <td>
-                                <div class="storage-name">학생지원팀</div>
-                                <div class="storage-desc">학생복지관 1층</div>
+                                <div class="storage-name" th:text="${storage.storageName}">보관 장소</div>
+                                <div class="storage-desc" th:text="${storage.operatingHours != null ? storage.operatingHours : ''}">운영 시간</div>
                             </td>
-
-                            <td>051-629-0514</td>
-
+                            <td class="storage-location-cell" th:text="${storage.locationName != null ? storage.locationName : '-'}">-</td>
+                            <td class="storage-phone-cell" th:text="${storage.phone != null ? storage.phone : '-'}">-</td>
                             <td>
-                                <span class="count-badge">8건</span>
+                                <span class="status-badge" th:classappend="${storage.useYn == 'Y' ? ' active' : ' inactive'}" th:text="${storage.useYn == 'Y' ? '사용중' : '사용안함'}">사용중</span>
                             </td>
-
                             <td>
-                                <span class="status-badge active">사용중</span>
-                            </td>
-
-                            <td>
-                                <div class="action-group">
-                                    <button type="button" class="action-btn edit-btn">
-                                        수정
-                                    </button>
-
-                                    <button type="button" class="action-btn stop-btn">
-                                        중지
-                                    </button>
+                                <div class="action-group storage-action-group">
+                                    <a th:href="@{/admin/storage(editId=${storage.storageId})}" class="action-btn edit-btn">수정</a>
+                                    <form th:if="${storage.useYn == 'Y'}" th:action="@{/admin/storage/status}" method="post">
+                                        <input type="hidden" name="storageId" th:value="${storage.storageId}">
+                                        <input type="hidden" name="useYn" value="N">
+                                        <button type="submit" class="action-btn stop-btn">중지</button>
+                                    </form>
+                                    <form th:if="${storage.useYn != 'Y'}" th:action="@{/admin/storage/status}" method="post">
+                                        <input type="hidden" name="storageId" th:value="${storage.storageId}">
+                                        <input type="hidden" name="useYn" value="Y">
+                                        <button type="submit" class="action-btn restore-btn">사용</button>
+                                    </form>
+                                    <form th:action="@{/admin/storage/delete}" method="post" onsubmit="return confirm('이 보관 장소를 삭제할까요?');">
+                                        <input type="hidden" name="storageId" th:value="${storage.storageId}">
+                                        <button type="submit" class="action-btn delete-btn">삭제</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
-
-
-                        <tr>
-                            <td>2</td>
-
-                            <td>
-                                <div class="storage-name">대학본관 경비실</div>
-                                <div class="storage-desc">대학본관 1층 입구</div>
-                            </td>
-
-                            <td>051-629-0001</td>
-
-                            <td>
-                                <span class="count-badge">4건</span>
-                            </td>
-
-                            <td>
-                                <span class="status-badge active">사용중</span>
-                            </td>
-
-                            <td>
-                                <div class="action-group">
-                                    <button type="button" class="action-btn edit-btn">
-                                        수정
-                                    </button>
-
-                                    <button type="button" class="action-btn stop-btn">
-                                        중지
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <td>3</td>
-
-                            <td>
-                                <div class="storage-name">ICT관 행정실</div>
-                                <div class="storage-desc">ICT관 2층</div>
-                            </td>
-
-                            <td>051-629-0002</td>
-
-                            <td>
-                                <span class="count-badge">5건</span>
-                            </td>
-
-                            <td>
-                                <span class="status-badge active">사용중</span>
-                            </td>
-
-                            <td>
-                                <div class="action-group">
-                                    <button type="button" class="action-btn edit-btn">
-                                        수정
-                                    </button>
-
-                                    <button type="button" class="action-btn stop-btn">
-                                        중지
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                        <tr>
-                            <td>4</td>
-
-                            <td>
-                                <div class="storage-name">중앙도서관 안내데스크</div>
-                                <div class="storage-desc">중앙도서관 1층</div>
-                            </td>
-
-                            <td>051-629-0003</td>
-
-                            <td>
-                                <span class="count-badge">1건</span>
-                            </td>
-
-                            <td>
-                                <span class="status-badge inactive">사용안함</span>
-                            </td>
-
-                            <td>
-                                <div class="action-group">
-                                    <button type="button" class="action-btn edit-btn">
-                                        수정
-                                    </button>
-
-                                    <button type="button" class="action-btn restore-btn">
-                                        사용
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
                         </tbody>
-
                     </table>
-
                 </div>
-
             </section>
-
         </main>
-
     </div>
-
 </div>
-
 </body>
-
 </html>

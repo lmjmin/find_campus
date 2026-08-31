@@ -29,7 +29,7 @@
 
             <div class="setting-detail-title-box">
                 <h1>앱 정보</h1>
-                <p>FindCampus 서비스 정보와 버전 정보를 확인할 수 있습니다.</p>
+                <p>FindCampus의 서비스 정보를 확인합니다.</p>
             </div>
         </div>
 
@@ -143,7 +143,7 @@
 
                         <div class="feature-text">
                             <strong>분실물 등록</strong>
-                            <span>잃어버린 물건의 위치, 시간, 특징을 등록합니다.</span>
+                            <span>잃어버린 물건의 이름, 위치, 특징을 등록합니다.</span>
                         </div>
                     </div>
 
@@ -154,7 +154,7 @@
 
                         <div class="feature-text">
                             <strong>습득물 확인</strong>
-                            <span>등록된 습득물을 확인하고 수령 절차를 진행합니다.</span>
+                            <span>등록된 습득물을 확인하고 수령 신청을 진행합니다.</span>
                         </div>
                     </div>
 
@@ -165,7 +165,7 @@
 
                         <div class="feature-text">
                             <strong>유사 물건 추천</strong>
-                            <span>분실물과 습득물 정보를 비교해 유사 물건을 확인합니다.</span>
+                            <span>분실물과 습득물의 정보를 비교해 비슷한 물건을 확인합니다.</span>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
 
                         <div class="feature-text">
                             <strong>캠퍼스 위치 검색</strong>
-                            <span>동명대학교 건물과 장소 기준으로 물건을 검색합니다.</span>
+                            <span>캠퍼스 건물과 장소를 기준으로 물건을 찾습니다.</span>
                         </div>
                     </div>
 
@@ -202,7 +202,7 @@
                         </div>
 
                         <p>
-                            분실물 또는 습득물이 등록되어 확인이 필요한 상태입니다.
+                            분실물 글이 등록되어 확인 중인 상태입니다.
                         </p>
                     </div>
 
@@ -222,7 +222,7 @@
                         </div>
 
                         <p>
-                            본인 확인 후 물건이 사용자에게 반환된 상태입니다.
+                            본인 확인을 마치고 물건이 주인에게 돌아간 상태입니다.
                         </p>
                     </div>
 
@@ -230,93 +230,11 @@
 
             </section>
 
-            <section class="app-info-section">
-
-                <div class="app-section-title">
-                    <div class="app-section-icon gray">
-                        <i class="fa-solid fa-code"></i>
-                    </div>
-
-                    <h3>개발 정보</h3>
-                </div>
-
-                <div class="tech-list">
-
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fa-solid fa-leaf"></i>
-                        </div>
-
-                        <div class="tech-text">
-                            <strong>Spring Boot</strong>
-                            <span>웹 서버 및 화면 라우팅</span>
-                        </div>
-                    </div>
-
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fa-solid fa-code"></i>
-                        </div>
-
-                        <div class="tech-text">
-                            <strong>Thymeleaf</strong>
-                            <span>HTML 템플릿 화면 구성</span>
-                        </div>
-                    </div>
-
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fa-solid fa-database"></i>
-                        </div>
-
-                        <div class="tech-text">
-                            <strong>Oracle DB</strong>
-                            <span>분실물·습득물 데이터 관리 예정</span>
-                        </div>
-                    </div>
-
-                    <div class="tech-item">
-                        <div class="tech-icon">
-                            <i class="fa-solid fa-palette"></i>
-                        </div>
-
-                        <div class="tech-text">
-                            <strong>HTML / CSS</strong>
-                            <span>사용자 화면 UI 구성</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
-
-            <section class="app-info-section">
-
-                <div class="app-section-title">
-                    <div class="app-section-icon red">
-                        <i class="fa-solid fa-file-lines"></i>
-                    </div>
-
-                    <h3>라이선스 및 안내</h3>
-                </div>
-
-                <div class="license-box">
-                    <i class="fa-solid fa-circle-exclamation"></i>
-
-                    <div>
-                        본 화면은 FindCampus 졸업작품 프로젝트의 서비스 정보 페이지입니다.
-                        실제 서비스 적용 시 학교 인증, 관리자 승인, 신고 처리, 개인정보 보호 정책 등이
-                        함께 적용되어야 합니다.
-                    </div>
-                </div>
-
-            </section>
-
             <div class="app-bottom-area">
 
                 <a th:href="@{/mypage/setting}" class="app-back-btn">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    설정으로
+                    <i class="fa-solid fa-gear"></i>
+                    설정으로 이동
                 </a>
 
                 <a th:href="@{/}" class="app-home-btn">

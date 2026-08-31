@@ -26,21 +26,25 @@
             </button>
 
             <div class="profile-main-info">
-                <div class="profile-avatar" id="profileAvatar">
-                    <span id="profileInitial">김</span>
+                <div class="profile-avatar profile-indigo" id="profileAvatar">
+                    <span id="profileInitial"
+                          th:text="${profileUser != null and profileUser.userName != null and not #strings.isEmpty(profileUser.userName) ? #strings.substring(profileUser.userName, 0, 1) : '?'}">?</span>
                 </div>
 
                 <div class="profile-user-text">
                     <div class="profile-name-row">
-                        <h1 id="profileName">김동명</h1>
-                        <span class="profile-department" id="profileDepartment">컴퓨터공학과</span>
+                        <h1 id="profileName" th:text="${profileUser != null ? profileUser.userName : '사용자'}">사용자</h1>
+                        <span class="profile-department"
+                              id="profileDepartment"
+                              th:if="${profileUser != null and profileUser.studentNo != null}"
+                              th:text="${profileUser.studentNo}">학번</span>
                     </div>
-                    <p id="profileIntro">분실물 확인을 위해 대화 중입니다.</p>
+                    <p id="profileIntro">이 사용자가 등록한 분실물과 습득물 활동입니다.</p>
 
                     <div class="profile-meta-list">
                         <span>
                             <i class="fa-regular fa-clock"></i>
-                            <em id="profileRecent">최근 대화 방금 전</em>
+                            <em id="profileRecent" th:text="${profileUser != null and profileUser.createdAt != null ? '가입일 ' + #dates.format(profileUser.createdAt, 'yyyy.MM.dd') : '사용자 정보'}">사용자 정보</em>
                         </span>
                         <span>
                             <i class="fa-solid fa-circle-check"></i>
@@ -51,7 +55,7 @@
             </div>
 
             <div class="profile-action-area">
-                <a th:href="@{/chat/room/1}" id="chatLink" class="profile-chat-btn">
+                <a th:href="@{/chat/room/{id}(id=${userId})}" id="chatLink" class="profile-chat-btn">
                     <i class="fa-regular fa-comment-dots"></i>
                     채팅하기
                 </a>
@@ -64,16 +68,17 @@
 
         <div class="profile-summary-grid">
             <div class="profile-summary-card">
-                <strong id="lostCount">2</strong>
+                <strong id="lostCount" th:text="${lostItems != null ? #lists.size(lostItems) : 0}">0</strong>
                 <span>등록한 분실글</span>
             </div>
             <div class="profile-summary-card">
-                <strong id="foundCount">1</strong>
+                <strong id="foundCount" th:text="${foundItems != null ? #lists.size(foundItems) : 0}">0</strong>
                 <span>등록한 습득글</span>
             </div>
             <div class="profile-summary-card">
-                <strong id="returnCount">3</strong>
-                <span>반환 완료</span>
+                <strong id="postCount"
+                        th:text="${(lostItems != null ? #lists.size(lostItems) : 0) + (foundItems != null ? #lists.size(foundItems) : 0)}">0</strong>
+                <span>전체 작성글</span>
             </div>
         </div>
 
@@ -85,256 +90,62 @@
                 </div>
             </div>
 
+            <div th:if="${(lostItems == null or #lists.isEmpty(lostItems)) and (foundItems == null or #lists.isEmpty(foundItems))}"
+                 class="profile-empty">
+                등록한 글이 없습니다.
+            </div>
+
             <div class="profile-post-list" id="postList">
-                <!-- JS에서 더미 게시글 렌더링 -->
+                <a th:each="item : ${lostItems}"
+                   th:href="@{/lost/detail/{id}(id=${item.id})}"
+                   class="profile-post-card profile-post-lost">
+                    <div class="profile-post-top">
+                        <span class="profile-post-type lost">분실물</span>
+                        <span class="profile-post-status"
+                              th:classappend="${item.status == 'RETURNED' ? ' returned' : (item.status == 'CLAIM_WAITING' ? ' waiting' : (item.status == 'HIDDEN' ? ' hidden' : ' registered'))}"
+                              th:text="${item.status == 'RETURNED' ? '반환완료' : (item.status == 'CLAIM_WAITING' ? '처리대기' : (item.status == 'HIDDEN' ? '숨김' : '접수중'))}">접수중</span>
+                    </div>
+                    <h3 th:text="${item.title}">분실물 제목</h3>
+                    <p th:text="${item.description}">분실물 설명</p>
+                    <div class="profile-post-meta">
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</span>
+                        </span>
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${item.itemDate != null ? #dates.format(item.itemDate, 'yyyy.MM.dd') : '날짜 미입력'}">날짜</span>
+                        </span>
+                    </div>
+                </a>
+
+                <a th:each="item : ${foundItems}"
+                   th:href="@{/found/detail/{id}(id=${item.id})}"
+                   class="profile-post-card profile-post-found">
+                    <div class="profile-post-top">
+                        <span class="profile-post-type found">습득물</span>
+                        <span class="profile-post-status"
+                              th:classappend="${item.status == 'RETURNED' ? ' returned' : (item.status == 'CLAIM_WAITING' ? ' waiting' : (item.status == 'HIDDEN' ? ' hidden' : ' stored'))}"
+                              th:text="${item.status == 'RETURNED' ? '반환완료' : (item.status == 'CLAIM_WAITING' ? '처리대기' : (item.status == 'HIDDEN' ? '숨김' : '보관중'))}">보관중</span>
+                    </div>
+                    <h3 th:text="${item.title}">습득물 제목</h3>
+                    <p th:text="${item.description}">습득물 설명</p>
+                    <div class="profile-post-meta">
+                        <span>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</span>
+                        </span>
+                        <span>
+                            <i class="fa-regular fa-clock"></i>
+                            <span th:text="${item.itemDate != null ? #dates.format(item.itemDate, 'yyyy.MM.dd') : '날짜 미입력'}">날짜</span>
+                        </span>
+                    </div>
+                </a>
             </div>
         </section>
 
     </section>
 </main>
-
-<script>
-    const profiles = {
-        1: {
-            name: "김동명",
-            initial: "김",
-            department: "컴퓨터공학과",
-            avatarClass: "profile-indigo",
-            intro: "분실물 확인을 위해 대화 중입니다.",
-            recent: "최근 대화 방금 전",
-            lostCount: 2,
-            foundCount: 1,
-            returnCount: 3,
-            chatRoomId: 1,
-            posts: [
-                {
-                    type: "lost",
-                    status: "접수중",
-                    title: "검은색 카드지갑을 찾습니다",
-                    location: "학생회관 근처",
-                    date: "오늘",
-                    desc: "검은색 카드지갑을 잃어버렸습니다. 안에 학생증과 카드가 들어 있습니다."
-                },
-                {
-                    type: "found",
-                    status: "보관중",
-                    title: "중앙도서관 앞 이어폰 케이스 습득",
-                    location: "중앙도서관",
-                    date: "어제",
-                    desc: "흰색 이어폰 케이스를 습득하여 안내데스크에 맡겼습니다."
-                },
-                {
-                    type: "lost",
-                    status: "반환완료",
-                    title: "파란색 텀블러 분실",
-                    location: "제1공학관",
-                    date: "3일 전",
-                    desc: "강의실에 두고 온 텀블러를 찾았습니다."
-                }
-            ]
-        },
-        2: {
-            name: "이민주",
-            initial: "이",
-            department: "컴퓨터공학과",
-            avatarClass: "profile-sky",
-            intro: "학생회관 안내데스크 보관 관련 대화입니다.",
-            recent: "최근 대화 14:47",
-            lostCount: 1,
-            foundCount: 2,
-            returnCount: 2,
-            chatRoomId: 2,
-            posts: [
-                {
-                    type: "found",
-                    status: "보관중",
-                    title: "파란색 파우치 습득",
-                    location: "학생회관 1층",
-                    date: "오늘",
-                    desc: "파란색 파우치를 습득하여 학생회관 안내데스크에 맡겼습니다."
-                },
-                {
-                    type: "found",
-                    status: "반환완료",
-                    title: "검은색 우산 습득",
-                    location: "도서관 입구",
-                    date: "2일 전",
-                    desc: "우산 보관함 근처에서 검은색 우산을 발견했습니다."
-                }
-            ]
-        },
-        3: {
-            name: "박창용",
-            initial: "박",
-            department: "",
-            avatarClass: "profile-rose",
-            intro: "사진 확인 요청 대화입니다.",
-            recent: "최근 대화 13:20",
-            lostCount: 1,
-            foundCount: 0,
-            returnCount: 0,
-            chatRoomId: 3,
-            posts: [
-                {
-                    type: "lost",
-                    status: "접수중",
-                    title: "갈색 지갑을 찾습니다",
-                    location: "대학본부 근처",
-                    date: "오늘",
-                    desc: "사진과 비슷한 지갑을 찾고 있습니다. 내부 특징 확인 가능합니다."
-                }
-            ]
-        },
-        4: {
-            name: "최수상",
-            initial: "최",
-            department: "정보보호학과",
-            avatarClass: "profile-slate",
-            intro: "방문 수령 일정 확인 중입니다.",
-            recent: "최근 대화 12:05",
-            lostCount: 2,
-            foundCount: 0,
-            returnCount: 1,
-            chatRoomId: 4,
-            posts: [
-                {
-                    type: "lost",
-                    status: "접수중",
-                    title: "학생증을 찾습니다",
-                    location: "정보통신관",
-                    date: "오늘",
-                    desc: "정보통신관 강의실 근처에서 학생증을 잃어버렸습니다."
-                },
-                {
-                    type: "lost",
-                    status: "반환완료",
-                    title: "검은색 필통 분실",
-                    location: "도서관",
-                    date: "지난주",
-                    desc: "도서관 열람실에서 분실했던 필통을 찾았습니다."
-                }
-            ]
-        },
-        5: {
-            name: "장연옥",
-            initial: "장",
-            department: "뷰티케어학과",
-            avatarClass: "profile-violet",
-            intro: "보관 장소를 안내하는 대화입니다.",
-            recent: "최근 대화 11:38",
-            lostCount: 1,
-            foundCount: 1,
-            returnCount: 1,
-            chatRoomId: 5,
-            posts: [
-                {
-                    type: "lost",
-                    status: "접수중",
-                    title: "에어팟 케이스를 찾습니다",
-                    location: "학생회관",
-                    date: "오늘",
-                    desc: "곰돌이 스티커가 붙은 에어팟 케이스를 찾고 있습니다."
-                }
-            ]
-        },
-        6: {
-            name: "오지훈",
-            initial: "오",
-            department: "간호학과",
-            avatarClass: "profile-green",
-            intro: "습득물 상세 페이지를 보고 시작된 대화입니다.",
-            recent: "최근 대화 10:22",
-            lostCount: 1,
-            foundCount: 0,
-            returnCount: 0,
-            chatRoomId: 6,
-            posts: [
-                {
-                    type: "lost",
-                    status: "접수중",
-                    title: "검은색 우산을 찾습니다",
-                    location: "간호학관",
-                    date: "오늘",
-                    desc: "손잡이에 작은 표시가 있는 검은색 우산을 찾고 있습니다."
-                }
-            ]
-        }
-    };
-
-    function getProfileIdFromPath() {
-        const parts = window.location.pathname.split("/");
-        const last = parts[parts.length - 1];
-        return profiles[last] ? last : "1";
-    }
-
-    function escapeHtml(text) {
-        return String(text)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
-    function renderProfile() {
-        const profileId = getProfileIdFromPath();
-        const profile = profiles[profileId];
-
-        const avatar = document.getElementById("profileAvatar");
-        avatar.className = `profile-avatar ${profile.avatarClass}`;
-
-        document.getElementById("profileInitial").textContent = profile.initial;
-        document.getElementById("profileName").textContent = profile.name;
-        document.getElementById("profileIntro").textContent = profile.intro;
-        document.getElementById("profileRecent").textContent = profile.recent;
-        document.getElementById("lostCount").textContent = profile.lostCount;
-        document.getElementById("foundCount").textContent = profile.foundCount;
-        document.getElementById("returnCount").textContent = profile.returnCount;
-
-        const department = document.getElementById("profileDepartment");
-        if (profile.department) {
-            department.textContent = profile.department;
-            department.style.display = "inline-flex";
-        } else {
-            department.style.display = "none";
-        }
-
-        document.getElementById("chatLink").setAttribute("href", `/chat/room/${profile.chatRoomId}`);
-
-        const postList = document.getElementById("postList");
-        let html = "";
-
-        profile.posts.forEach(post => {
-            const typeLabel = post.type === "lost" ? "분실물" : "습득물";
-            const typeClass = post.type === "lost" ? "lost" : "found";
-
-            html += `
-                <a href="${post.type === "lost" ? "/lost/detail" : "/found/detail"}" class="profile-post-card">
-                    <div class="profile-post-top">
-                        <span class="profile-post-type ${typeClass}">${typeLabel}</span>
-                        <span class="profile-post-status">${escapeHtml(post.status)}</span>
-                    </div>
-                    <h3>${escapeHtml(post.title)}</h3>
-                    <p>${escapeHtml(post.desc)}</p>
-                    <div class="profile-post-meta">
-                        <span>
-                            <i class="fa-solid fa-location-dot"></i>
-                            ${escapeHtml(post.location)}
-                        </span>
-                        <span>
-                            <i class="fa-regular fa-clock"></i>
-                            ${escapeHtml(post.date)}
-                        </span>
-                    </div>
-                </a>
-            `;
-        });
-
-        postList.innerHTML = html;
-    }
-
-    renderProfile();
-</script>
 
 </body>
 </html>

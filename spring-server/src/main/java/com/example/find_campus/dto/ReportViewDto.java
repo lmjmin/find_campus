@@ -12,6 +12,9 @@ public class ReportViewDto {
     private String reporterName;
     private String targetType;
     private Long targetId;
+    private Long targetUserId;
+    private String targetUserName;
+    private String targetUserStatus;
     private String targetTitle;
     private String reason;
     private String detail;

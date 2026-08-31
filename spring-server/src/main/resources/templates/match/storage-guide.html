@@ -5,400 +5,249 @@
     <meta charset="UTF-8">
     <title>보관 장소 안내 | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/match.css}">
-
     <style>
-        /* 이 페이지의 지도 마커만 적용 */
-        .storage-guide-marker {
-            position: relative;
-            width: 156px;
-            height: 86px;
-            pointer-events: none;
-        }
-
-        .storage-guide-marker-label {
-            position: absolute;
-            left: 50%;
-            bottom: 48px;
-
-            width: 156px;
-            padding: 8px 11px;
-
-            border-radius: 13px;
-            background: #ffffff;
-            border: 1px solid rgba(226, 232, 240, 0.95);
-            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.16);
-
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-
-            transform: translateX(-50%);
-        }
-
-        .storage-guide-marker-label strong {
-            font-size: 12px;
+        .storage-alert.success {
+            margin: 16px 0;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: #eefbf2;
+            color: #238148;
+            border: 1px solid #ccefd7;
             font-weight: 900;
-            color: #111827;
+        }
 
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .guide-hero {
+            align-items: stretch;
+        }
+
+        .guide-hero h2 {
+            line-height: 1.22;
+            word-break: keep-all;
+        }
+
+        .storage-summary {
+            min-width: 360px;
+        }
+
+        .summary-list {
+            gap: 16px;
+        }
+
+        .summary-item {
+            align-items: flex-start;
+        }
+
+        .summary-item i {
+            margin-top: 3px;
+            flex: 0 0 auto;
+        }
+
+        .summary-item span {
+            line-height: 1.45;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .info-row {
+            grid-template-columns: 120px minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .info-label {
             white-space: nowrap;
         }
 
-        .storage-guide-marker-label span {
-            font-size: 11px;
-            color: #6b7280;
-
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        .info-value {
+            min-width: 0;
+            line-height: 1.45;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
         }
 
-        .storage-guide-marker-pin {
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-
-            width: 38px;
-            height: 38px;
-            border-radius: 999px;
-
-            background: #f59e0b;
-            color: #ffffff;
-
+        .storage-no-map {
+            min-height: 250px;
+            border-radius: 22px;
+            background: #f8fafc;
+            border: 1px dashed #cfd8ea;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            font-size: 15px;
-
-            border: 3px solid #ffffff;
-            box-shadow:
-                0 7px 16px rgba(245, 158, 11, 0.30),
-                0 0 0 5px rgba(245, 158, 11, 0.16);
-
-            transform: translateX(-50%);
+            text-align: center;
+            padding: 26px;
+            color: #4b5563;
+            font-weight: 800;
+            line-height: 1.6;
         }
 
-        .storage-guide-marker-pin::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: -5px;
+        .storage-no-map i {
+            display: inline-flex;
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: #4f65e9;
+            background: #eef2ff;
+            font-size: 22px;
+        }
 
-            width: 11px;
-            height: 11px;
+        @media (max-width: 900px) {
+            .storage-summary {
+                min-width: 0;
+            }
 
-            background: inherit;
-            transform: translateX(-50%) rotate(45deg);
-
-            border-right: 3px solid #ffffff;
-            border-bottom: 3px solid #ffffff;
-            border-radius: 2px;
+            .info-row {
+                grid-template-columns: 92px minmax(0, 1fr);
+            }
         }
     </style>
 </head>
 
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container">
+<div class="container"
+     th:with="isDepartmentStorage=${foundItem != null and foundItem.storageName != null and #strings.startsWith(foundItem.storageName, '학과사무실')}">
+    <div class="storage-alert success" th:if="${claimMessage}" th:text="${claimMessage}">수령 신청이 접수되었습니다.</div>
 
-    <a th:href="@{/match/result}"
-       href="/match/result"
-       class="back-link">
+    <a th:href="@{/match/result(foundId=${foundId}, lostId=${lostId})}" href="/match/result" class="back-link back-icon-link">
         <i class="fa-solid fa-arrow-left"></i>
-        유사도 결과로 돌아가기
     </a>
 
     <div class="page-head">
-
-        <div class="page-badge">
-            <i class="fa-solid fa-location-dot"></i>
-            수령 신청 3단계
-        </div>
-
+        <div class="page-badge"><i class="fa-solid fa-location-dot"></i> 수령 신청 3단계</div>
         <h1>보관 장소를 확인하세요</h1>
-
-        <p>
-            유사도 확인 후 안내되는 보관 장소입니다.<br>
-            실제 수령은 보관처에서 본인 확인을 완료한 뒤 진행됩니다.
-        </p>
-
     </div>
 
     <section class="guide-hero">
-
         <div>
-            <div class="hero-label">
-                <i class="fa-solid fa-circle-check"></i>
-                인계 완료
-            </div>
-
-            <h2>
-                학생장학봉사팀<br>
-                분실물 센터에 보관 중
-            </h2>
-
-            <p>
-                방문 시 학생증 또는 본인 확인이 필요하며,
-                분실물 글에 작성한 특징과 실제 물건이 일치해야 수령할 수 있습니다.
-            </p>
+            <div class="hero-label"><i class="fa-solid fa-circle-check"></i> 보관 안내</div>
+            <h2><span th:text="${foundItem != null and foundItem.storageName != null ? foundItem.storageName : '-'}">보관처</span></h2>
+            <p>허위 수령을 막기 위해 보관처에서 본인 확인과 물건 세부 특징 확인 절차를 거칩니다.</p>
         </div>
 
         <div class="storage-summary">
-
-            <div class="summary-title">
-                보관처 요약
-            </div>
-
+            <div class="summary-title">보관처 요약</div>
             <div class="summary-list">
-
                 <div class="summary-item">
                     <i class="fa-solid fa-building-columns"></i>
-                    <span>학생장학봉사팀 분실물 센터</span>
+                    <span th:text="${foundItem != null and foundItem.storageName != null ? foundItem.storageName : '-'}">보관처</span>
                 </div>
-
                 <div class="summary-item">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span>학생복지관 2층 학생장학봉사팀</span>
+                    <span th:text="${isDepartmentStorage ? '지도 안내 없음' : (foundItem != null and foundItem.storageLocationName != null ? foundItem.storageLocationName : '-')}">위치</span>
                 </div>
-
                 <div class="summary-item">
                     <i class="fa-solid fa-clock"></i>
-                    <span>평일 09:00 ~ 18:00</span>
+                    <span th:text="${foundItem != null and foundItem.storageOperatingHours != null ? foundItem.storageOperatingHours : '평일 09:00 ~ 17:00'}">운영 시간</span>
                 </div>
-
                 <div class="summary-item">
                     <i class="fa-solid fa-phone"></i>
-                    <span>051-629-0514</span>
+                    <span th:text="${foundItem != null and foundItem.storagePhone != null ? foundItem.storagePhone : '-'}">연락처</span>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
     <section class="content-grid">
-
         <div class="info-card">
-
-            <div class="card-title">
-                <div class="card-title-icon">
-                    <i class="fa-solid fa-box-open"></i>
-                </div>
-
-                습득물 정보
-            </div>
-
+            <div class="card-title"><div class="card-title-icon"><i class="fa-solid fa-box-open"></i></div>습득물 정보</div>
             <div class="info-list">
-
-                <div class="info-row">
-                    <span class="info-label">물건명</span>
-                    <span class="info-value">에어팟</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">카테고리</span>
-                    <span class="info-value">전자기기</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">습득 위치</span>
-                    <span class="info-value">ICT 2관 강의실</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">습득 날짜</span>
-                    <span class="info-value">2026.05.20</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">보관 상태</span>
-                    <span class="info-value">인계 완료</span>
-                </div>
-
+                <div class="info-row"><span class="info-label">제목</span><span class="info-value" th:text="${foundItem != null and foundItem.title != null ? foundItem.title : '-'}">-</span></div>
+                <div class="info-row"><span class="info-label">물건명</span><span class="info-value" th:text="${foundItem != null and foundItem.itemName != null ? foundItem.itemName : '-'}">-</span></div>
+                <div class="info-row"><span class="info-label">카테고리</span><span class="info-value" th:text="${foundItem != null and foundItem.categoryName != null ? foundItem.categoryName : '-'}">-</span></div>
+                <div class="info-row"><span class="info-label">습득 위치</span><span class="info-value" th:text="${foundItem != null and foundItem.locationName != null ? foundItem.locationName : '-'}">-</span></div>
+                <div class="info-row"><span class="info-label">인계 장소</span><span class="info-value" th:text="${foundItem != null and foundItem.storageName != null ? foundItem.storageName : '-'}">-</span></div>
             </div>
-
         </div>
 
         <div class="map-card">
-
-            <div class="card-title">
-                <div class="card-title-icon">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                </div>
-
-                위치 안내
-            </div>
-
-            <div class="mini-map">
-
+            <div class="card-title"><div class="card-title-icon"><i class="fa-solid fa-map-location-dot"></i></div>위치 안내</div>
+            <div class="mini-map" th:if="${not isDepartmentStorage and foundItem != null}">
                 <div id="storageGuideKakaoMap"
+                     th:attr="data-lat=${foundItem.storageLatitude}, data-lng=${foundItem.storageLongitude}, data-name=${foundItem.storageName}, data-location=${foundItem.storageLocationName}"
                      style="width: 100%; height: 100%; border-radius: inherit;"></div>
-
             </div>
-
-            <div class="map-desc">
-                학생복지관 2층 학생장학봉사팀 사무실로 방문해 주세요.
-                실제 수령 시 학생증 또는 본인 확인이 필요합니다.
+            <div class="storage-no-map" th:if="${isDepartmentStorage}">
+                <div>
+                    <i class="fa-solid fa-building-user"></i>
+                    <div>학과사무실 보관 물품은 지도 위치를 표시하지 않습니다.</div>
+                    <div th:text="${foundItem != null and foundItem.storageDescription != null ? foundItem.storageDescription : '보관처 정보와 연락처를 확인한 뒤 방문해 주세요.'}">보관처 안내</div>
+                </div>
             </div>
-
+            <div class="storage-no-map" th:if="${foundItem == null}">
+                <div>
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <div>보관처 위치 정보가 아직 연결되지 않았습니다.</div>
+                    <div>보관 장소 관리에서 연결 위치를 확인해 주세요.</div>
+                </div>
+            </div>
         </div>
-
     </section>
 
     <section class="check-section">
-
-        <div class="card-title">
-            <div class="card-title-icon">
-                <i class="fa-solid fa-clipboard-check"></i>
-            </div>
-
-            수령 전 확인사항
-        </div>
-
+        <div class="card-title"><div class="card-title-icon"><i class="fa-solid fa-clipboard-check"></i></div>수령 전 확인사항</div>
         <div class="check-list">
-
-            <div class="check-item">
-                <div class="check-icon">
-                    <i class="fa-solid fa-id-card"></i>
-                </div>
-
-                <strong>학생증 지참</strong>
-
-                <span>
-                    학생증 또는 본인 확인이 가능한 신분 확인 수단을 준비해 주세요.
-                </span>
-            </div>
-
-            <div class="check-item">
-                <div class="check-icon">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-
-                <strong>세부 특징 설명</strong>
-
-                <span>
-                    분실물 글에 작성한 기기명, 흠집, 구성품 등 특징을 설명해야 할 수 있습니다.
-                </span>
-            </div>
-
-            <div class="check-item">
-                <div class="check-icon">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
-
-                <strong>보관처 확인 후 수령</strong>
-
-                <span>
-                    실제 물건의 특징과 설명이 일치하면 보관처에서 수령할 수 있습니다.
-                </span>
-            </div>
-
+            <div class="check-item"><div class="check-icon"><i class="fa-solid fa-id-card"></i></div><strong>본인 확인</strong><span>학생증 또는 본인 확인이 가능한 수단을 준비해 주세요.</span></div>
+            <div class="check-item"><div class="check-icon"><i class="fa-solid fa-lock"></i></div><strong>세부 특징 설명</strong><span>색상, 브랜드, 흔적, 구성품 등 본인만 알 수 있는 특징을 확인할 수 있습니다.</span></div>
+            <div class="check-item"><div class="check-icon"><i class="fa-solid fa-user-check"></i></div><strong>보관처 확인 후 수령</strong><span>보관처 확인 절차가 끝나면 수령이 진행됩니다.</span></div>
         </div>
-
     </section>
 
-    <div class="warning-box">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-
-        <div>
-            <strong>유사도 결과만으로 수령이 확정되는 것은 아닙니다.</strong>
-            FindCampus는 분실물과 습득물 정보를 비교해 보관 장소를 안내합니다.
-            최종 수령 가능 여부는 보관처에서 실제 물건과 본인 확인 정보를 대조한 뒤 결정됩니다.
-        </div>
+    <div class="action-area action-area-single">
+        <a th:href="@{/found/list}" href="/found/list" class="done-btn">확인 완료 <i class="fa-solid fa-check"></i></a>
     </div>
-
-    <div class="action-area">
-
-        <a th:href="@{/match/result}"
-           href="/match/result"
-           class="prev-btn">
-            <i class="fa-solid fa-arrow-left"></i>
-            이전으로
-        </a>
-
-        <a th:href="@{/found/list}"
-           href="/found/list"
-           class="done-btn">
-            확인 완료
-            <i class="fa-solid fa-check"></i>
-        </a>
-
-    </div>
-
 </div>
 
-<script type="text/javascript"
-        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052&autoload=false"></script>
-
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=d2962e0b8f6b7c0a935d83fb3ace7052&autoload=false"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const mapContainer = document.getElementById("storageGuideKakaoMap");
+        if (!mapContainer || typeof kakao === "undefined" || !kakao.maps) return;
+        let lat = Number(mapContainer.dataset.lat);
+        let lng = Number(mapContainer.dataset.lng);
+        const storageName = mapContainer.dataset.name || "FindCampus";
+        const storageLocationName = mapContainer.dataset.location || "";
 
-        if (!mapContainer) {
-            console.error("storageGuideKakaoMap 요소를 찾을 수 없습니다.");
-            return;
+        function fallbackPosition(name, locationName) {
+            const text = ((name || "") + " " + (locationName || "")).replace(/\s+/g, " ");
+            if (text.includes("학과사무실")) return null;
+            if (text.includes("학생복지관") || text.includes("학생장학봉사팀") || text.includes("장학봉사팀")) {
+                return { lat: 35.12171815499319, lng: 129.1031812340018, label: "8. 학생복지관" };
+            }
+            if (text.includes("중앙도서관")) {
+                return { lat: 35.120967560709644, lng: 129.1035924257535, label: "10. 중앙도서관" };
+            }
+            if (text.includes("대학본관")) {
+                return { lat: 35.12337821045975, lng: 129.1026809933428, label: "1. 대학본관" };
+            }
+            return null;
         }
 
-        if (typeof kakao === "undefined" || !kakao.maps) {
-            console.error("카카오맵 SDK를 불러오지 못했습니다.");
-            return;
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            const fallback = fallbackPosition(storageName, storageLocationName);
+            if (!fallback) return;
+            lat = fallback.lat;
+            lng = fallback.lng;
+            mapContainer.dataset.location = fallback.label;
         }
 
-        function createStorageMarkerContent() {
-            return (
-                '<div class="storage-guide-marker">' +
-                    '<div class="storage-guide-marker-label">' +
-                        '<strong>학생장학봉사팀 분실물 센터</strong>' +
-                        '<span>학생복지관 2층</span>' +
-                    '</div>' +
-                    '<div class="storage-guide-marker-pin">' +
-                        '<i class="fa-solid fa-building-columns"></i>' +
-                    '</div>' +
-                '</div>'
-            );
+        function markerContent() {
+            return '<div class="storage-guide-marker"><div class="storage-guide-marker-label"><strong>' + storageName + '</strong><span>보관처</span></div><div class="storage-guide-marker-pin"><i class="fa-solid fa-building-columns"></i></div></div>';
         }
 
         kakao.maps.load(function () {
-            const storagePosition = new kakao.maps.LatLng(
-                35.12171552247815,
-                129.10320310245282
-            );
-
-            const mapOption = {
-                center: storagePosition,
-                level: 3
-            };
-
-            const map = new kakao.maps.Map(mapContainer, mapOption);
-
-            const storageOverlay = new kakao.maps.CustomOverlay({
-                position: storagePosition,
-                content: createStorageMarkerContent(),
-                xAnchor: 0.5,
-                yAnchor: 1,
-                zIndex: 50
-            });
-
-            storageOverlay.setMap(map);
-
-            setTimeout(function () {
-                map.relayout();
-                map.setCenter(storagePosition);
-            }, 150);
+            const position = new kakao.maps.LatLng(lat, lng);
+            const map = new kakao.maps.Map(mapContainer, { center: position, level: 3 });
+            new kakao.maps.CustomOverlay({ position: position, content: markerContent(), xAnchor: 0.5, yAnchor: 1, zIndex: 50 }).setMap(map);
+            setTimeout(function () { map.relayout(); map.setCenter(position); }, 150);
         });
     });
 </script>
-
 </body>
-
 </html>

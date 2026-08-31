@@ -35,7 +35,7 @@
 
     <div class="right-section">
         <div class="form-title">회원가입</div>
-        <div class="form-subtitle">학번과 학교 이메일로 계정을 생성합니다.</div>
+        <div class="form-subtitle">학번으로 계정을 생성합니다.</div>
 
         <form id="joinForm">
             <div class="input-group">
@@ -50,15 +50,7 @@
                 <label>학번</label>
                 <div class="input-box">
                     <i class="fa-solid fa-id-card"></i>
-                    <input type="text" id="studentNo" name="studentNo" placeholder="예: 23120030">
-                </div>
-            </div>
-
-            <div class="input-group">
-                <label>학교 이메일</label>
-                <div class="input-box">
-                    <i class="fa-solid fa-envelope"></i>
-                    <input type="email" id="email" name="email" placeholder="tongmyong@tu.ac.kr">
+                    <input type="text" id="studentNo" name="studentNo" placeholder="학번을 입력하세요">
                 </div>
             </div>
 
@@ -117,7 +109,6 @@
 
         const userName = document.getElementById("userName").value.trim();
         const studentNo = document.getElementById("studentNo").value.trim();
-        const email = document.getElementById("email").value.trim();
         const phone = document.getElementById("phone").value.trim();
         const password = document.getElementById("password").value.trim();
         const passwordCheck = document.getElementById("passwordCheck").value.trim();
@@ -132,10 +123,6 @@
         }
         if (!studentNo) {
             showJoinError("학번을 입력해 주세요.");
-            return;
-        }
-        if (!email || !email.includes("@")) {
-            showJoinError("올바른 이메일을 입력해 주세요.");
             return;
         }
         if (!password) {
@@ -163,8 +150,7 @@
                     passwordCheck: passwordCheck,
                     userName: userName,
                     studentNo: studentNo,
-                    phone: phone,
-                    email: email
+                    phone: phone
                 })
             });
 

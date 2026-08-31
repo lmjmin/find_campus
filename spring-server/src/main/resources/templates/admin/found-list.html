@@ -1,227 +1,102 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>습득물 관리 | FindCampus Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
-
 <body>
-
 <div class="admin-page">
-
-    <!-- 상단바 -->
     <header class="admin-header">
-
         <a th:href="@{/admin/dashboard}" class="admin-logo">
-            <span class="admin-logo-icon">
-                <i class="fa-solid fa-magnifying-glass-location"></i>
-            </span>
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
             <span>FindCampus Admin</span>
         </a>
-
         <div class="admin-header-right">
-            <span>
-                <i class="fa-regular fa-user"></i>
-                관리자
-            </span>
-
-            <a th:href="@{/admin/login}" class="logout-btn">
-                로그아웃
-            </a>
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
         </div>
-
     </header>
 
-
     <div class="admin-layout">
-
-        <!-- 사이드바 -->
         <aside class="sidebar">
-
-            <div class="sidebar-title">
-                메뉴
-            </div>
-
+            <div class="sidebar-title">메뉴</div>
             <nav class="side-menu">
-
-                <a th:href="@{/admin/dashboard}" class="side-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    대시보드
-                </a>
-
-                <a th:href="@{/admin/users}" class="side-link">
-                    <i class="fa-solid fa-users"></i>
-                    사용자 관리
-                </a>
-
-                <a th:href="@{/admin/lost}" class="side-link">
-                    <i class="fa-solid fa-circle-question"></i>
-                    분실물 관리
-                </a>
-
-                <a th:href="@{/admin/found}" class="side-link active">
-                    <i class="fa-solid fa-box-open"></i>
-                    습득물 관리
-                </a>
-
-                <a th:href="@{/admin/storage}" class="side-link">
-                    <i class="fa-solid fa-warehouse"></i>
-                    보관 장소 관리
-                </a>
-
-                <a th:href="@{/admin/locations}" class="side-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    위치 관리
-                </a>
-
-                <a th:href="@{/admin/categories}" class="side-link">
-                    <i class="fa-solid fa-tags"></i>
-                    카테고리 관리
-                </a>
-
-                <a th:href="@{/admin/reports}" class="side-link">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    신고 관리
-                </a>
-
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link active"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
+                <a th:href="@{/admin/notifications}" class="side-link"><i class="fa-regular fa-bell"></i>알림 관리</a>
             </nav>
-
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
         </aside>
 
-
-        <!-- 본문 -->
         <main class="admin-content">
-
             <div class="page-title-wrap">
-                <h1 class="page-title">
-                    습득물 관리
-                </h1>
-
-                <p class="page-desc">
-                    사용자가 등록한 습득물 게시글과 보관 상태를 관리할 수 있습니다.
-                </p>
+                <h1 class="page-title">습득물 관리</h1>
+                <p class="page-desc">등록된 습득물 게시글의 노출과 상태를 관리합니다.</p>
             </div>
 
-
-            <!-- 요약 카드 -->
             <section class="summary-grid">
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">전체 습득물</div>
-                        <div class="summary-icon total">
-                            <i class="fa-solid fa-box-open"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">86<span>건</span></div>
-                    <div class="summary-sub">등록된 전체 습득물</div>
+                    <div class="summary-top"><div class="summary-label">전체 습득물</div><div class="summary-icon total"><i class="fa-solid fa-box-open"></i></div></div>
+                    <div class="summary-count"><span th:text="${totalCount}">0</span><span>건</span></div>
+                    <div class="summary-sub">숨김 포함 전체</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">접수중</div>
-                        <div class="summary-icon waiting">
-                            <i class="fa-solid fa-hourglass-half"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">12<span>건</span></div>
-                    <div class="summary-sub">보관 처리 전 상태</div>
+                    <div class="summary-top"><div class="summary-label">처리 대기</div><div class="summary-icon waiting"><i class="fa-solid fa-hourglass-half"></i></div></div>
+                    <div class="summary-count"><span th:text="${claimWaitingCount}">0</span><span>건</span></div>
+                    <div class="summary-sub">수령 신청 확인 필요</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">보관중</div>
-                        <div class="summary-icon storage">
-                            <i class="fa-solid fa-box-archive"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">18<span>건</span></div>
-                    <div class="summary-sub">지정 장소에 보관 중</div>
+                    <div class="summary-top"><div class="summary-label">보관중</div><div class="summary-icon storage"><i class="fa-solid fa-box-archive"></i></div></div>
+                    <div class="summary-count"><span th:text="${storedCount}">0</span><span>건</span></div>
+                    <div class="summary-sub">사용자 화면 보관중</div>
                 </div>
-
-
                 <div class="summary-card">
-                    <div class="summary-top">
-                        <div class="summary-label">반환완료</div>
-                        <div class="summary-icon done">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                    </div>
-
-                    <div class="summary-count">56<span>건</span></div>
-                    <div class="summary-sub">분실자에게 반환 완료</div>
+                    <div class="summary-top"><div class="summary-label">반환완료</div><div class="summary-icon done"><i class="fa-solid fa-circle-check"></i></div></div>
+                    <div class="summary-count"><span th:text="${returnedCount}">0</span><span>건</span></div>
+                    <div class="summary-sub">수령 완료</div>
                 </div>
-
             </section>
 
-
-            <!-- 검색 / 필터 -->
             <section class="filter-panel">
-
-                <div class="filter-row">
-
-                    <div class="search-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="물품명, 작성자, 습득 위치로 검색">
-                    </div>
-
+                <form class="filter-row admin-found-filter" th:action="@{/admin/found}" method="get">
+                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" name="keyword" th:value="${search.keyword}" placeholder="물품명, 작성자, 위치로 검색"></div>
                     <div class="filter-actions">
-
-                        <select class="filter-select">
-                            <option>카테고리 전체</option>
-                            <option>전자기기</option>
-                            <option>지갑/카드</option>
-                            <option>의류</option>
-                            <option>가방</option>
-                            <option>기타</option>
+                        <select class="filter-select" name="categoryId">
+                            <option value="">카테고리 전체</option>
+                            <option th:each="category : ${categories}" th:value="${category.categoryId}" th:selected="${search.categoryId == category.categoryId}" th:text="${category.categoryName}">카테고리</option>
                         </select>
-
-                        <select class="filter-select">
-                            <option>상태 전체</option>
-                            <option>접수중</option>
-                            <option>보관중</option>
-                            <option>반환완료</option>
-                            <option>숨김</option>
+                        <select class="filter-select" name="status">
+                            <option value="">상태 전체</option>
+                            <option value="CLAIM_WAITING" th:selected="${search.status == 'CLAIM_WAITING'}">처리 대기</option>
+                            <option value="STORED" th:selected="${search.status == 'STORED'}">보관중</option>
+                            <option value="RETURNED" th:selected="${search.status == 'RETURNED'}">반환완료</option>
+                            <option value="HIDDEN" th:selected="${search.status == 'HIDDEN'}">숨김</option>
                         </select>
-
-                        <button type="button" class="search-btn">
-                            검색
-                        </button>
-
+                        <button type="submit" class="search-btn">검색</button>
                     </div>
-
-                </div>
-
+                </form>
             </section>
 
-
-            <!-- 습득물 목록 -->
             <section class="table-panel">
-
                 <div class="table-head">
-                    <h2 class="table-title">
-                        습득물 목록
-                    </h2>
-
-                    <div class="table-count">
-                        총 86건
-                    </div>
+                    <h2 class="table-title">습득물 목록</h2>
+                    <div class="table-count" th:text="|총 ${totalCount}건|">총 0건</div>
                 </div>
-
-                <table class="found-table">
-
+                <table class="found-table admin-found-table">
                     <thead>
                     <tr>
                         <th>번호</th>
@@ -236,212 +111,52 @@
                         <th>관리</th>
                     </tr>
                     </thead>
-
                     <tbody>
-
-                    <tr>
-                        <td>1</td>
-
+                    <tr th:if="${#lists.isEmpty(items)}"><td colspan="10" class="empty-cell">등록된 습득물이 없습니다.</td></tr>
+                    <tr th:each="item, stat : ${items}" class="clickable-row" th:attr="data-href=@{/found/detail/{id}(id=${item.id})}">
+                        <td th:text="${stat.count}">1</td>
+                        <td><span class="type-badge found">습득물</span></td>
+                        <td><div class="item-name" th:text="${item.title}">제목</div><div class="item-desc" th:text="${item.itemName}">물건명</div></td>
+                        <td><span class="category-badge" th:text="${item.categoryName != null ? item.categoryName : '-'}">-</span></td>
+                        <td th:text="${item.locationName != null ? item.locationName : '-'}">-</td>
+                        <td th:text="${item.storageName != null ? item.storageName : '-'}">-</td>
+                        <td th:text="${item.writerName != null ? item.writerName : '-'}">-</td>
+                        <td th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd') : '-'}">-</td>
                         <td>
-                            <span class="type-badge found">습득물</span>
+                            <span class="status-badge"
+                                  th:classappend="${item.status == 'CLAIM_WAITING' ? ' waiting' : (item.status == 'HIDDEN' ? ' hidden' : (item.status == 'RETURNED' ? ' done' : ' storage'))}"
+                                  th:text="${item.status == 'CLAIM_WAITING' ? '처리 대기' : (item.status == 'HIDDEN' ? '숨김' : (item.status == 'RETURNED' ? '반환완료' : '보관중'))}">보관중</span>
                         </td>
-
                         <td>
-                            <div class="item-name">학생증</div>
-                            <div class="item-desc">동명대학교 학생증입니다. 이름 일부 확인 가능.</div>
-                        </td>
-
-                        <td>
-                            <span class="category-badge">지갑/카드</span>
-                        </td>
-
-                        <td>중앙도서관</td>
-
-                        <td>학생지원팀</td>
-
-                        <td>김민주</td>
-
-                        <td>2026.05.30</td>
-
-                        <td>
-                            <span class="status-badge storage">보관중</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn done-btn">
-                                    반환완료
-                                </button>
-
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-                            </div>
+                            <form class="status-change-form" th:action="@{/admin/found/status}" method="post">
+                                <input type="hidden" name="foundId" th:value="${item.id}">
+                                <select class="admin-status-select" name="status" aria-label="습득물 상태 변경">
+                                    <option value="CLAIM_WAITING" th:if="${item.status == 'CLAIM_WAITING'}" selected disabled>처리 대기</option>
+                                    <option value="STORED" th:selected="${item.status == 'STORED' or item.status == 'REGISTERED'}">보관중</option>
+                                    <option value="RETURNED" th:selected="${item.status == 'RETURNED' or item.status == 'COMPLETED'}">반환완료</option>
+                                    <option value="HIDDEN" th:selected="${item.status == 'HIDDEN'}">숨김</option>
+                                </select>
+                                <button type="submit" class="action-btn status-save-btn">변경</button>
+                            </form>
                         </td>
                     </tr>
-
-
-                    <tr>
-                        <td>2</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="item-name">무선 이어폰</div>
-                            <div class="item-desc">흰색 무선 이어폰 한쪽과 케이스가 함께 있습니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="category-badge">전자기기</span>
-                        </td>
-
-                        <td>ICT관</td>
-
-                        <td>ICT관 행정실</td>
-
-                        <td>이시현</td>
-
-                        <td>2026.05.29</td>
-
-                        <td>
-                            <span class="status-badge done">반환완료</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>3</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="item-name">검정 우산</div>
-                            <div class="item-desc">손잡이에 흰색 스티커가 붙어있는 검정 우산입니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="category-badge">기타</span>
-                        </td>
-
-                        <td>대학본관</td>
-
-                        <td>대학본관 경비실</td>
-
-                        <td>박지훈</td>
-
-                        <td>2026.05.28</td>
-
-                        <td>
-                            <span class="status-badge waiting">접수중</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn done-btn">
-                                    보관처리
-                                </button>
-
-                                <button type="button" class="action-btn hide-btn">
-                                    숨김
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td>4</td>
-
-                        <td>
-                            <span class="type-badge found">습득물</span>
-                        </td>
-
-                        <td>
-                            <div class="item-name">회색 파우치</div>
-                            <div class="item-desc">화장품이 들어있는 작은 회색 파우치입니다.</div>
-                        </td>
-
-                        <td>
-                            <span class="category-badge">기타</span>
-                        </td>
-
-                        <td>학생복지관</td>
-
-                        <td>학생지원팀</td>
-
-                        <td>최유림</td>
-
-                        <td>2026.05.27</td>
-
-                        <td>
-                            <span class="status-badge hidden">숨김</span>
-                        </td>
-
-                        <td>
-                            <div class="action-group">
-                                <button type="button" class="action-btn detail-btn">
-                                    상세
-                                </button>
-
-                                <button type="button" class="action-btn restore-btn">
-                                    복구
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-
                     </tbody>
-
                 </table>
-
-
-                <!-- 페이지네이션 -->
-                <div class="pagination">
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-left"></i>
-                    </a>
-
-                    <a href="#" class="page-btn active">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-
-                    <a href="#" class="page-btn">
-                        <i class="fa-solid fa-angle-right"></i>
-                    </a>
-                </div>
-
             </section>
-
         </main>
-
     </div>
-
 </div>
-
+<script>
+    document.addEventListener("click", function (event) {
+        if (event.target.closest(".action-group, .status-change-form, button, a, input, select, textarea, label")) {
+            return;
+        }
+        const row = event.target.closest(".clickable-row");
+        if (!row || !row.dataset.href) {
+            return;
+        }
+        window.location.href = row.dataset.href;
+    });
+</script>
 </body>
-
 </html>

@@ -21,6 +21,7 @@ public class UserService {
     @Transactional
     public void join(JoinDto joinDto) {
         validateJoin(joinDto);
+        joinDto.setEmail(createInternalEmail(joinDto.getLoginId()));
 
         if (userDao.countByLoginId(joinDto.getLoginId()) > 0) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
@@ -38,24 +39,29 @@ public class UserService {
 
     public UserDto login(LoginDto loginDto) {
         if (loginDto.getLoginId() == null || loginDto.getLoginId().trim().isEmpty()) {
-            throw new IllegalArgumentException("학번 또는 이메일을 입력해 주세요.");
+            throw new IllegalArgumentException("학번을 입력해 주세요.");
         }
         if (loginDto.getPassword() == null || loginDto.getPassword().trim().isEmpty()) {
             throw new IllegalArgumentException("비밀번호를 입력해 주세요.");
         }
 
         String loginKey = loginDto.getLoginId().trim();
-        UserDto user = loginKey.contains("@")
-                ? userDao.findByEmail(loginKey)
-                : userDao.findByLoginId(loginKey);
+        UserDto user = userDao.findByLoginId(loginKey);
 
         if (user == null || !passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("학번/이메일 또는 비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("학번 또는 비밀번호가 일치하지 않습니다.");
         }
         if (!"ACTIVE".equals(user.getStatus())) {
             throw new IllegalArgumentException("사용할 수 없는 계정입니다.");
         }
         return user;
+    }
+
+    public UserDto findById(Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        return userDao.findById(userId);
     }
 
     @Transactional
@@ -113,11 +119,9 @@ public class UserService {
         if (joinDto.getUserName() == null || joinDto.getUserName().trim().isEmpty()) {
             throw new IllegalArgumentException("이름을 입력해 주세요.");
         }
-        if (joinDto.getEmail() == null || joinDto.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("이메일을 입력해 주세요.");
-        }
-        if (!joinDto.getEmail().contains("@")) {
-            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
-        }
+    }
+
+    private String createInternalEmail(String loginId) {
+        return loginId.trim() + "@findcampus.local";
     }
 }

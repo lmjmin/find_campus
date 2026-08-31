@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>&#47928;&#51032; &#49345;&#49464; | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-page">
+    <header class="admin-header"><a th:href="@{/admin/dashboard}" class="admin-logo"><span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span><span>FindCampus Admin</span></a><div class="admin-header-right"><span><i class="fa-regular fa-user"></i> &#44288;&#47532;&#51088;</span><a th:href="@{/admin/login}" class="logout-btn">&#47196;&#44536;&#50500;&#50883;</a></div></header>
+    <div class="admin-layout">
+                <aside class="sidebar">
+            <div class="sidebar-title">&#47700;&#45684;</div>
+            <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    &#45824;&#49884;&#48372;&#46300;
+                </a>
+                <a th:href="@{/admin/users}" class="side-link">
+                    <i class="fa-solid fa-users"></i>
+                    &#49324;&#50857;&#51088; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/lost}" class="side-link">
+                    <i class="fa-solid fa-circle-question"></i>
+                    &#48516;&#49892;&#47932; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/found}" class="side-link">
+                    <i class="fa-solid fa-box-open"></i>
+                    &#49845;&#46301;&#47932; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/storage}" class="side-link">
+                    <i class="fa-solid fa-warehouse"></i>
+                    &#48372;&#44288; &#51109;&#49548; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/locations}" class="side-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    &#50948;&#52824; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/categories}" class="side-link">
+                    <i class="fa-solid fa-tags"></i>
+                    &#52852;&#53580;&#44256;&#47532; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/reports}" class="side-link">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    &#49888;&#44256; &#44288;&#47532;
+                </a>
+                <a th:href="@{/admin/inquiries}" class="side-link active">
+                    <i class="fa-solid fa-headset"></i>
+                    &#47928;&#51032; &#44288;&#47532;
+                </a>
+
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
+                </a>
+            </nav>
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i>
+                    <span>&#49324;&#50857;&#51088; &#54168;&#51060;&#51648;&#47196; &#51060;&#46041;</span>
+                </a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div class="page-title-wrap detail-title-row"><a th:href="@{/admin/inquiries}" class="round-back-btn"><i class="fa-solid fa-chevron-left"></i></a><div><h1 class="page-title">&#47928;&#51032; &#49345;&#49464;</h1><p class="page-desc">&#47928;&#51032; &#45236;&#50857;&#51012; &#54869;&#51064;&#54616;&#44256; &#45813;&#48320;&#51012; &#51089;&#49457;&#54633;&#45768;&#45796;.</p></div></div>
+            <div class="admin-alert success" th:if="${message != null}" th:text="${message}"></div>
+            <div class="admin-alert error" th:if="${error != null}" th:text="${error}"></div>
+            <section class="admin-detail-grid">
+                <article class="admin-detail-card"><div class="detail-card-head"><span class="type-badge etc">&#47928;&#51032;</span><span class="status-badge waiting" th:if="${inquiry.status == null or inquiry.status == 'WAITING'}">&#45813;&#48320; &#45824;&#44592;</span><span class="status-badge answered" th:if="${inquiry.status == 'ANSWERED'}">&#45813;&#48320; &#50756;&#47308;</span></div><h2 th:text="${inquiry.title}">&#47928;&#51032; &#51228;&#47785;</h2><dl class="admin-info-list"><div><dt>&#51089;&#49457;&#51088;</dt><dd th:text="${inquiry.userName != null ? inquiry.userName : '&#48708;&#54924;&#50896;'}">&#51060;&#47492;</dd></div><div><dt>&#54617;&#48264;</dt><dd th:text="${inquiry.studentNo != null ? inquiry.studentNo : '-'}">-</dd></div><div><dt>&#45813;&#48320; &#51060;&#47700;&#51068;</dt><dd th:text="${inquiry.replyEmail != null ? inquiry.replyEmail : '-'}">-</dd></div><div><dt>&#51217;&#49688;&#51068;</dt><dd th:text="${#dates.format(inquiry.createdAt, 'yyyy.MM.dd HH:mm')}">-</dd></div></dl><div class="inquiry-full-content" th:text="${inquiry.content}">&#47928;&#51032; &#45236;&#50857;</div></article>
+                <article class="admin-detail-card"><h2>&#45813;&#48320; &#51089;&#49457;</h2><form th:action="@{/admin/inquiries/answer}" method="post" class="answer-form"><input type="hidden" name="inquiryId" th:value="${inquiry.inquiryId}"><textarea name="answerContent" required placeholder="&#49324;&#50857;&#51088;&#50640;&#44172; &#48372;&#51068; &#45813;&#48320;&#51012; &#51089;&#49457;&#54644;&#51452;&#49464;&#50836;." th:text="${inquiry.answerContent}"></textarea><button type="submit" class="search-btn answer-submit-btn">&#45813;&#48320; &#51200;&#51109;</button></form><div class="answer-meta" th:if="${inquiry.answeredAt != null}"><i class="fa-solid fa-circle-check"></i><span th:text="|${#dates.format(inquiry.answeredAt, 'yyyy.MM.dd HH:mm')} &#45813;&#48320; &#50756;&#47308;|">&#45813;&#48320; &#50756;&#47308;</span></div></article>
+            </section>
+        </main>
+    </div>
+</div>
+</body>
+</html>

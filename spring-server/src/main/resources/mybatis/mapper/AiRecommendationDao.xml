@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.find_campus.dao.IAiRecommendationDao">
+
+    <insert id="upsertEmbedding" parameterType="com.example.find_campus.dto.AiEmbeddingDto">
+        MERGE INTO AI_ITEM_EMBEDDINGS E
+        USING (
+            SELECT #{itemType} AS ITEM_TYPE, #{itemId} AS ITEM_ID FROM DUAL
+        ) S
+        ON (E.ITEM_TYPE = S.ITEM_TYPE AND E.ITEM_ID = S.ITEM_ID)
+        WHEN MATCHED THEN
+            UPDATE SET
+                MODEL_NAME = #{modelName},
+                IMAGE_EMBEDDING = #{imageEmbedding},
+                TEXT_EMBEDDING = #{textEmbedding},
+                UPDATED_AT = SYSDATE
+        WHEN NOT MATCHED THEN
+            INSERT (
+                EMBEDDING_ID, ITEM_TYPE, ITEM_ID, MODEL_NAME,
+                IMAGE_EMBEDDING, TEXT_EMBEDDING, CREATED_AT, UPDATED_AT
+            )
+            VALUES (
+                SEQ_AI_ITEM_EMBEDDINGS.NEXTVAL, #{itemType}, #{itemId}, #{modelName},
+                #{imageEmbedding}, #{textEmbedding}, SYSDATE, SYSDATE
+            )
+    </insert>
+
+    <delete id="deleteRecommendations">
+        DELETE FROM AI_RECOMMENDATIONS
+        WHERE SOURCE_TYPE = #{sourceType}
+          AND SOURCE_ID = #{sourceId}
+    </delete>
+
+    <insert id="insertRecommendation" parameterType="com.example.find_campus.dto.AiRecommendationDto">
+        <selectKey keyProperty="recommendationId" resultType="long" order="BEFORE">
+            SELECT SEQ_AI_RECOMMENDATIONS.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO AI_RECOMMENDATIONS (
+            RECOMMENDATION_ID, SOURCE_TYPE, SOURCE_ID, TARGET_TYPE, TARGET_ID,
+            TOTAL_SCORE, IMAGE_SCORE, TEXT_SCORE, METADATA_SCORE,
+            REASON, MODEL_NAME, CREATED_AT
+        ) VALUES (
+            #{recommendationId}, #{sourceType}, #{sourceId}, #{targetType}, #{targetId},
+            #{totalScore}, #{imageScore}, #{textScore}, #{metadataScore},
+            #{reason}, #{modelName}, SYSDATE
+        )
+    </insert>
+
+    <select id="findRecommendations" resultType="com.example.find_campus.dto.AiRecommendationDto">
+        SELECT *
+        FROM (
+            SELECT
+                R.RECOMMENDATION_ID,
+                R.SOURCE_TYPE,
+                R.SOURCE_ID,
+                R.TARGET_TYPE,
+                R.TARGET_ID,
+                R.TOTAL_SCORE,
+                R.IMAGE_SCORE,
+                R.TEXT_SCORE,
+                R.METADATA_SCORE,
+                DBMS_LOB.SUBSTR(R.REASON, 1000, 1) AS REASON,
+                R.MODEL_NAME,
+                R.CREATED_AT,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.TITLE
+                    WHEN R.TARGET_TYPE = 'found' THEN F.TITLE
+                END AS TITLE,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.ITEM_NAME
+                    WHEN R.TARGET_TYPE = 'found' THEN F.ITEM_NAME
+                END AS ITEM_NAME,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN LC.CATEGORY_NAME
+                    WHEN R.TARGET_TYPE = 'found' THEN FC.CATEGORY_NAME
+                END AS CATEGORY_NAME,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.COLOR
+                    WHEN R.TARGET_TYPE = 'found' THEN F.COLOR
+                END AS COLOR,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN LLOC.LOCATION_NAME
+                    WHEN R.TARGET_TYPE = 'found' THEN FLOC.LOCATION_NAME
+                END AS LOCATION_NAME,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.LOST_LOCATION_DETAIL
+                    WHEN R.TARGET_TYPE = 'found' THEN F.FOUND_LOCATION_DETAIL
+                END AS LOCATION_DETAIL,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.LOST_DATE
+                    WHEN R.TARGET_TYPE = 'found' THEN F.FOUND_DATE
+                END AS ITEM_DATE,
+                CASE
+                    WHEN R.TARGET_TYPE = 'lost' THEN L.STATUS
+                    WHEN R.TARGET_TYPE = 'found' THEN F.STATUS
+                END AS STATUS,
+                IMG.IMAGE_URL
+            FROM AI_RECOMMENDATIONS R
+            LEFT JOIN LOST_ITEMS L ON R.TARGET_TYPE = 'lost' AND L.LOST_ID = R.TARGET_ID
+            LEFT JOIN FOUND_ITEMS F ON R.TARGET_TYPE = 'found' AND F.FOUND_ID = R.TARGET_ID
+            LEFT JOIN CATEGORIES LC ON LC.CATEGORY_ID = L.CATEGORY_ID
+            LEFT JOIN CATEGORIES FC ON FC.CATEGORY_ID = F.CATEGORY_ID
+            LEFT JOIN LOCATIONS LLOC ON LLOC.LOCATION_ID = L.LOST_LOCATION_ID
+            LEFT JOIN LOCATIONS FLOC ON FLOC.LOCATION_ID = F.FOUND_LOCATION_ID
+            LEFT JOIN (
+                SELECT ITEM_TYPE, ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+                FROM ITEM_IMAGES
+                GROUP BY ITEM_TYPE, ITEM_ID
+            ) IMG ON IMG.ITEM_TYPE = R.TARGET_TYPE AND IMG.ITEM_ID = R.TARGET_ID
+            WHERE R.SOURCE_TYPE = #{sourceType}
+              AND R.SOURCE_ID = #{sourceId}
+            ORDER BY R.TOTAL_SCORE DESC, R.CREATED_AT DESC
+        )
+        WHERE ROWNUM &lt;= 5
+    </select>
+</mapper>

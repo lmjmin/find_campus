@@ -9,5 +9,7 @@ public class ItemSearchDto {
     private String sort = "latest";
     private Long categoryId;
     private Long locationId;
+    private String locationName;
     private String status;
+    private Boolean includeHidden;
 }

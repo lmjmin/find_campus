@@ -7,48 +7,72 @@
 
     <sql id="lostWhere">
         <where>
+            L.STATUS != 'DELETED'
+            <if test="includeHidden == null or includeHidden == false">
+                AND L.STATUS != 'HIDDEN'
+            </if>
             <if test="keyword != null and keyword != ''">
                 AND (
-                    L.TITLE LIKE '%' || #{keyword} || '%'
-                    OR L.ITEM_NAME LIKE '%' || #{keyword} || '%'
+                    LOWER(L.TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(L.ITEM_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(L.COLOR) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(L.BRAND) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(C.CATEGORY_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
                     OR DBMS_LOB.INSTR(L.DESCRIPTION, #{keyword}) > 0
-                    OR L.LOST_LOCATION_DETAIL LIKE '%' || #{keyword} || '%'
+                    OR LOWER(LOC.LOCATION_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(L.LOST_LOCATION_DETAIL) LIKE '%' || LOWER(#{keyword}) || '%'
                 )
             </if>
             <if test="categoryId != null">
-                AND L.CATEGORY_ID = #{categoryId}
+                AND L.CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
             </if>
             <if test="locationId != null">
                 AND L.LOST_LOCATION_ID = #{locationId}
             </if>
+            <if test="locationName != null and locationName != ''">
+                AND LOC.LOCATION_NAME LIKE '%' || #{locationName} || '%'
+            </if>
             <if test="status != null and status != ''">
-                AND L.STATUS = #{status}
+                AND L.STATUS = #{status,jdbcType=VARCHAR}
             </if>
         </where>
     </sql>
 
     <sql id="foundWhere">
         <where>
+            F.STATUS != 'DELETED'
+            <if test="includeHidden == null or includeHidden == false">
+                AND F.STATUS != 'HIDDEN'
+            </if>
             <if test="keyword != null and keyword != ''">
                 AND (
-                    F.TITLE LIKE '%' || #{keyword} || '%'
-                    OR F.ITEM_NAME LIKE '%' || #{keyword} || '%'
+                    LOWER(F.TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(F.ITEM_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(F.COLOR) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(F.BRAND) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(C.CATEGORY_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
                     OR DBMS_LOB.INSTR(F.DESCRIPTION, #{keyword}) > 0
-                    OR F.FOUND_LOCATION_DETAIL LIKE '%' || #{keyword} || '%'
+                    OR LOWER(LOC.LOCATION_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                    OR LOWER(F.FOUND_LOCATION_DETAIL) LIKE '%' || LOWER(#{keyword}) || '%'
                 )
             </if>
             <if test="categoryId != null">
-                AND F.CATEGORY_ID = #{categoryId}
+                AND F.CATEGORY_ID = #{categoryId,jdbcType=NUMERIC}
             </if>
             <if test="locationId != null">
                 AND F.FOUND_LOCATION_ID = #{locationId}
             </if>
-            <if test="status != null and status != ''">
-                AND F.STATUS = #{status}
+            <if test="locationName != null and locationName != ''">
+                AND LOC.LOCATION_NAME LIKE '%' || #{locationName} || '%'
+            </if>
+                        <if test="status != null and status != '' and status == 'STORED'">
+                AND F.STATUS IN ('STORED', 'REGISTERED')
+            </if>
+            <if test="status != null and status != '' and status != 'STORED'">
+                AND F.STATUS = #{status,jdbcType=VARCHAR}
             </if>
         </where>
     </sql>
-
     <insert id="insertLostItem" parameterType="com.example.find_campus.dto.LostItemDto">
         <selectKey keyProperty="lostId" resultType="long" order="BEFORE">
             SELECT SEQ_LOST_ITEMS.NEXTVAL FROM DUAL
@@ -56,14 +80,13 @@
         INSERT INTO LOST_ITEMS (
             LOST_ID, USER_ID, TITLE, CATEGORY_ID, ITEM_NAME, COLOR, BRAND,
             LOST_LOCATION_ID, LOST_LOCATION_DETAIL, LOST_DATE, LOST_TIME,
-            LOST_TIME_RANGE, DESCRIPTION, STATUS, CREATED_AT
+            LOST_TIME_RANGE, DESCRIPTION, STATUS, VIEW_COUNT, CREATED_AT, UPDATED_AT
         ) VALUES (
-            #{lostId}, #{userId}, #{title}, #{categoryId}, #{itemName}, #{color}, #{brand},
-            #{lostLocationId}, #{lostLocationDetail}, #{lostDate}, #{lostTime},
-            #{lostTimeRange}, #{description}, #{status}, SYSDATE
+            #{lostId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{title,jdbcType=VARCHAR}, #{categoryId,jdbcType=NUMERIC}, #{itemName,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR},
+            #{lostLocationId,jdbcType=NUMERIC}, #{lostLocationDetail,jdbcType=VARCHAR}, #{lostDate,jdbcType=DATE}, #{lostTime,jdbcType=VARCHAR},
+            #{lostTimeRange,jdbcType=VARCHAR}, #{description,jdbcType=CLOB}, #{status,jdbcType=VARCHAR}, 0, SYSDATE, SYSDATE
         )
     </insert>
-
     <insert id="insertFoundItem" parameterType="com.example.find_campus.dto.FoundItemDto">
         <selectKey keyProperty="foundId" resultType="long" order="BEFORE">
             SELECT SEQ_FOUND_ITEMS.NEXTVAL FROM DUAL
@@ -71,11 +94,11 @@
         INSERT INTO FOUND_ITEMS (
             FOUND_ID, USER_ID, TITLE, CATEGORY_ID, ITEM_NAME, COLOR, BRAND,
             FOUND_LOCATION_ID, FOUND_LOCATION_DETAIL, FOUND_DATE, FOUND_TIME,
-            FOUND_TIME_RANGE, STORAGE_ID, DESCRIPTION, STATUS, CREATED_AT
+            FOUND_TIME_RANGE, STORAGE_ID, DESCRIPTION, STATUS, VIEW_COUNT, CREATED_AT, UPDATED_AT
         ) VALUES (
-            #{foundId}, #{userId}, #{title}, #{categoryId}, #{itemName}, #{color}, #{brand},
-            #{foundLocationId}, #{foundLocationDetail}, #{foundDate}, #{foundTime},
-            #{foundTimeRange}, #{storageId}, #{description}, #{status}, SYSDATE
+            #{foundId,jdbcType=NUMERIC}, #{userId,jdbcType=NUMERIC}, #{title,jdbcType=VARCHAR}, #{categoryId,jdbcType=NUMERIC}, #{itemName,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR},
+            #{foundLocationId,jdbcType=NUMERIC}, #{foundLocationDetail,jdbcType=VARCHAR}, #{foundDate,jdbcType=DATE}, #{foundTime,jdbcType=VARCHAR},
+            #{foundTimeRange,jdbcType=VARCHAR}, #{storageId,jdbcType=NUMERIC}, #{description,jdbcType=CLOB}, #{status,jdbcType=VARCHAR}, 0, SYSDATE, SYSDATE
         )
     </insert>
 
@@ -86,7 +109,7 @@
         INSERT INTO REPORTS (
             REPORT_ID, REPORTER_ID, TARGET_TYPE, TARGET_ID, REASON, DETAIL, STATUS, CREATED_AT
         ) VALUES (
-            #{reportId}, #{reporterId}, #{targetType}, #{targetId}, #{reasonType}, #{reasonDetail}, #{status}, SYSDATE
+            #{reportId}, #{reporterId,jdbcType=NUMERIC}, #{targetType,jdbcType=VARCHAR}, #{targetId,jdbcType=NUMERIC}, #{reasonType,jdbcType=VARCHAR}, #{reasonDetail,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, SYSDATE
         )
     </insert>
 
@@ -123,7 +146,7 @@
             LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = L.CATEGORY_ID
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
             LEFT JOIN (
-                SELECT ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+                SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
                 FROM ITEM_IMAGES
                 WHERE ITEM_TYPE = 'lost'
                 GROUP BY ITEM_ID
@@ -141,6 +164,8 @@
     <select id="countLostItems" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="int">
         SELECT COUNT(*)
         FROM LOST_ITEMS L
+        LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = L.CATEGORY_ID
+        LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
         <include refid="lostWhere" />
     </select>
 
@@ -176,19 +201,19 @@
         LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = L.CATEGORY_ID
         LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
         LEFT JOIN (
-            SELECT ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+            SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
             FROM ITEM_IMAGES
             WHERE ITEM_TYPE = 'lost'
             GROUP BY ITEM_ID
         ) IMG ON IMG.ITEM_ID = L.LOST_ID
-        WHERE L.LOST_ID = #{lostId}
+        WHERE L.LOST_ID = #{lostId,jdbcType=NUMERIC}
           AND L.STATUS != 'DELETED'
     </select>
 
     <update id="increaseLostViewCount" parameterType="long">
         UPDATE LOST_ITEMS
         SET VIEW_COUNT = VIEW_COUNT + 1
-        WHERE LOST_ID = #{lostId}
+        WHERE LOST_ID = #{lostId,jdbcType=NUMERIC}
     </update>
 
     <select id="findFoundItems" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="com.example.find_campus.dto.ItemViewDto">
@@ -224,8 +249,9 @@
             LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = F.CATEGORY_ID
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
             LEFT JOIN STORAGE_PLACES SP ON SP.STORAGE_ID = F.STORAGE_ID
+            LEFT JOIN LOCATIONS SL ON SL.LOCATION_ID = SP.LOCATION_ID
             LEFT JOIN (
-                SELECT ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+                SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
                 FROM ITEM_IMAGES
                 WHERE ITEM_TYPE = 'found'
                 GROUP BY ITEM_ID
@@ -243,6 +269,8 @@
     <select id="countFoundItems" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="int">
         SELECT COUNT(*)
         FROM FOUND_ITEMS F
+        LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = F.CATEGORY_ID
+        LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
         <include refid="foundWhere" />
     </select>
 
@@ -265,6 +293,14 @@
             F.FOUND_TIME_RANGE AS ITEM_TIME_RANGE,
             F.STORAGE_ID,
             SP.STORAGE_NAME,
+            SP.LOCATION_ID AS STORAGE_LOCATION_ID,
+            SL.LOCATION_NAME AS STORAGE_LOCATION_NAME,
+            SL.LATITUDE AS STORAGE_LATITUDE,
+            SL.LONGITUDE AS STORAGE_LONGITUDE,
+            SP.MANAGER_NAME AS STORAGE_MANAGER_NAME,
+            SP.PHONE AS STORAGE_PHONE,
+            SP.OPERATING_HOURS AS STORAGE_OPERATING_HOURS,
+            SP.DESCRIPTION AS STORAGE_DESCRIPTION,
             DBMS_LOB.SUBSTR(F.DESCRIPTION, 4000, 1) AS DESCRIPTION,
             F.STATUS,
             F.VIEW_COUNT,
@@ -278,20 +314,21 @@
         LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = F.CATEGORY_ID
         LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
         LEFT JOIN STORAGE_PLACES SP ON SP.STORAGE_ID = F.STORAGE_ID
+        LEFT JOIN LOCATIONS SL ON SL.LOCATION_ID = SP.LOCATION_ID
         LEFT JOIN (
-            SELECT ITEM_ID, MIN(IMAGE_URL) AS IMAGE_URL
+            SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
             FROM ITEM_IMAGES
             WHERE ITEM_TYPE = 'found'
             GROUP BY ITEM_ID
         ) IMG ON IMG.ITEM_ID = F.FOUND_ID
-        WHERE F.FOUND_ID = #{foundId}
+        WHERE F.FOUND_ID = #{foundId,jdbcType=NUMERIC}
           AND F.STATUS != 'DELETED'
     </select>
 
     <update id="increaseFoundViewCount" parameterType="long">
         UPDATE FOUND_ITEMS
         SET VIEW_COUNT = VIEW_COUNT + 1
-        WHERE FOUND_ID = #{foundId}
+        WHERE FOUND_ID = #{foundId,jdbcType=NUMERIC}
     </update>
 
     <select id="findRecentItems" resultType="com.example.find_campus.dto.ItemViewDto">
@@ -301,14 +338,14 @@
             FROM LOST_ITEMS L
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
             WHERE #{itemType} = 'lost'
-              AND L.STATUS != 'DELETED'
+              AND L.STATUS NOT IN ('DELETED', 'HIDDEN')
             UNION ALL
             SELECT F.FOUND_ID AS ID, 'found' AS ITEM_TYPE, F.TITLE, F.ITEM_NAME, F.STATUS, F.CREATED_AT,
                    LOC.LOCATION_NAME, F.FOUND_LOCATION_DETAIL AS LOCATION_DETAIL
             FROM FOUND_ITEMS F
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
             WHERE #{itemType} = 'found'
-              AND F.STATUS != 'DELETED'
+              AND F.STATUS NOT IN ('DELETED', 'HIDDEN')
             ORDER BY CREATED_AT DESC
         )
         WHERE ROWNUM &lt;= #{limit}
@@ -325,29 +362,99 @@
             #{imageId}, #{itemType}, #{itemId}, #{imageUrl}, #{originalName}, #{savedName}, #{sortOrder}, SYSDATE
         )
     </insert>
-
     <select id="findLostItemsByUserId" parameterType="long" resultType="com.example.find_campus.dto.ItemViewDto">
         SELECT * FROM (
-            SELECT L.LOST_ID AS ID, L.USER_ID, 'lost' AS ITEM_TYPE, L.TITLE, L.ITEM_NAME,
-                   L.STATUS, L.VIEW_COUNT, L.CREATED_AT, LOC.LOCATION_NAME,
-                   L.LOST_LOCATION_DETAIL AS LOCATION_DETAIL, DBMS_LOB.SUBSTR(L.DESCRIPTION, 1000, 1) AS DESCRIPTION
+            SELECT
+                L.LOST_ID AS ID,
+                L.USER_ID,
+                'lost' AS ITEM_TYPE,
+                L.TITLE,
+                L.CATEGORY_ID,
+                C.CATEGORY_NAME,
+                L.ITEM_NAME,
+                L.COLOR,
+                L.BRAND,
+                L.LOST_LOCATION_ID AS LOCATION_ID,
+                LOC.LOCATION_NAME,
+                L.LOST_LOCATION_DETAIL AS LOCATION_DETAIL,
+                L.LOST_DATE AS ITEM_DATE,
+                L.LOST_TIME AS ITEM_TIME,
+                L.LOST_TIME_RANGE AS ITEM_TIME_RANGE,
+                NULL AS STORAGE_ID,
+                NULL AS STORAGE_NAME,
+                DBMS_LOB.SUBSTR(L.DESCRIPTION, 1000, 1) AS DESCRIPTION,
+                L.STATUS,
+                L.VIEW_COUNT,
+                L.CREATED_AT,
+                U.USER_NAME AS WRITER_NAME,
+                U.STUDENT_NO,
+                NULL AS SCHOOL,
+                IMG.IMAGE_URL
             FROM LOST_ITEMS L
+            JOIN USERS U ON U.USER_ID = L.USER_ID
+            LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = L.CATEGORY_ID
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = L.LOST_LOCATION_ID
-            WHERE L.USER_ID = #{userId}
-              AND L.STATUS != 'DELETED'
+            LEFT JOIN (
+                SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
+                FROM ITEM_IMAGES
+                WHERE ITEM_TYPE = 'lost'
+                GROUP BY ITEM_ID
+            ) IMG ON IMG.ITEM_ID = L.LOST_ID
+            WHERE L.USER_ID = #{userId,jdbcType=NUMERIC}
+              AND L.STATUS NOT IN ('DELETED', 'HIDDEN')
             ORDER BY L.CREATED_AT DESC
         )
     </select>
-
     <select id="findFoundItemsByUserId" parameterType="long" resultType="com.example.find_campus.dto.ItemViewDto">
         SELECT * FROM (
-            SELECT F.FOUND_ID AS ID, F.USER_ID, 'found' AS ITEM_TYPE, F.TITLE, F.ITEM_NAME,
-                   F.STATUS, F.VIEW_COUNT, F.CREATED_AT, LOC.LOCATION_NAME,
-                   F.FOUND_LOCATION_DETAIL AS LOCATION_DETAIL, DBMS_LOB.SUBSTR(F.DESCRIPTION, 1000, 1) AS DESCRIPTION
+            SELECT
+                F.FOUND_ID AS ID,
+                F.USER_ID,
+                'found' AS ITEM_TYPE,
+                F.TITLE,
+                F.CATEGORY_ID,
+                C.CATEGORY_NAME,
+                F.ITEM_NAME,
+                F.COLOR,
+                F.BRAND,
+                F.FOUND_LOCATION_ID AS LOCATION_ID,
+                LOC.LOCATION_NAME,
+                F.FOUND_LOCATION_DETAIL AS LOCATION_DETAIL,
+                F.FOUND_DATE AS ITEM_DATE,
+                F.FOUND_TIME AS ITEM_TIME,
+                F.FOUND_TIME_RANGE AS ITEM_TIME_RANGE,
+                F.STORAGE_ID,
+                SP.STORAGE_NAME,
+                SP.LOCATION_ID AS STORAGE_LOCATION_ID,
+                SL.LOCATION_NAME AS STORAGE_LOCATION_NAME,
+                SL.LATITUDE AS STORAGE_LATITUDE,
+                SL.LONGITUDE AS STORAGE_LONGITUDE,
+                SP.MANAGER_NAME AS STORAGE_MANAGER_NAME,
+                SP.PHONE AS STORAGE_PHONE,
+                SP.OPERATING_HOURS AS STORAGE_OPERATING_HOURS,
+                SP.DESCRIPTION AS STORAGE_DESCRIPTION,
+                DBMS_LOB.SUBSTR(F.DESCRIPTION, 1000, 1) AS DESCRIPTION,
+                F.STATUS,
+                F.VIEW_COUNT,
+                F.CREATED_AT,
+                U.USER_NAME AS WRITER_NAME,
+                U.STUDENT_NO,
+                NULL AS SCHOOL,
+                IMG.IMAGE_URL
             FROM FOUND_ITEMS F
+            JOIN USERS U ON U.USER_ID = F.USER_ID
+            LEFT JOIN CATEGORIES C ON C.CATEGORY_ID = F.CATEGORY_ID
             LEFT JOIN LOCATIONS LOC ON LOC.LOCATION_ID = F.FOUND_LOCATION_ID
-            WHERE F.USER_ID = #{userId}
-              AND F.STATUS != 'DELETED'
+            LEFT JOIN STORAGE_PLACES SP ON SP.STORAGE_ID = F.STORAGE_ID
+            LEFT JOIN LOCATIONS SL ON SL.LOCATION_ID = SP.LOCATION_ID
+            LEFT JOIN (
+                SELECT ITEM_ID, MIN(IMAGE_URL) KEEP (DENSE_RANK FIRST ORDER BY NVL(SORT_ORDER, 9999), IMAGE_ID) AS IMAGE_URL
+                FROM ITEM_IMAGES
+                WHERE ITEM_TYPE = 'found'
+                GROUP BY ITEM_ID
+            ) IMG ON IMG.ITEM_ID = F.FOUND_ID
+            WHERE F.USER_ID = #{userId,jdbcType=NUMERIC}
+              AND F.STATUS NOT IN ('DELETED', 'HIDDEN')
             ORDER BY F.CREATED_AT DESC
         )
     </select>
@@ -356,8 +463,31 @@
         SELECT * FROM (
             SELECT R.REPORT_ID, R.REPORTER_ID, U.USER_NAME AS REPORTER_NAME, R.TARGET_TYPE, R.TARGET_ID,
                    CASE
+                       WHEN R.TARGET_TYPE = 'lost' THEN (SELECT USER_ID FROM LOST_ITEMS WHERE LOST_ID = R.TARGET_ID)
+                       WHEN R.TARGET_TYPE = 'found' THEN (SELECT USER_ID FROM FOUND_ITEMS WHERE FOUND_ID = R.TARGET_ID)
+                       WHEN R.TARGET_TYPE = 'chat' THEN R.TARGET_ID
+                       ELSE NULL
+                   END AS TARGET_USER_ID,
+                   CASE
+                       WHEN R.TARGET_TYPE = 'lost' THEN (
+                           SELECT LU.USER_NAME
+                           FROM LOST_ITEMS LI
+                           JOIN USERS LU ON LU.USER_ID = LI.USER_ID
+                           WHERE LI.LOST_ID = R.TARGET_ID
+                       )
+                       WHEN R.TARGET_TYPE = 'found' THEN (
+                           SELECT FU.USER_NAME
+                           FROM FOUND_ITEMS FI
+                           JOIN USERS FU ON FU.USER_ID = FI.USER_ID
+                           WHERE FI.FOUND_ID = R.TARGET_ID
+                       )
+                       WHEN R.TARGET_TYPE = 'chat' THEN (SELECT CU.USER_NAME FROM USERS CU WHERE CU.USER_ID = R.TARGET_ID)
+                       ELSE NULL
+                   END AS TARGET_USER_NAME,
+                   CASE
                        WHEN R.TARGET_TYPE = 'lost' THEN (SELECT TITLE FROM LOST_ITEMS WHERE LOST_ID = R.TARGET_ID)
                        WHEN R.TARGET_TYPE = 'found' THEN (SELECT TITLE FROM FOUND_ITEMS WHERE FOUND_ID = R.TARGET_ID)
+                       WHEN R.TARGET_TYPE = 'chat' THEN (SELECT USER_NAME || '님과의 채팅' FROM USERS WHERE USER_ID = R.TARGET_ID)
                        ELSE NULL
                    END AS TARGET_TITLE,
                    R.REASON, DBMS_LOB.SUBSTR(R.DETAIL, 1000, 1) AS DETAIL, R.STATUS, R.CREATED_AT, R.PROCESSED_AT
@@ -365,10 +495,14 @@
             JOIN USERS U ON U.USER_ID = R.REPORTER_ID
             <where>
                 <if test="keyword != null and keyword != ''">
-                    AND (R.REASON LIKE '%' || #{keyword} || '%' OR DBMS_LOB.INSTR(R.DETAIL, #{keyword}) &gt; 0)
+                    AND (
+                        R.REASON LIKE '%' || #{keyword} || '%'
+                        OR DBMS_LOB.INSTR(R.DETAIL, #{keyword}) &gt; 0
+                        OR LOWER(U.USER_NAME) LIKE '%' || LOWER(#{keyword}) || '%'
+                    )
                 </if>
                 <if test="status != null and status != ''">
-                    AND R.STATUS = #{status}
+                    AND R.STATUS = #{status,jdbcType=VARCHAR}
                 </if>
             </where>
             ORDER BY R.CREATED_AT DESC
@@ -376,53 +510,83 @@
         WHERE ROWNUM &lt;= 200
     </select>
 
+
+    <select id="findReportById" parameterType="long" resultType="com.example.find_campus.dto.ReportViewDto">
+        SELECT R.REPORT_ID, R.REPORTER_ID, U.USER_NAME AS REPORTER_NAME, R.TARGET_TYPE, R.TARGET_ID,
+               CASE
+                   WHEN R.TARGET_TYPE = 'lost' THEN (SELECT USER_ID FROM LOST_ITEMS WHERE LOST_ID = R.TARGET_ID)
+                   WHEN R.TARGET_TYPE = 'found' THEN (SELECT USER_ID FROM FOUND_ITEMS WHERE FOUND_ID = R.TARGET_ID)
+                   WHEN R.TARGET_TYPE = 'chat' THEN R.TARGET_ID
+                   ELSE NULL
+               END AS TARGET_USER_ID,
+               CASE
+                   WHEN R.TARGET_TYPE = 'lost' THEN (SELECT TITLE FROM LOST_ITEMS WHERE LOST_ID = R.TARGET_ID)
+                   WHEN R.TARGET_TYPE = 'found' THEN (SELECT TITLE FROM FOUND_ITEMS WHERE FOUND_ID = R.TARGET_ID)
+                   WHEN R.TARGET_TYPE = 'chat' THEN (SELECT USER_NAME || '님과의 채팅' FROM USERS WHERE USER_ID = R.TARGET_ID)
+                   ELSE NULL
+               END AS TARGET_TITLE,
+               R.REASON, DBMS_LOB.SUBSTR(R.DETAIL, 1000, 1) AS DETAIL, R.STATUS, R.CREATED_AT, R.PROCESSED_AT
+        FROM REPORTS R
+        JOIN USERS U ON U.USER_ID = R.REPORTER_ID
+        WHERE R.REPORT_ID = #{reportId,jdbcType=NUMERIC}
+    </select>
+
     <select id="countReports" parameterType="com.example.find_campus.dto.ItemSearchDto" resultType="int">
         SELECT COUNT(*)
         FROM REPORTS R
         <where>
             <if test="keyword != null and keyword != ''">
-                AND (R.REASON LIKE '%' || #{keyword} || '%' OR DBMS_LOB.INSTR(R.DETAIL, #{keyword}) &gt; 0)
+                AND (
+                      R.REASON LIKE '%' || #{keyword} || '%'
+                      OR DBMS_LOB.INSTR(R.DETAIL, #{keyword}) &gt; 0
+                      OR ('FALSE_INFO' = R.REASON AND '허위 게시글' LIKE '%' || #{keyword} || '%')
+                      OR ('PRIVATE_INFO' = R.REASON AND '개인정보 노출' LIKE '%' || #{keyword} || '%')
+                      OR ('DUPLICATE' = R.REASON AND '중복 게시글' LIKE '%' || #{keyword} || '%')
+                      OR ('BAD_CONTENT' = R.REASON AND '부적절한 내용' LIKE '%' || #{keyword} || '%')
+                      OR ('SPAM' = R.REASON AND '광고/스팸' LIKE '%' || #{keyword} || '%')
+                      OR ('ETC' = R.REASON AND '기타' LIKE '%' || #{keyword} || '%')
+                  )
             </if>
             <if test="status != null and status != ''">
-                AND R.STATUS = #{status}
+                AND R.STATUS = #{status,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
 
     <update id="updateReportStatus">
         UPDATE REPORTS
-        SET STATUS = #{status}, PROCESSED_AT = SYSDATE
+        SET STATUS = #{status,jdbcType=VARCHAR}, PROCESSED_AT = SYSDATE
         WHERE REPORT_ID = #{reportId}
     </update>
 
     <update id="updateLostStatus">
         UPDATE LOST_ITEMS
-        SET STATUS = #{status}, UPDATED_AT = SYSDATE
-        WHERE LOST_ID = #{lostId}
+        SET STATUS = #{status,jdbcType=VARCHAR}, UPDATED_AT = SYSDATE
+        WHERE LOST_ID = #{lostId,jdbcType=NUMERIC}
     </update>
 
     <update id="updateFoundStatus">
         UPDATE FOUND_ITEMS
-        SET STATUS = #{status}, UPDATED_AT = SYSDATE
-        WHERE FOUND_ID = #{foundId}
+        SET STATUS = #{status,jdbcType=VARCHAR}, UPDATED_AT = SYSDATE
+        WHERE FOUND_ID = #{foundId,jdbcType=NUMERIC}
     </update>
 
     <update id="updateLostItem" parameterType="com.example.find_campus.dto.LostItemDto">
         UPDATE LOST_ITEMS
-        SET TITLE = #{title},
-            CATEGORY_ID = #{categoryId},
-            ITEM_NAME = #{itemName},
-            COLOR = #{color},
-            BRAND = #{brand},
-            LOST_LOCATION_ID = #{lostLocationId},
-            LOST_LOCATION_DETAIL = #{lostLocationDetail},
-            LOST_DATE = #{lostDate},
-            LOST_TIME = #{lostTime},
-            LOST_TIME_RANGE = #{lostTimeRange},
-            DESCRIPTION = #{description},
+        SET TITLE = #{title,jdbcType=VARCHAR},
+            CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+            ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            COLOR = #{color,jdbcType=VARCHAR},
+            BRAND = #{brand,jdbcType=VARCHAR},
+            LOST_LOCATION_ID = #{lostLocationId,jdbcType=NUMERIC},
+            LOST_LOCATION_DETAIL = #{lostLocationDetail,jdbcType=VARCHAR},
+            LOST_DATE = #{lostDate,jdbcType=DATE},
+            LOST_TIME = #{lostTime,jdbcType=VARCHAR},
+            LOST_TIME_RANGE = #{lostTimeRange,jdbcType=VARCHAR},
+            DESCRIPTION = #{description,jdbcType=CLOB},
             UPDATED_AT = SYSDATE
-        WHERE LOST_ID = #{lostId}
-          AND USER_ID = #{userId}
+        WHERE LOST_ID = #{lostId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </update>
 
@@ -430,36 +594,36 @@
         UPDATE LOST_ITEMS
         SET STATUS = 'DELETED',
             UPDATED_AT = SYSDATE
-        WHERE LOST_ID = #{lostId}
-          AND USER_ID = #{userId}
+        WHERE LOST_ID = #{lostId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </update>
 
     <select id="countLostItemByOwner" resultType="int">
         SELECT COUNT(*)
         FROM LOST_ITEMS
-        WHERE LOST_ID = #{lostId}
-          AND USER_ID = #{userId}
+        WHERE LOST_ID = #{lostId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </select>
 
     <update id="updateFoundItem" parameterType="com.example.find_campus.dto.FoundItemDto">
         UPDATE FOUND_ITEMS
-        SET TITLE = #{title},
-            CATEGORY_ID = #{categoryId},
-            ITEM_NAME = #{itemName},
-            COLOR = #{color},
-            BRAND = #{brand},
-            FOUND_LOCATION_ID = #{foundLocationId},
-            FOUND_LOCATION_DETAIL = #{foundLocationDetail},
-            FOUND_DATE = #{foundDate},
-            FOUND_TIME = #{foundTime},
-            FOUND_TIME_RANGE = #{foundTimeRange},
-            STORAGE_ID = #{storageId},
-            DESCRIPTION = #{description},
+        SET TITLE = #{title,jdbcType=VARCHAR},
+            CATEGORY_ID = #{categoryId,jdbcType=NUMERIC},
+            ITEM_NAME = #{itemName,jdbcType=VARCHAR},
+            COLOR = #{color,jdbcType=VARCHAR},
+            BRAND = #{brand,jdbcType=VARCHAR},
+            FOUND_LOCATION_ID = #{foundLocationId,jdbcType=NUMERIC},
+            FOUND_LOCATION_DETAIL = #{foundLocationDetail,jdbcType=VARCHAR},
+            FOUND_DATE = #{foundDate,jdbcType=DATE},
+            FOUND_TIME = #{foundTime,jdbcType=VARCHAR},
+            FOUND_TIME_RANGE = #{foundTimeRange,jdbcType=VARCHAR},
+            STORAGE_ID = #{storageId,jdbcType=NUMERIC},
+            DESCRIPTION = #{description,jdbcType=CLOB},
             UPDATED_AT = SYSDATE
-        WHERE FOUND_ID = #{foundId}
-          AND USER_ID = #{userId}
+        WHERE FOUND_ID = #{foundId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </update>
 
@@ -467,16 +631,16 @@
         UPDATE FOUND_ITEMS
         SET STATUS = 'DELETED',
             UPDATED_AT = SYSDATE
-        WHERE FOUND_ID = #{foundId}
-          AND USER_ID = #{userId}
+        WHERE FOUND_ID = #{foundId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </update>
 
     <select id="countFoundItemByOwner" resultType="int">
         SELECT COUNT(*)
         FROM FOUND_ITEMS
-        WHERE FOUND_ID = #{foundId}
-          AND USER_ID = #{userId}
+        WHERE FOUND_ID = #{foundId,jdbcType=NUMERIC}
+          AND USER_ID = #{userId,jdbcType=NUMERIC}
           AND STATUS != 'DELETED'
     </select>
 

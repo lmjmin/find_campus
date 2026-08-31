@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 상세 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-page">
+    <header class="admin-header">
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+            <span>FindCampus Admin</span>
+        </a>
+        <div class="admin-header-right">
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-title">메뉴</div>
+            <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link active"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
+
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
+                </a>
+            </nav>
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <div class="page-title-wrap detail-title-row">
+                <div>
+                    <h1 class="page-title">사용자 상세</h1>
+                    <p class="page-desc">사용자 기본 정보와 계정 상태를 확인합니다.</p>
+                </div>
+                <a th:href="@{/admin/users}" class="action-btn detail-btn">목록으로</a>
+            </div>
+
+            <section class="panel report-detail-card">
+                <div class="panel-head">
+                    <h2 class="panel-title" th:text="${user.userName != null ? user.userName : '사용자'}">사용자</h2>
+                    <span class="status-badge"
+                          th:classappend="${user.status == 'SUSPENDED' ? ' suspended' : (user.status == 'PENDING' ? ' waiting' : ' active')}"
+                          th:text="${user.status == 'SUSPENDED' ? '정지' : (user.status == 'PENDING' ? '인증대기' : '정상')}">정상</span>
+                </div>
+
+                <div class="admin-info-list">
+                    <div><span>사용자 번호</span><strong th:text="${user.userId}">1</strong></div>
+                    <div><span>아이디</span><strong th:text="${user.loginId != null ? user.loginId : '-'}">-</strong></div>
+                    <div><span>이름</span><strong th:text="${user.userName != null ? user.userName : '-'}">-</strong></div>
+                    <div><span>학번</span><strong th:text="${user.studentNo != null ? user.studentNo : '-'}">-</strong></div>
+                    <div><span>전화번호</span><strong th:text="${user.phone != null and user.phone != '' ? user.phone : '-'}">-</strong></div>
+                    <div><span>권한</span><strong th:text="${user.role == 'ADMIN' ? '관리자' : '사용자'}">사용자</strong></div>
+                    <div><span>가입일</span><strong th:text="${user.createdAt != null ? #dates.format(user.createdAt, 'yyyy.MM.dd HH:mm') : '-'}">-</strong></div>
+                    <div><span>수정일</span><strong th:text="${user.updatedAt != null ? #dates.format(user.updatedAt, 'yyyy.MM.dd HH:mm') : '-'}">-</strong></div>
+                </div>
+            </section>
+
+            <section class="panel report-detail-card">
+                <div class="panel-head"><h2 class="panel-title">계정 조치</h2></div>
+                <div class="action-group report-detail-actions">
+                    <form th:if="${user.role != 'ADMIN' and user.status != 'SUSPENDED'}"
+                          th:action="@{/admin/users/status}" method="post"
+                          onsubmit="return confirm('이 사용자를 정지할까요?');">
+                        <input type="hidden" name="userId" th:value="${user.userId}">
+                        <input type="hidden" name="status" value="SUSPENDED">
+                        <button type="submit" class="action-btn stop-btn">계정 정지</button>
+                    </form>
+                    <form th:if="${user.role != 'ADMIN' and user.status == 'SUSPENDED'}"
+                          th:action="@{/admin/users/status}" method="post"
+                          onsubmit="return confirm('이 사용자의 정지를 해제할까요?');">
+                        <input type="hidden" name="userId" th:value="${user.userId}">
+                        <input type="hidden" name="status" value="ACTIVE">
+                        <button type="submit" class="action-btn restore-btn">정지 해제</button>
+                    </form>
+                    <span th:if="${user.role == 'ADMIN'}" class="admin-muted-note">관리자 계정은 이 화면에서 정지할 수 없습니다.</span>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+</body>
+</html>

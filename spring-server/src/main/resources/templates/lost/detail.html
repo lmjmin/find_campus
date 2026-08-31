@@ -24,7 +24,8 @@
 
             <div class="image-box">
                 <span class="type-badge">분실물</span>
-                <i class="fa-solid fa-briefcase main-item-icon"></i>
+                <img th:if="${item.imageUrl != null}" th:src="@{${item.imageUrl}}" alt="분실물 사진" class="detail-photo">
+                <i th:if="${item.imageUrl == null}" class="fa-solid fa-box-open main-item-icon"></i>
             </div>
 
             <div class="info-card">
@@ -36,7 +37,7 @@
 
                     <div class="info-text">
                         <strong>분실 위치</strong>
-                        <span>중앙도서관 2층 열람실 앞</span>
+                        <span th:text="${item.locationName != null ? item.locationName + ' ' + (item.locationDetail != null ? item.locationDetail : '') : (item.locationDetail != null ? item.locationDetail : '위치 미입력')}">위치 미입력</span>
                     </div>
                 </div>
 
@@ -47,7 +48,7 @@
 
                     <div class="info-text">
                         <strong>분실 시간</strong>
-                        <span>2026.05.19 오후 2:00 ~ 3:00</span>
+                        <span th:text="${(item.itemDate != null ? #dates.format(item.itemDate, 'yyyy.MM.dd') : '날짜 미입력') + (item.itemTime != null ? ' ' + item.itemTime : '') + (item.itemTimeRange != null ? ' ' + item.itemTimeRange : '')}">날짜 미입력</span>
                     </div>
                 </div>
 
@@ -58,7 +59,7 @@
 
                     <div class="info-text">
                         <strong>카테고리</strong>
-                        <span>가방 / 노트북 가방</span>
+                        <span th:text="${item.categoryName != null ? item.categoryName : '카테고리 미입력'}">카테고리 미입력</span>
                     </div>
                 </div>
 
@@ -69,15 +70,15 @@
 
                     <div class="info-text">
                         <strong>본인 확인 특징</strong>
-                        <span>검정색, 파란 키링, 내부 맥북 포함</span>
+                        <span th:text="${(item.color != null ? item.color : '색상 미입력') + (item.brand != null ? ' / ' + item.brand : '')}">색상 미입력</span>
                     </div>
                 </div>
 
                 <div class="tag-list">
-                    <span class="tag">#검정색</span>
-                    <span class="tag">#노트북가방</span>
-                    <span class="tag">#맥북 포함</span>
-                    <span class="tag">#파란 키링</span>
+                    <span class="tag" th:if="${item.categoryName != null}" th:text="|#${item.categoryName}|">#카테고리</span>
+                    <span class="tag" th:if="${item.color != null}" th:text="|#${item.color}|">#색상</span>
+                    <span class="tag" th:if="${item.brand != null}" th:text="|#${item.brand}|">#브랜드</span>
+                    <span class="tag" th:if="${item.locationName != null}" th:text="|#${item.locationName}|">#위치</span>
                 </div>
 
             </div>
@@ -86,24 +87,13 @@
 
         <div class="right-area">
 
-<<<<<<< HEAD
-<<<<<<< HEAD:src/main/resources/templates/lost/detail.html
-            <span class="status status-storage">보관중</span>
-=======
-            <span class="status status-storage" th:text="${item.status}">보관중</span>
-            <!-- 반환완료 상태로 보여야 하면 위 줄을 아래처럼 바꾸면 됨
-            <span class="status status-returned">반환완료</span>
-            -->
->>>>>>> main:spring-server/src/main/resources/templates/lost/detail.html
-=======
-            <span class="status status-storage" th:text="${item.status}">보관중</span>
->>>>>>> 9f5ad5743f569962b63111343b100020f1f29728
+            <span class="status"
+                  th:classappend="${item.status == 'RETURNED' ? ' status-returned' : (item.status == 'STORED' ? ' status-storage' : ' status-received')}"
+                  th:text="${item.status == 'REGISTERED' ? '접수중' : (item.status == 'STORED' ? '보관중' : (item.status == 'RETURNED' ? '반환완료' : item.status))}">접수중</span>
 
             <h1 class="title" th:text="${item.title}">검정 노트북 가방을 잃어버렸어요</h1>
 
-            <div class="date" th:text="${item.createdAt}">
-                2026년 5월 19일 오후 2:30 게시
-            </div>
+            <div class="date" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd HH:mm') + ' 게시' : ''}"></div>
 
             <div class="desc-card">
                 <div class="section-title">상세 설명</div>
@@ -120,8 +110,9 @@
             <div class="writer-card">
                 <div class="writer">
 
-                    <div class="avatar">
-                        김
+                    <div class="avatar"
+                         th:text="${item.writerName != null and not #strings.isEmpty(item.writerName) ? #strings.substring(item.writerName, 0, 1) : '?'}">
+                        ?
                     </div>
 
                     <div>
@@ -160,19 +151,9 @@
 
             </div>
 
-            <div class="warning-card">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-
-                <span>
-                    채팅 기능은 사용하지 않습니다.
-                    유사한 습득물이 있더라도 바로 수령할 수 없으며,
-                    본인 확인과 관리자 승인 절차를 거쳐야 합니다.
-                </span>
-            </div>
-
             <div class="button-area">
 
-                <a th:href="@{/found/list}" class="match-btn">
+                <a th:href="@{/recommend(targetType='lost', targetId=${lostId})}" class="match-btn">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     유사 습득물 확인하기
                 </a>

@@ -9,37 +9,433 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/mypage/setting/setting.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/mypage/setting/setting.css(v=${#dates.createNow().time})}">
+
+    <style>
+        .setting-page-container > .setting-top-profile {
+            width: 100% !important;
+            min-height: 210px !important;
+            margin: 0 0 28px !important;
+            padding: 38px 46px !important;
+            border-radius: 30px !important;
+            background: linear-gradient(135deg, #4f46e5, #1e3a8a) !important;
+            color: #ffffff !important;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.18) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 30px !important;
+            box-sizing: border-box !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-left {
+            display: flex !important;
+            align-items: center !important;
+            gap: 28px !important;
+            min-width: 0 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-avatar {
+            width: 92px !important;
+            height: 92px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 38px !important;
+            font-weight: 900 !important;
+            flex-shrink: 0 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-avatar span {
+            color: #ffffff !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-info h1 {
+            margin: 0 0 10px !important;
+            color: #ffffff !important;
+            font-size: 34px !important;
+            font-weight: 900 !important;
+            line-height: 1.25 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-info p,
+        .setting-page-container > .setting-top-profile .setting-profile-info span {
+            margin: 0 !important;
+            color: #dbeafe !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            line-height: 1.75 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-top-edit-btn {
+            height: 56px !important;
+            padding: 0 24px !important;
+            border-radius: 16px !important;
+            background: #ffffff !important;
+            color: #4f46e5 !important;
+            font-size: 15px !important;
+            font-weight: 900 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            flex-shrink: 0 !important;
+            text-decoration: none !important;
+        }
+
+        html.fc-theme-dark .setting-page-container > .setting-top-profile {
+            background: linear-gradient(135deg, #312e81, #111827) !important;
+            box-shadow: none !important;
+        }
+
+        @media (max-width: 760px) {
+            .setting-page-container > .setting-top-profile {
+                padding: 30px !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+
+            .setting-page-container > .setting-top-profile .setting-top-edit-btn {
+                width: 100% !important;
+            }
+        }
+    </style>
+<style>
+        .setting-page-container {
+            max-width: 1180px !important;
+            padding: 40px 24px 80px !important;
+        }
+
+        .setting-page-container > .setting-top-profile {
+            min-height: 0 !important;
+            margin: 0 0 28px !important;
+            padding: 38px !important;
+            border-radius: 30px !important;
+            gap: 30px !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-left {
+            gap: 22px !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-avatar {
+            width: 86px !important;
+            height: 86px !important;
+            font-size: 34px !important;
+            font-weight: 800 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-info h1 {
+            margin: 0 0 8px !important;
+            font-size: 30px !important;
+            font-weight: 900 !important;
+            line-height: 1.25 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-profile-info p,
+        .setting-page-container > .setting-top-profile .setting-profile-info span {
+            font-size: 15px !important;
+            line-height: 1.6 !important;
+            font-weight: 700 !important;
+        }
+
+        .setting-page-container > .setting-top-profile .setting-top-edit-btn {
+            height: 46px !important;
+            padding: 0 18px !important;
+            border-radius: 14px !important;
+            font-size: 14px !important;
+            font-weight: 800 !important;
+        }
+
+        .setting-container {
+            display: grid !important;
+            grid-template-columns: 320px 1fr !important;
+            gap: 28px !important;
+            align-items: start !important;
+        }
+
+        .side-area {
+            width: auto !important;
+        }
+
+        .side-menu {
+            border-radius: 24px !important;
+            padding: 16px !important;
+            background: #ffffff !important;
+            overflow: visible !important;
+        }
+
+        .side-link {
+            min-height: 78px !important;
+            padding: 18px !important;
+            border: 0 !important;
+            border-radius: 18px !important;
+            gap: 14px !important;
+        }
+
+        .side-link + .side-link {
+            margin-top: 8px !important;
+        }
+
+        .side-link.active,
+        .side-link:hover {
+            background: #eef2ff !important;
+        }
+
+        .side-icon {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 14px !important;
+            font-size: 16px !important;
+        }
+
+        .side-text strong {
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            margin-bottom: 4px !important;
+        }
+
+        .side-text span {
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+        }
+
+        .side-area > .logout-btn {
+            height: 54px !important;
+            margin-top: 16px !important;
+            border-radius: 18px !important;
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            background: #f9e1e1 !important;
+            color: #dc2626 !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+        }
+
+        .content {
+            padding-top: 0 !important;
+        }
+
+        .setting-section h2 {
+            margin: 0 0 18px !important;
+            font-size: 24px !important;
+            font-weight: 900 !important;
+            line-height: 1.25 !important;
+        }
+
+        .setting-card {
+            border-radius: 24px !important;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+        }
+
+        .setting-row {
+            min-height: 78px !important;
+            padding: 0 24px !important;
+            gap: 16px !important;
+        }
+
+        .setting-left {
+            gap: 14px !important;
+        }
+
+        .setting-icon {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 14px !important;
+            font-size: 16px !important;
+        }
+
+        .setting-text strong {
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            margin-bottom: 4px !important;
+        }
+
+        .setting-text span {
+            font-size: 13px !important;
+            line-height: 1.4 !important;
+        }
+
+        @media (max-width: 900px) {
+            .setting-container {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+<!-- codex-v117-setting-left-card-start -->
+    <style>
+        .setting-page-container .setting-container .side-area {
+            width: 320px !important;
+            background: #ffffff !important;
+            border-radius: 24px !important;
+            padding: 16px !important;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .setting-page-container .setting-container .side-menu {
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            overflow: visible !important;
+        }
+
+        .setting-page-container .setting-container .side-link {
+            min-height: 76px !important;
+            margin: 0 0 8px !important;
+            padding: 16px 18px !important;
+            border-radius: 18px !important;
+            border: 0 !important;
+            background: transparent !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 14px !important;
+        }
+
+        .setting-page-container .setting-container .side-link:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .setting-page-container .setting-container .side-link.active,
+        .setting-page-container .setting-container .side-link:hover {
+            background: #eef2ff !important;
+        }
+
+        .setting-page-container .setting-container .side-left {
+            display: flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+            min-width: 0 !important;
+        }
+
+        .setting-page-container .setting-container .side-icon {
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
+            border-radius: 14px !important;
+            background: #f5f6fb !important;
+            color: #5b5ff0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+        }
+
+        .setting-page-container .setting-container .side-text strong {
+            display: block !important;
+            margin: 0 0 5px !important;
+            color: #111827 !important;
+            font-size: 16px !important;
+            font-weight: 900 !important;
+            line-height: 1.2 !important;
+        }
+
+        .setting-page-container .setting-container .side-text span {
+            display: block !important;
+            color: #6b7280 !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            line-height: 1.35 !important;
+        }
+
+        .setting-page-container .setting-container .side-link > i.fa-chevron-right {
+            color: #111827 !important;
+            font-size: 18px !important;
+            line-height: 1 !important;
+            opacity: 0.92 !important;
+        }
+
+        .setting-page-container .setting-container .side-area > .logout-btn {
+            width: 100% !important;
+            height: 56px !important;
+            min-height: 56px !important;
+            margin: 18px 0 0 !important;
+            padding: 0 !important;
+            border-radius: 18px !important;
+            background: #f9e1e1 !important;
+            color: #dc2626 !important;
+            box-shadow: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            font-size: 16px !important;
+            font-weight: 900 !important;
+            text-decoration: none !important;
+        }
+
+        .setting-page-container .setting-container .side-area > .logout-btn:hover {
+            background: #f7d6d6 !important;
+            transform: none !important;
+        }
+
+        html.fc-theme-dark .setting-page-container .setting-container .side-area {
+            background: #111827 !important;
+            box-shadow: none !important;
+        }
+
+        html.fc-theme-dark .setting-page-container .setting-container .side-link.active,
+        html.fc-theme-dark .setting-page-container .setting-container .side-link:hover {
+            background: #1f2937 !important;
+        }
+
+        html.fc-theme-dark .setting-page-container .setting-container .side-text strong,
+        html.fc-theme-dark .setting-page-container .setting-container .side-link > i.fa-chevron-right {
+            color: #f9fafb !important;
+        }
+
+        html.fc-theme-dark .setting-page-container .setting-container .side-text span {
+            color: #cbd5e1 !important;
+        }
+
+        @media (max-width: 900px) {
+            .setting-page-container .setting-container .side-area {
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container setting-container">
+<div class="container setting-page-container">
 
-    <aside class="side-area">
-
-        <div class="profile-card setting-profile-card">
-
-            <div class="profile-avatar">
-                김
+    <section class="setting-top-profile">
+        <div class="setting-profile-left">
+            <div class="setting-profile-avatar">
+                <span th:text="${loginUser != null and loginUser.userName != null and not #strings.isEmpty(loginUser.userName) ? #strings.substring(loginUser.userName, 0, 1) : '?'}">?</span>
             </div>
 
-            <h2>김동명</h2>
-
-            <p>
-                tongmyong@tu.ac.kr<br>
-                동명대학교 컴퓨터공학과
-            </p>
-
-            <a th:href="@{/mypage/edit}" class="edit-profile-btn">
-                <i class="fa-solid fa-pen"></i>
-                정보 수정
-            </a>
-
+            <div class="setting-profile-info">
+                <h1 th:text="${loginUser != null ? loginUser.userName : '사용자'}">사용자</h1>
+                <p>
+                    <span th:text="${loginUser != null ? loginUser.email : ''}">email</span><br>
+                    <span th:text="${loginUser != null and loginUser.studentNo != null ? '학번 ' + loginUser.studentNo : '동명대학교 사용자'}">동명대학교 사용자</span>
+                </p>
+            </div>
         </div>
+
+        <a th:href="@{/mypage/edit}" class="setting-top-edit-btn">
+            <i class="fa-solid fa-pen"></i>
+            정보 수정
+        </a>
+    </section>
+
+    <div class="setting-container">
+
+    <aside class="side-area">
 
         <div class="side-menu">
 
@@ -88,21 +484,6 @@
                 <i class="fa-solid fa-chevron-right"></i>
             </a>
 
-            <a th:href="@{/mypage/setting/privacy}" class="side-link">
-                <div class="side-left">
-                    <div class="side-icon">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-
-                    <div class="side-text">
-                        <strong>개인정보 보호</strong>
-                        <span>개인정보 처리방침 확인</span>
-                    </div>
-                </div>
-
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
-
             <a th:href="@{/mypage/setting}" class="side-link active">
                 <div class="side-left">
                     <div class="side-icon">
@@ -120,7 +501,7 @@
 
         </div>
 
-        <a href="#" class="logout-btn">
+        <a th:href="@{/logout}" href="/logout" class="logout-btn">
             <i class="fa-solid fa-right-from-bracket"></i>
             로그아웃
         </a>
@@ -128,11 +509,6 @@
     </aside>
 
     <main class="content">
-
-        <div class="page-title setting-page-title">
-            <h1>설정</h1>
-            <p>앱 환경과 서비스 이용 설정을 관리할 수 있습니다.</p>
-        </div>
 
         <section class="section setting-section">
 
@@ -240,21 +616,6 @@
                     <i class="fa-solid fa-chevron-right arrow"></i>
                 </a>
 
-                <a th:href="@{/report}" class="setting-row">
-                    <div class="setting-left">
-                        <div class="setting-icon red">
-                            <i class="fa-regular fa-flag"></i>
-                        </div>
-
-                        <div class="setting-text">
-                            <strong>신고하기</strong>
-                            <span>허위 게시글, 개인정보 노출, 부적절한 내용을 신고합니다.</span>
-                        </div>
-                    </div>
-
-                    <i class="fa-solid fa-chevron-right arrow"></i>
-                </a>
-
             </div>
 
         </section>
@@ -315,6 +676,8 @@
         </section>
 
     </main>
+
+    </div>
 
 </div>
 

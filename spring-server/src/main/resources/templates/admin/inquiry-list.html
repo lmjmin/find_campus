@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>&#47928;&#51032; &#44288;&#47532; | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-page">
+    <header class="admin-header">
+        <a th:href="@{/admin/dashboard}" class="admin-logo"><span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span><span>FindCampus Admin</span></a>
+        <div class="admin-header-right"><span><i class="fa-regular fa-user"></i> &#44288;&#47532;&#51088;</span><a th:href="@{/admin/login}" class="logout-btn">&#47196;&#44536;&#50500;&#50883;</a></div>
+    </header>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-title">&#47700;&#45684;</div>
+            <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>&#45824;&#49884;&#48372;&#46300;</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>&#49324;&#50857;&#51088; &#44288;&#47532;</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>&#48516;&#49892;&#47932; &#44288;&#47532;</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>&#49845;&#46301;&#47932; &#44288;&#47532;</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>&#48372;&#44288; &#51109;&#49548; &#44288;&#47532;</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>&#50948;&#52824; &#44288;&#47532;</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>&#52852;&#53580;&#44256;&#47532; &#44288;&#47532;</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>&#49888;&#44256; &#44288;&#47532;</a>
+                <a th:href="@{/admin/inquiries}" class="side-link active"><i class="fa-solid fa-headset"></i>&#47928;&#51032; &#44288;&#47532;</a>
+
+                <a th:href="@{/admin/notifications}" class="side-link">
+                    <i class="fa-regular fa-bell"></i>
+                    알림 관리
+                </a>
+            </nav>
+            <div class="admin-user-link-box"><a th:href="@{/}" href="/" class="admin-user-link"><i class="fa-solid fa-house"></i><span>&#49324;&#50857;&#51088; &#54168;&#51060;&#51648;&#47196; &#51060;&#46041;</span></a></div>
+        </aside>
+        <main class="admin-content">
+            <div class="page-title-wrap"><h1 class="page-title">&#47928;&#51032; &#44288;&#47532;</h1><p class="page-desc">&#49324;&#50857;&#51088; &#47928;&#51032;&#47484; &#54869;&#51064;&#54616;&#44256; &#45813;&#48320;&#51012; &#45224;&#44641;&#45768;&#45796;.</p></div>
+            <div class="admin-alert success" th:if="${message != null}" th:text="${message}"></div>
+            <div class="admin-alert error" th:if="${error != null}" th:text="${error}"></div>
+            <section class="summary-grid inquiry-summary-grid">
+                <div class="summary-card"><div class="summary-top"><div class="summary-label">&#51204;&#52404; &#47928;&#51032;</div><div class="summary-icon total"><i class="fa-solid fa-headset"></i></div></div><div class="summary-count" th:text="${totalCount}">0</div><div class="summary-sub">&#51217;&#49688;&#46108; &#51204;&#52404; &#47928;&#51032;</div></div>
+                <div class="summary-card"><div class="summary-top"><div class="summary-label">&#45813;&#48320; &#45824;&#44592;</div><div class="summary-icon waiting"><i class="fa-solid fa-clock"></i></div></div><div class="summary-count" th:text="${waitingCount}">0</div><div class="summary-sub">&#44288;&#47532;&#51088; &#45813;&#48320; &#54596;&#50836;</div></div>
+                <div class="summary-card"><div class="summary-top"><div class="summary-label">&#45813;&#48320; &#50756;&#47308;</div><div class="summary-icon done"><i class="fa-solid fa-circle-check"></i></div></div><div class="summary-count" th:text="${answeredCount}">0</div><div class="summary-sub">&#49324;&#50857;&#51088;&#50640;&#44172; &#45813;&#48320;&#51060; &#48372;&#51077;&#45768;&#45796;</div></div>
+            </section>
+            <section class="filter-panel"><form class="filter-row" th:action="@{/admin/inquiries}" method="get"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input type="text" name="keyword" th:value="${search.keyword}" placeholder="&#51228;&#47785;, &#45236;&#50857;, &#51089;&#49457;&#51088;&#47196; &#44160;&#49353;"></div><div class="filter-actions"><select class="filter-select" name="status"><option value="" th:selected="${search.status == null or search.status == ''}">&#49345;&#53468; &#51204;&#52404;</option><option value="WAITING" th:selected="${search.status == 'WAITING'}">&#45813;&#48320; &#45824;&#44592;</option><option value="ANSWERED" th:selected="${search.status == 'ANSWERED'}">&#45813;&#48320; &#50756;&#47308;</option></select><button type="submit" class="search-btn">&#44160;&#49353;</button></div></form></section>
+            <section class="table-panel"><div class="table-head"><h2 class="table-title">&#47928;&#51032; &#47785;&#47197;</h2><div class="table-count" th:text="|&#52509; ${totalCount}&#44148;|">&#52509; 0&#44148;</div></div><table class="inquiry-table"><thead><tr><th>&#48264;&#54840;</th><th>&#50976;&#54805;</th><th>&#47928;&#51032;</th><th>&#51089;&#49457;&#51088;</th><th>&#51217;&#49688;&#51068;</th><th>&#49345;&#53468;</th><th>&#44288;&#47532;</th></tr></thead><tbody><tr th:if="${#lists.isEmpty(inquiries)}"><td colspan="7" class="empty-cell">&#51217;&#49688;&#46108; &#47928;&#51032;&#44032; &#50630;&#49845;&#45768;&#45796;.</td></tr><tr th:each="inquiry, stat : ${inquiries}" class="clickable-row" th:attr="data-href=@{/admin/inquiries/{id}(id=${inquiry.inquiryId})}"><td th:text="${stat.count}">1</td><td><span class="type-badge etc" th:if="${inquiry.inquiryType == 'lost'}">&#48516;&#49892;&#47932;</span><span class="type-badge etc" th:if="${inquiry.inquiryType == 'found'}">&#49845;&#46301;&#47932;</span><span class="type-badge etc" th:if="${inquiry.inquiryType == 'match'}">&#52628;&#52380;</span><span class="type-badge etc" th:if="${inquiry.inquiryType == 'report'}">&#49888;&#44256;</span><span class="type-badge etc" th:if="${inquiry.inquiryType != 'lost' and inquiry.inquiryType != 'found' and inquiry.inquiryType != 'match' and inquiry.inquiryType != 'report'}">&#44592;&#53440;</span></td><td><div class="report-title" th:text="${inquiry.title}">&#47928;&#51032; &#51228;&#47785;</div><div class="report-desc inquiry-content-preview" th:text="${inquiry.content}">&#47928;&#51032; &#45236;&#50857;</div></td><td><div class="user-name" th:text="${inquiry.userName != null ? inquiry.userName : '&#48708;&#54924;&#50896;'}">&#51089;&#49457;&#51088;</div><div class="user-id" th:text="${inquiry.studentNo != null ? inquiry.studentNo : inquiry.loginId}">&#54617;&#48264;</div></td><td th:text="${#dates.format(inquiry.createdAt, 'yyyy.MM.dd')}">2026.08.11</td><td><span class="status-badge waiting" th:if="${inquiry.status == null or inquiry.status == 'WAITING'}">&#45813;&#48320; &#45824;&#44592;</span><span class="status-badge answered" th:if="${inquiry.status == 'ANSWERED'}">&#45813;&#48320; &#50756;&#47308;</span></td><td><a class="action-btn detail-btn" th:href="@{/admin/inquiries/{id}(id=${inquiry.inquiryId})}">&#49345;&#49464; &#54869;&#51064;</a></td></tr></tbody></table></section>
+        </main>
+    </div>
+</div>
+<script>
+document.addEventListener("click", function(event) {
+    const row = event.target.closest(".clickable-row");
+    if (!row || event.target.closest("a, button, form, input, select")) return;
+    const href = row.getAttribute("data-href");
+    if (href) window.location.href = href;
+});
+</script>
+</body>
+</html>

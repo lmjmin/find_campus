@@ -44,10 +44,13 @@ public class ItemController {
             return "redirect:/lost/detail/" + lostId;
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("formData", dto);
+            redirectAttributes.addFlashAttribute("errorField", resolveLostErrorField(e.getMessage()));
             return "redirect:/lost/write";
         } catch (Exception e) {
             log.error("Failed to create lost item", e);
-            redirectAttributes.addFlashAttribute("error", "분실물을 등록하지 못했습니다. 입력값과 위치/카테고리 데이터를 확인해 주세요.");
+            redirectAttributes.addFlashAttribute("error", "분실물을 등록하지 못했습니다. 원인: " + rootCauseMessage(e));
+            redirectAttributes.addFlashAttribute("formData", dto);
             return "redirect:/lost/write";
         }
     }
@@ -89,7 +92,7 @@ public class ItemController {
         try {
             itemService.deleteLostItem(lostId, userId);
             redirectAttributes.addFlashAttribute("message", "분실물이 삭제되었습니다.");
-            return "redirect:/lost/list";
+            return "redirect:/mypage";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/lost/detail/" + lostId;
@@ -112,10 +115,13 @@ public class ItemController {
             return "redirect:/found/detail/" + foundId;
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("formData", dto);
+            redirectAttributes.addFlashAttribute("errorField", resolveFoundErrorField(e.getMessage()));
             return "redirect:/found/write";
         } catch (Exception e) {
             log.error("Failed to create found item", e);
             redirectAttributes.addFlashAttribute("error", "습득물을 등록하지 못했습니다. 입력값과 위치/보관장소 데이터를 확인해 주세요.");
+            redirectAttributes.addFlashAttribute("formData", dto);
             return "redirect:/found/write";
         }
     }
@@ -157,7 +163,7 @@ public class ItemController {
         try {
             itemService.deleteFoundItem(foundId, userId);
             redirectAttributes.addFlashAttribute("message", "습득물이 삭제되었습니다.");
-            return "redirect:/found/list";
+            return "redirect:/mypage";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/found/detail/" + foundId;
@@ -179,11 +185,13 @@ public class ItemController {
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/report/write";
+            redirectAttributes.addFlashAttribute("report", dto);
+            return buildReportRedirect(dto);
         } catch (Exception e) {
             log.error("Failed to create report", e);
             redirectAttributes.addFlashAttribute("error", "신고를 접수하지 못했습니다.");
-            return "redirect:/report/write";
+            redirectAttributes.addFlashAttribute("report", dto);
+            return buildReportRedirect(dto);
         }
     }
 
@@ -219,5 +227,46 @@ public class ItemController {
             return Long.valueOf(userId);
         }
         return null;
+    }
+
+    private String resolveLostErrorField(String message) {
+        if (message == null) {
+            return "";
+        }
+        if (message.contains("제목")) return "title";
+        if (message.contains("물건명")) return "itemName";
+        if (message.contains("카테고리")) return "categoryId";
+        if (message.contains("상세 설명")) return "description";
+        if (message.contains("분실 위치")) return "lostLocationId";
+        return "";
+    }
+
+    private String resolveFoundErrorField(String message) {
+        if (message == null) {
+            return "";
+        }
+        if (message.contains("제목")) return "title";
+        if (message.contains("물건명")) return "itemName";
+        if (message.contains("카테고리")) return "categoryId";
+        if (message.contains("습득 위치")) return "foundLocationId";
+        if (message.contains("습득 날짜")) return "foundDate";
+        if (message.contains("보관 장소")) return "storageId";
+        return "";
+    }
+
+    private String rootCauseMessage(Exception e) {
+        Throwable cause = e;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        String message = cause.getMessage();
+        return message != null && !message.isBlank() ? message : "서버 로그를 확인해 주세요.";
+    }
+
+    private String buildReportRedirect(ReportDto dto) {
+        if (dto != null && dto.getTargetType() != null && dto.getTargetId() != null) {
+            return "redirect:/report/write?type=" + dto.getTargetType() + "&id=" + dto.getTargetId() + "#reasonSection";
+        }
+        return "redirect:/report/write";
     }
 }

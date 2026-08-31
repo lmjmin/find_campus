@@ -1,194 +1,340 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
     <meta charset="UTF-8">
-    <title>알림 | FindCampus</title>
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <title>&#50508;&#47548; | FindCampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/mypage.css}">
-
+        <style>
+        body { background: #f5f7fb; }
+        .notification-container {
+            max-width: 1120px;
+            padding: 28px 24px 76px;
+        }
+        .notification-page-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 8px 0 22px;
+        }
+        .notification-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .notification-page-title {
+            font-size: 30px;
+            font-weight: 900;
+            color: #111827;
+            letter-spacing: 0;
+        }
+        .notification-back {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #111827;
+            box-shadow: 0 12px 26px rgba(15, 23, 42, .08);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .read-all-button {
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 18px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(79, 70, 229, .08);
+        }
+        .notification-summary {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 22px;
+            padding: 24px 28px;
+            border-radius: 24px;
+            background: #ffffff;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, .08);
+            margin-bottom: 24px;
+            border: 1px solid #eef1f7;
+        }
+        .summary-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .summary-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            background: #eef2ff;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        .summary-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #111827;
+        }
+        .summary-desc {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.55;
+        }
+        .summary-count {
+            min-width: 118px;
+            min-height: 82px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+            color: #4f46e5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            border: 1px solid #e5e7ff;
+        }
+        .summary-count strong {
+            font-size: 30px;
+            line-height: 1;
+        }
+        .summary-count span {
+            margin-top: 7px;
+            font-size: 13px;
+        }
+        .notify-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .notify-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 54px 1fr auto;
+            align-items: center;
+            gap: 18px;
+            padding: 22px 24px;
+            border-radius: 22px;
+            background: #ffffff;
+            border: 1px solid #e6eaf2;
+            box-shadow: 0 12px 26px rgba(15, 23, 42, .05);
+        }
+        .notify-card.unread {
+            border-color: #c7d2fe;
+            background: linear-gradient(90deg, #f7f8ff 0%, #ffffff 60%);
+            box-shadow: 0 16px 34px rgba(79, 70, 229, .10);
+        }
+        .notify-card.unread::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 18px;
+            bottom: 18px;
+            width: 5px;
+            border-radius: 0 999px 999px 0;
+            background: #4f46e5;
+        }
+        .notify-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-size: 20px;
+        }
+        .notify-card.unread .notify-icon {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .notify-icon.inquiry { background: #eef2ff; color: #4f46e5; }
+        .notify-icon.ai { background: #f5f3ff; color: #7c3aed; }
+        .notify-icon.report { background: #fef2f2; color: #d84f49; }
+        .notify-icon.system { background: #eef2ff; color: #4f46e5; }
+        .notify-main { min-width: 0; }
+        .notify-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .notify-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #111827;
+        }
+        .unread-dot {
+            min-width: 46px;
+            height: 24px;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: #4f46e5;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .unread-dot::after { content: "새 알림"; }
+        .notify-text {
+            margin-top: 7px;
+            color: #4b5563;
+            line-height: 1.55;
+        }
+        .notify-meta {
+            margin-top: 10px;
+            color: #8f98aa;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .notify-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .notify-action a,
+        .notify-action button {
+            border: 0;
+            border-radius: 14px;
+            padding: 11px 15px;
+            font-weight: 900;
+            text-decoration: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .notify-action a {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .notify-action button {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        .empty-notification {
+            padding: 54px 24px;
+            border-radius: 24px;
+            background: #fff;
+            text-align: center;
+            color: #6b7280;
+            border: 1px dashed #d1d5db;
+        }
+        .empty-notification i {
+            display: block;
+            font-size: 34px;
+            color: #a5b4fc;
+            margin-bottom: 14px;
+        }
+        html.fc-theme-dark .notification-summary,
+        html.fc-theme-dark .notify-card,
+        html.fc-theme-dark .empty-notification {
+            background: #172033;
+            border-color: #2b3448;
+            color: #e5e7eb;
+        }
+        html.fc-theme-dark .notification-page-title,
+        html.fc-theme-dark .summary-title,
+        html.fc-theme-dark .notify-title {
+            color: #f8fafc;
+        }
+        html.fc-theme-dark .summary-desc,
+        html.fc-theme-dark .notify-text {
+            color: #cbd5e1;
+        }
+        @media (max-width: 720px) {
+            .notification-container { padding: 20px 16px 64px; }
+            .notification-page-head,
+            .notification-summary {
+                align-items: flex-start;
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+            .notify-card {
+                grid-template-columns: 48px 1fr;
+            }
+            .notify-action {
+                grid-column: 1 / -1;
+                justify-content: flex-end;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container notification-container">
-
-    <div class="page-head notification-page-head">
-
-        <div class="page-title notification-page-title">
-            알림
+<main class="container notification-container">
+    <div class="notification-page-head">
+        <div class="notification-title-wrap">
+            <a th:href="@{/mypage}" class="notification-back" aria-label="&#47560;&#51060;&#54168;&#51060;&#51648;&#47196; &#46028;&#50500;&#44032;&#44592;">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <h1 class="notification-page-title">&#50508;&#47548;</h1>
         </div>
-
-        <a href="#" class="read-all">
-            모두 읽음
-        </a>
-
+        <form th:if="${notifications != null and !notifications.isEmpty()}" th:action="@{/notification/read-all}" method="post">
+            <button type="submit" class="read-all-button">&#47784;&#46160; &#51069;&#51020; &#52376;&#47532;</button>
+        </form>
     </div>
 
-    <div class="summary">
-
-        <div class="summary-icon">
-            <i class="fa-regular fa-bell"></i>
+    <section class="notification-summary">
+        <div class="summary-left">
+            <div class="summary-icon"><i class="fa-regular fa-bell"></i></div>
+            <div>
+                <div class="summary-title">&#49352; &#50508;&#47548;&#51012; &#54869;&#51064;&#54644; &#51452;&#49464;&#50836;</div>
+                <div class="summary-desc">&#47928;&#51032; &#45813;&#48320;, &#49888;&#44256; &#52376;&#47532;, &#50976;&#49324; &#47932;&#44148; &#50504;&#45236;&#47484; &#54620; &#44275;&#50640;&#49436; &#48380; &#49688; &#51080;&#49845;&#45768;&#45796;.</div>
+            </div>
         </div>
-
-        <div>
-
-            <div class="summary-title">
-                읽지 않은 알림 3개
-            </div>
-
-            <div class="summary-desc">
-                새로운 알림을 확인하세요
-            </div>
-
+        <div class="summary-count">
+            <strong th:text="${unreadCount ?: 0}">0</strong>
+            <span>&#50504; &#51069;&#51008; &#50508;&#47548;</span>
         </div>
+    </section>
 
-    </div>
-
-    <div class="notify-list">
-
-        <div class="notify-card">
-
-            <div class="notify-icon ai">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
+    <section class="notify-list" th:if="${notifications != null and !notifications.isEmpty()}">
+        <article class="notify-card" th:each="item : ${notifications}" th:classappend="${item.readYn == 'N'} ? ' unread' : ''">
+            <div class="notify-icon" th:classappend="${item.notificationType == 'INQUIRY_ANSWER'} ? ' inquiry' : (${item.notificationType == 'AI_MATCH'} ? ' ai' : (${item.notificationType == 'REPORT'} ? ' report' : ' system'))">
+                <i class="fa-solid" th:classappend="${item.notificationType == 'INQUIRY_ANSWER'} ? ' fa-headset' : (${item.notificationType == 'AI_MATCH'} ? ' fa-wand-magic-sparkles' : (${item.notificationType == 'REPORT'} ? ' fa-flag' : ' fa-bell'))"></i>
             </div>
-
-            <div class="notify-content">
-
-                <div class="notify-title">
-                    AI 매칭 알림
+            <div class="notify-main">
+                <div class="notify-title-row">
+                    <div class="notify-title" th:text="${item.title}">&#50508;&#47548;</div>
+                    <span class="unread-dot" th:if="${item.readYn == 'N'}"></span>
                 </div>
-
-                <div class="notify-text">
-                    검정 노트북 가방과 유사도 94%의 습득물이 발견되었습니다.
-                </div>
-
-                <div class="notify-meta">
-                    방금
-                    <div class="dot"></div>
-                </div>
-
+                <div class="notify-text" th:text="${item.message}">&#50508;&#47548; &#45236;&#50857;</div>
+                <div class="notify-meta" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy.MM.dd HH:mm') : ''}">2026.08.23 12:00</div>
             </div>
-
-        </div>
-
-        <div class="notify-card">
-
-            <div class="notify-icon claim">
-                <i class="fa-solid fa-hand-holding-heart"></i>
+            <div class="notify-action">
+                <form th:if="${item.readYn == 'N'}" th:action="@{/notification/{id}/read(id=${item.notificationId}, targetType=${item.targetType})}" method="post">
+                    <button type="submit">&#51069;&#51020;</button>
+                </form>
+                <a th:if="${item.targetType == 'inquiry'}" th:href="@{/mypage/setting/inquiry#inquiryHistory}">답변 확인</a>
+                <a th:if="${item.targetType == 'lost'}" th:href="@{/lost/detail/{id}(id=${item.targetId})}">게시글 보기</a>
+                <a th:if="${item.targetType == 'found'}" th:href="@{/found/detail/{id}(id=${item.targetId})}">게시글 보기</a>
+                <a th:if="${item.targetType == 'claim'}" th:href="@{/admin/notifications}">신청 확인</a>
+                <a th:if="${item.targetType == 'report'}" th:href="@{/notification}">처리 결과</a>
             </div>
+        </article>
+    </section>
 
-            <div class="notify-content">
-
-                <div class="notify-title">
-                    수령 신청 접수
-                </div>
-
-                <div class="notify-text">
-                    내가 등록한 습득물에 대해 수령 신청이 접수되었습니다. 관리자 확인 후 처리됩니다.
-                </div>
-
-                <div class="notify-meta">
-                    10분 전
-                    <div class="dot"></div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="notify-card">
-
-            <div class="notify-icon storage">
-                <i class="fa-solid fa-building-columns"></i>
-            </div>
-
-            <div class="notify-content">
-
-                <div class="notify-title">
-                    보관 장소 안내
-                </div>
-
-                <div class="notify-text">
-                    에어팟 프로가 학생장학봉사팀 분실물 센터에 보관 중입니다.
-                </div>
-
-                <div class="notify-meta">
-                    30분 전
-                    <div class="dot"></div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="notify-card">
-
-            <div class="notify-icon done">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-
-            <div class="notify-content">
-
-                <div class="notify-title">
-                    반환 완료
-                </div>
-
-                <div class="notify-text">
-                    분실물이 반환 완료 처리되었습니다.
-                </div>
-
-                <div class="notify-meta">
-                    1시간 전
-                    <div class="dot"></div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="notify-card">
-
-            <div class="notify-icon notice">
-                <i class="fa-solid fa-circle-info"></i>
-            </div>
-
-            <div class="notify-content">
-
-                <div class="notify-title">
-                    서비스 공지
-                </div>
-
-                <div class="notify-text">
-                    5월 20일 서버 점검 예정입니다.
-                </div>
-
-                <div class="notify-meta">
-                    어제
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="bottom">
-        최근 7일간 알림이 표시됩니다
-    </div>
-
-</div>
-
+    <section class="empty-notification" th:if="${notifications == null or notifications.isEmpty()}">
+        <i class="fa-regular fa-bell"></i>
+        <strong>&#50500;&#51649; &#50508;&#47548;&#51060; &#50630;&#49845;&#45768;&#45796;.</strong>
+        <p>&#47928;&#51032; &#45813;&#48320;&#51060;&#45208; &#49436;&#48708;&#49828; &#50504;&#45236;&#44032; &#51080;&#51012; &#46412; &#50668;&#44592;&#50640; &#54364;&#49884;&#46121;&#45768;&#45796;.</p>
+    </section>
+</main>
 </body>
-
 </html>

@@ -21,4 +21,5 @@ public class MapItemDto {
     private Double latitude;
     private Double longitude;
     private String detailUrl;
+    private String imageUrl;
 }

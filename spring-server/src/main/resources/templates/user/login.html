@@ -35,18 +35,18 @@
 
     <div class="right-section">
         <div class="form-title">로그인</div>
-        <div class="form-subtitle">학번 또는 학교 이메일로 로그인하세요.</div>
+        <div class="form-subtitle">학번으로 로그인하세요.</div>
 
         <form id="loginForm">
             <div class="input-group">
-                <label>학번 또는 학교 이메일</label>
+                <label>학번</label>
                 <div class="input-box">
                     <i class="fa-solid fa-user"></i>
                     <input type="text"
                            id="loginId"
                            name="loginId"
                            autocomplete="username"
-                           placeholder="예: 23120030 또는 tongmyong@tu.ac.kr">
+                           placeholder="학번을 입력하세요">
                 </div>
             </div>
 
@@ -74,10 +74,9 @@
         <div class="divider">또는</div>
 
         <button type="button"
-                class="school-login"
-                onclick="document.getElementById('loginId').focus();">
+                class="school-login">
             <i class="fa-solid fa-building-columns"></i>
-            동명대학교 계정으로 로그인
+            동명대 전자출결로 로그인
         </button>
 
         <div class="bottom-text">
@@ -106,7 +105,7 @@
         loginError.textContent = "";
 
         if (!loginId) {
-            showLoginError("학번 또는 이메일을 입력해 주세요.");
+            showLoginError("학번을 입력해 주세요.");
             return;
         }
         if (!password) {

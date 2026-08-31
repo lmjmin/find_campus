@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수령 신청 관리 | FindCampus Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-page">
+    <header class="admin-header">
+        <a th:href="@{/admin/dashboard}" class="admin-logo">
+            <span class="admin-logo-icon"><i class="fa-solid fa-magnifying-glass-location"></i></span>
+            <span>FindCampus Admin</span>
+        </a>
+        <div class="admin-header-right">
+            <span><i class="fa-regular fa-user"></i> 관리자</span>
+            <a th:href="@{/admin/login}" class="logout-btn">로그아웃</a>
+        </div>
+    </header>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-title">메뉴</div>
+            <nav class="side-menu">
+                <a th:href="@{/admin/dashboard}" class="side-link"><i class="fa-solid fa-chart-line"></i>대시보드</a>
+                <a th:href="@{/admin/users}" class="side-link"><i class="fa-solid fa-users"></i>사용자 관리</a>
+                <a th:href="@{/admin/lost}" class="side-link"><i class="fa-solid fa-circle-question"></i>분실물 관리</a>
+                <a th:href="@{/admin/found}" class="side-link"><i class="fa-solid fa-box-open"></i>습득물 관리</a>
+                <a th:href="@{/admin/storage}" class="side-link"><i class="fa-solid fa-warehouse"></i>보관 장소 관리</a>
+                <a th:href="@{/admin/locations}" class="side-link"><i class="fa-solid fa-location-dot"></i>위치 관리</a>
+                <a th:href="@{/admin/categories}" class="side-link"><i class="fa-solid fa-tags"></i>카테고리 관리</a>
+                <a th:href="@{/admin/reports}" class="side-link"><i class="fa-solid fa-triangle-exclamation"></i>신고 관리</a>
+                <a th:href="@{/admin/inquiries}" class="side-link"><i class="fa-solid fa-headset"></i>문의 관리</a>
+                <a th:href="@{/admin/notifications}" class="side-link"><i class="fa-regular fa-bell"></i>알림 관리</a>
+            </nav>
+            <div class="admin-user-link-box">
+                <a th:href="@{/}" href="/" class="admin-user-link" onclick="window.location.href='/'; return false;">
+                    <i class="fa-solid fa-house"></i><span>사용자 페이지로 이동</span>
+                </a>
+            </div>
+        </aside>
+        <main class="admin-content">
+            <div th:if="${message}" class="admin-alert success" th:text="${message}"></div>
+            <div th:if="${error}" class="admin-alert error" th:text="${error}"></div>
+            <div class="page-title-wrap">
+                <h1 class="page-title">수령 신청 관리</h1>
+                <p class="page-desc">사용자가 습득물 수령을 요청한 내역을 확인하고 처리합니다.</p>
+            </div>
+            <section class="summary-grid">
+                <div class="summary-card"><div class="summary-label">전체</div><div class="summary-count"><span th:text="${totalCount}">0</span><span>건</span></div></div>
+                <div class="summary-card"><div class="summary-label">처리 대기</div><div class="summary-count"><span th:text="${waitingCount}">0</span><span>건</span></div></div>
+                <div class="summary-card"><div class="summary-label">승인</div><div class="summary-count"><span th:text="${approvedCount}">0</span><span>건</span></div></div>
+                <div class="summary-card"><div class="summary-label">반환완료</div><div class="summary-count"><span th:text="${returnedCount}">0</span><span>건</span></div></div>
+            </section>
+            <section class="filter-panel">
+                <form class="filter-row compact-filter-row" th:action="@{/admin/claims}" method="get">
+                    <select class="filter-select" name="status">
+                        <option value="" th:selected="${status == null or status == ''}">상태 전체</option>
+                        <option value="WAITING" th:selected="${status == 'WAITING'}">처리 대기</option>
+                        <option value="APPROVED" th:selected="${status == 'APPROVED'}">승인</option>
+                        <option value="RETURNED" th:selected="${status == 'RETURNED'}">반환완료</option>
+                        <option value="REJECTED" th:selected="${status == 'REJECTED'}">반려</option>
+                    </select>
+                    <button type="submit" class="search-btn">검색</button>
+                </form>
+            </section>
+            <section class="table-panel">
+                <div class="table-head">
+                    <h2 class="table-title">수령 신청 목록</h2>
+                    <div class="table-count" th:text="|총 ${#lists.size(claims)}건|">총 0건</div>
+                </div>
+                <table class="admin-claim-table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>신청자</th>
+                        <th>습득물</th>
+                        <th>선택한 분실물</th>
+                        <th>유사도</th>
+                        <th>상태</th>
+                        <th>신청일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(claims)}">
+                        <td colspan="8" class="empty-cell">접수된 수령 신청이 없습니다.</td>
+                    </tr>
+                    <tr th:each="claim, stat : ${claims}">
+                        <td th:text="${stat.count}">1</td>
+                        <td>
+                            <div class="item-name" th:text="${claim['requesterName']}">신청자</div>
+                            <div class="item-desc" th:text="${claim['requesterStudentNo']}">학번</div>
+                        </td>
+                        <td>
+                            <a class="admin-table-link" th:href="@{/found/detail/{id}(id=${claim['foundId']})}" th:text="${claim['foundTitle']}">습득물</a>
+                            <div class="item-desc" th:text="${claim['storageName']}">보관처</div>
+                        </td>
+                        <td>
+                            <a class="admin-table-link lost-link" th:href="@{/lost/detail/{id}(id=${claim['lostId']})}" th:text="${claim['lostTitle']}">분실물</a>
+                        </td>
+                        <td><span class="score-pill" th:text="|${claim['matchScore']}%|">0%</span></td>
+                        <td>
+                            <span class="status-badge"
+                                  th:classappend="${claim['status'] == 'RETURNED' ? ' done' : (claim['status'] == 'REJECTED' ? ' inactive' : (claim['status'] == 'APPROVED' ? ' active' : ' waiting'))}"
+                                  th:text="${claim['status'] == 'RETURNED' ? '반환완료' : (claim['status'] == 'REJECTED' ? '반려' : (claim['status'] == 'APPROVED' ? '승인' : '처리 대기'))}">처리 대기</span>
+                        </td>
+                        <td th:text="${claim['createdAt'] != null ? #dates.format(claim['createdAt'], 'yyyy.MM.dd HH:mm') : '-'}">-</td>
+                        <td>
+                            <div class="action-group admin-claim-actions">
+                                <form th:action="@{/admin/claims/status}" method="post">
+                                    <input type="hidden" name="claimId" th:value="${claim['claimId']}">
+                                    <input type="hidden" name="status" value="APPROVED">
+                                    <button type="submit" class="action-btn restore-btn">승인</button>
+                                </form>
+                                <form th:action="@{/admin/claims/status}" method="post">
+                                    <input type="hidden" name="claimId" th:value="${claim['claimId']}">
+                                    <input type="hidden" name="status" value="RETURNED">
+                                    <button type="submit" class="action-btn done-btn">반환완료</button>
+                                </form>
+                                <form th:action="@{/admin/claims/status}" method="post">
+                                    <input type="hidden" name="claimId" th:value="${claim['claimId']}">
+                                    <input type="hidden" name="status" value="REJECTED">
+                                    <button type="submit" class="action-btn stop-btn">반려</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</div>
+</body>
+</html>

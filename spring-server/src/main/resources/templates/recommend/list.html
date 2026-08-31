@@ -3,574 +3,269 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>AI 유사 물건 추천 | FindCampus</title>
+    <title>AI 서비스 | FindCampus</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/recommend.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css(v=${#dates.createNow().time})}">
+    <link rel="stylesheet" th:href="@{/css/recommend.css(v=${#dates.createNow().time})}">
+</head>
+
+<body>
+
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container">
-
-    <div class="page-head">
+<main class="container recommend-page">
+    <section class="page-head">
         <div class="page-title">
-            <h1>AI 유사 물건 추천</h1>
-            <p>
-                내가 올린 분실글을 기준으로 AI가 습득물 글을 비교해 비슷한 물건을 추천합니다.
-            </p>
-        </div>
-
-        <button type="button" class="refresh-btn">
-            <i class="fa-solid fa-rotate"></i>
-            추천 새로고침
-        </button>
-    </div>
-
-    <section class="ai-hero">
-        <div class="ai-hero-icon">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-        </div>
-
-        <div>
-            <h2>카테고리, 색상, 일시, 위치 근접도를 함께 분석합니다</h2>
-            <p>
-                단순히 물건명만 비교하지 않고 카테고리 일치 여부, 색상과 특징,
-                분실·습득 시간 차이, 캠퍼스 내 위치 근접도를 함께 계산해 추천 결과를 보여줍니다.
-            </p>
+            <h1>AI 서비스</h1>
+            <p>내가 등록한 분실물 또는 습득물을 선택하면 반대 유형 게시글 중 유사한 물건을 추천합니다.</p>
         </div>
     </section>
 
     <section class="layout">
-
         <aside class="panel lost-panel">
+            <div class="panel-title">내 분실물</div>
 
-            <div class="panel-title">
-                내 분실글 선택
-            </div>
-
-            <div class="lost-select-list">
-
-                <div class="lost-select-card active">
+            <div class="lost-select-list" th:if="${lostItems != null and not #lists.isEmpty(lostItems)}">
+                <a th:each="item : ${lostItems}"
+                   th:href="@{/recommend/list(targetType='lost', targetId=${item.id})}"
+                   th:classappend="${targetType == 'lost' and targetId == item.id ? ' active' : ''}"
+                   class="lost-select-card">
                     <div class="lost-icon">
-                        <i class="fa-solid fa-briefcase"></i>
+                        <i class="fa-solid fa-box-open"></i>
                     </div>
 
                     <div>
-                        <h3>검정 노트북 가방</h3>
-                        <p>중앙도서관 2층 · 2026.05.19 14:30</p>
-                        <span class="lost-status">접수중</span>
+                        <h3 th:text="${item.title}">분실물 제목</h3>
+                        <p th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</p>
+                        <span class="lost-status">분실물</span>
                     </div>
-                </div>
+                </a>
+            </div>
 
-                <div class="lost-select-card">
-                    <div class="lost-icon">
-                        <i class="fa-solid fa-headphones"></i>
+            <div class="empty-list" th:if="${lostItems == null or #lists.isEmpty(lostItems)}">
+                현재 로그인한 계정으로 현재 로그인한 계정으로 등록한 분실물이 없습니다.
+            </div>
+
+            <div class="panel-title found-title">내 습득물</div>
+
+            <div class="lost-select-list" th:if="${foundItems != null and not #lists.isEmpty(foundItems)}">
+                <a th:each="item : ${foundItems}"
+                   th:href="@{/recommend/list(targetType='found', targetId=${item.id})}"
+                   th:classappend="${targetType == 'found' and targetId == item.id ? ' active' : ''}"
+                   class="lost-select-card found-select-card">
+                    <div class="lost-icon found-icon">
+                        <i class="fa-solid fa-box-open"></i>
                     </div>
 
                     <div>
-                        <h3>에어팟 프로</h3>
-                        <p>ICT 1관 3층 · 2026.05.18 11:00</p>
-                        <span class="lost-status">접수중</span>
+                        <h3 th:text="${item.title}">습득물 제목</h3>
+                        <p th:text="${item.locationName != null ? item.locationName : '위치 미입력'}">위치</p>
+                        <span class="lost-status found-status">습득물</span>
                     </div>
-                </div>
-
-                <div class="lost-select-card">
-                    <div class="lost-icon">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-
-                    <div>
-                        <h3>갈색 지갑</h3>
-                        <p>학생복지관 · 2026.05.17 13:10</p>
-                        <span class="lost-status">접수중</span>
-                    </div>
-                </div>
-
+                </a>
             </div>
 
-            <div class="target-card">
-                <div class="target-title">
-                    현재 추천 기준
-                </div>
-
-                <div class="target-info">
-                    <span>
-                        <i class="fa-solid fa-tag"></i>
-                        카테고리: 가방 / 노트북 가방
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-palette"></i>
-                        색상: 검정색
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-location-dot"></i>
-                        위치: 중앙도서관 2층
-                    </span>
-
-                    <span>
-                        <i class="fa-regular fa-clock"></i>
-                        일시: 2026.05.19 오후 2시 30분
-                    </span>
-                </div>
+            <div class="empty-list" th:if="${foundItems == null or #lists.isEmpty(foundItems)}">
+                현재 로그인한 계정으로 현재 로그인한 계정으로 등록한 습득물이 없습니다.
             </div>
-
         </aside>
 
-        <main class="panel result-panel">
-
+        <section class="panel result-panel">
             <div class="result-head">
-                <h2>추천 습득물</h2>
-                <span class="result-count">3건 추천</span>
+                <h2 th:if="${targetItem == null}">추천 기준을 선택하세요</h2>
+                <h2 th:if="${targetItem != null}" th:text="${targetItem.title}">선택한 게시글</h2>
+                <span class="result-count"
+                      th:text="${recommendations != null ? #lists.size(recommendations) + '건 추천' : '대기'}">대기</span>
             </div>
 
-            <div class="compare-guide">
-
-                <div class="guide-item">
-                    <strong>
-                        <i class="fa-solid fa-tag"></i>
-                        카테고리
-                    </strong>
-                    <span>물건 종류가 같은지 확인합니다.</span>
+            <div class="target-card" th:if="${targetItem != null}" th:classappend="${targetType == 'lost' ? ' target-lost' : (targetType == 'found' ? ' target-found' : '')}">
+                <div class="target-title">현재 추천 기준</div>
+                <div class="target-info">
+                    <span><i class="fa-solid fa-tag"></i><b th:text="${targetItem.categoryName != null ? targetItem.categoryName : '카테고리 없음'}">카테고리</b></span>
+                    <span><i class="fa-solid fa-palette"></i><b th:text="${targetItem.color != null ? targetItem.color : '색상 없음'}">색상</b></span>
+                    <span><i class="fa-solid fa-location-dot"></i><b th:text="${targetItem.locationName != null ? targetItem.locationName : '위치 없음'}">위치</b></span>
+                    <span><i class="fa-regular fa-calendar"></i><b th:text="${targetItem.itemDate != null ? #dates.format(targetItem.itemDate, 'yyyy.MM.dd') : '날짜 없음'}">날짜</b></span>
                 </div>
-
-                <div class="guide-item">
-                    <strong>
-                        <i class="fa-solid fa-palette"></i>
-                        색상/특징
-                    </strong>
-                    <span>색상과 주요 특징이 비슷한지 봅니다.</span>
-                </div>
-
-                <div class="guide-item">
-                    <strong>
-                        <i class="fa-regular fa-clock"></i>
-                        일시
-                    </strong>
-                    <span>분실 시간과 습득 시간이 가까운지 비교합니다.</span>
-                </div>
-
-                <div class="guide-item">
-                    <strong>
-                        <i class="fa-solid fa-location-dot"></i>
-                        위치
-                    </strong>
-                    <span>분실 장소와 습득 장소의 근접도를 봅니다.</span>
-                </div>
-
             </div>
 
-            <div class="recommend-list">
+            <div class="compare-guide" th:if="${targetItem == null}">
+                <div class="guide-item">
+                    <strong><i class="fa-solid fa-circle-info"></i> 추천 방식</strong>
+                    <span>사진, 제목, 설명, 카테고리, 색상, 위치, 날짜를 함께 비교합니다.</span>
+                </div>
+            </div>
 
-                <article class="recommend-card">
+            <div class="empty-list recommend-threshold-empty" th:if="${targetItem != null and (recommendations == null or #lists.isEmpty(recommendations))}">
+                &#50976;&#49324;&#46020; 60% &#51060;&#49345;&#51064; &#44172;&#49884;&#47932;&#47564; &#52628;&#52380;&#54633;&#45768;&#45796;. &#51312;&#44148;&#50640; &#47582;&#45716; &#44172;&#49884;&#47932;&#51060; &#50630;&#51004;&#47732; &#44208;&#44284;&#44032; &#54364;&#49884;&#46104;&#51648; &#50506;&#49845;&#45768;&#45796;.
+            </div>
 
-                    <div class="found-thumb">
-                        <span class="status-badge status-storage">보관중</span>
-                        <i class="fa-solid fa-briefcase"></i>
+            <div class="recommend-list" th:if="${recommendations != null and not #lists.isEmpty(recommendations)}">
+                <article class="recommend-card" th:each="result : ${recommendations}" th:classappend="${result.targetType == 'lost' ? ' recommend-result-lost' : ' recommend-result-found'}">
+                    <div class="found-thumb" th:classappend="${result.targetType == 'lost' ? ' lost-thumb' : ''}">
+                        <span class="status-badge"
+                              th:classappend="${result.status == 'RETURNED' or result.status == 'COMPLETED' ? ' status-returned' : (result.targetType == 'found' ? ' status-storage' : ' status-received')}"
+                              th:text="${result.status == 'RETURNED' or result.status == 'COMPLETED' ? '반환완료' : (result.targetType == 'found' ? '보관중' : '접수중')}">상태</span>
+                        <img th:if="${result.imageUrl != null}" th:src="@{${result.imageUrl}}" alt="추천 물건 사진">
+                        <i th:if="${result.imageUrl == null}"
+                           class="fa-solid fa-box-open"></i>
                     </div>
 
                     <div class="recommend-body">
-
                         <div class="card-top">
                             <div>
-                                <span class="found-type">습득물</span>
-
-                                <div class="found-title">
-                                    검정 노트북 가방 습득
-                                </div>
-
+                                <span class="found-type" th:text="${result.targetType == 'found' ? '습득물' : '분실물'}">유형</span>
+                                <div class="found-title" th:text="${result.title}">추천 제목</div>
                                 <p class="found-desc">
-                                    중앙도서관 1층 로비에서 검정색 노트북 가방으로 보이는 물건을 습득했습니다.
+                                    <span th:text="${result.locationName != null ? result.locationName : '위치 없음'}">위치</span>
+                                    <span th:if="${result.itemDate != null}" th:text="${' · ' + #dates.format(result.itemDate, 'yyyy.MM.dd')}">날짜</span>
                                 </p>
                             </div>
 
                             <div class="match-score high">
-                                <strong>94%</strong>
-                                <span>매우 유사</span>
+                                <strong th:text="${#numbers.formatDecimal(result.totalScore * 100, 0, 0) + '%'}">0%</strong>
+                                <span>유사도</span>
                             </div>
                         </div>
 
                         <div class="meta-grid">
-
                             <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-tag"></i>
-                                </div>
-
+                                <div class="meta-icon"><i class="fa-solid fa-image"></i></div>
                                 <div class="meta-text">
-                                    <strong>카테고리</strong>
-                                    <span>가방 / 노트북 가방</span>
+                                    <strong>이미지</strong>
+                                    <span th:text="${#numbers.formatDecimal(result.imageScore * 100, 0, 0) + '%'}">0%</span>
                                 </div>
                             </div>
 
                             <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-palette"></i>
-                                </div>
-
+                                <div class="meta-icon"><i class="fa-solid fa-align-left"></i></div>
                                 <div class="meta-text">
-                                    <strong>색상</strong>
-                                    <span>검정색</span>
+                                    <strong>텍스트</strong>
+                                    <span th:text="${#numbers.formatDecimal(result.textScore * 100, 0, 0) + '%'}">0%</span>
                                 </div>
                             </div>
 
                             <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-
+                                <div class="meta-icon"><i class="fa-solid fa-list-check"></i></div>
                                 <div class="meta-text">
-                                    <strong>습득 위치</strong>
-                                    <span>중앙도서관 1층 로비</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-regular fa-clock"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>습득 일시</strong>
-                                    <span>2026.05.19 오후 2:50</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="factor-box">
-                            <div class="factor-title">
-                                AI 분석 결과
-                            </div>
-
-                            <div class="factor-list">
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    카테고리 일치
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    색상 일치
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    위치 매우 근접
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    시간대 매우 근접
+                                    <strong>조건</strong>
+                                    <span th:text="${#numbers.formatDecimal(result.metadataScore * 100, 0, 0) + '%'}">0%</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="match-bar-wrap">
-                            <div class="match-bar">
-                                <div class="match-fill fill-94"></div>
-                            </div>
-
-                            <div class="bar-percent">
-                                94%
-                            </div>
+                        <div class="reason-box">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span th:text="${result.reason}">추천 사유</span>
                         </div>
 
-                        <div class="button-area">
-                            <a th:href="@{/found/detail}" class="detail-btn">
-                                <i class="fa-solid fa-circle-info"></i>
-                                상세보기
-                            </a>
-
-                            <a th:href="@{/match/result(foundId=1,lostId=1)}" class="claim-btn">
-                                <i class="fa-solid fa-hand-holding-heart"></i>
-                                내 물건 같아요
-                            </a>
+                        <div class="card-actions">
+                            <a th:href="${result.targetType == 'found' ? '/found/detail/' + result.targetId : '/lost/detail/' + result.targetId}"
+                               class="detail-btn">상세 보기</a>
                         </div>
-
                     </div>
-
                 </article>
-
-                <article class="recommend-card">
-
-                    <div class="found-thumb">
-                        <span class="status-badge status-storage">보관중</span>
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-
-                    <div class="recommend-body">
-
-                        <div class="card-top">
-                            <div>
-                                <span class="found-type">습득물</span>
-
-                                <div class="found-title">
-                                    검정 가방 발견
-                                </div>
-
-                                <p class="found-desc">
-                                    중앙도서관 앞 벤치 근처에서 검정색 가방을 습득했습니다.
-                                </p>
-                            </div>
-
-                            <div class="match-score mid">
-                                <strong>82%</strong>
-                                <span>유사</span>
-                            </div>
-                        </div>
-
-                        <div class="meta-grid">
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-tag"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>카테고리</strong>
-                                    <span>가방 / 일반 가방</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-palette"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>색상</strong>
-                                    <span>검정색</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>습득 위치</strong>
-                                    <span>중앙도서관 앞 벤치</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-regular fa-clock"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>습득 일시</strong>
-                                    <span>2026.05.19 오후 4:10</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="factor-box">
-                            <div class="factor-title">
-                                AI 분석 결과
-                            </div>
-
-                            <div class="factor-list">
-                                <div class="factor mid">
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                    세부 카테고리 일부 다름
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    색상 일치
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    위치 근접
-                                </div>
-
-                                <div class="factor mid">
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                    시간 차이 있음
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="match-bar-wrap">
-                            <div class="match-bar">
-                                <div class="match-fill fill-82"></div>
-                            </div>
-
-                            <div class="bar-percent">
-                                82%
-                            </div>
-                        </div>
-
-                        <div class="button-area">
-                            <a th:href="@{/found/detail}" class="detail-btn">
-                                <i class="fa-solid fa-circle-info"></i>
-                                상세보기
-                            </a>
-
-                            <a th:href="@{/match/result(foundId=2,lostId=1)}" class="claim-btn">
-                                <i class="fa-solid fa-hand-holding-heart"></i>
-                                내 물건 같아요
-                            </a>
-                        </div>
-
-                    </div>
-
-                </article>
-
-                <article class="recommend-card">
-
-                    <div class="found-thumb">
-                        <span class="status-badge status-storage">보관중</span>
-                        <i class="fa-solid fa-laptop"></i>
-                    </div>
-
-                    <div class="recommend-body">
-
-                        <div class="card-top">
-                            <div>
-                                <span class="found-type">습득물</span>
-
-                                <div class="found-title">
-                                    노트북 파우치 습득
-                                </div>
-
-                                <p class="found-desc">
-                                    ICT 2관 강의실에서 검정색 노트북 파우치로 보이는 물건을 습득했습니다.
-                                </p>
-                            </div>
-
-                            <div class="match-score low">
-                                <strong>68%</strong>
-                                <span>확인 필요</span>
-                            </div>
-                        </div>
-
-                        <div class="meta-grid">
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-tag"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>카테고리</strong>
-                                    <span>전자기기 / 노트북 파우치</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-palette"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>색상</strong>
-                                    <span>검정색</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>습득 위치</strong>
-                                    <span>ICT 2관 강의실</span>
-                                </div>
-                            </div>
-
-                            <div class="meta-item">
-                                <div class="meta-icon">
-                                    <i class="fa-regular fa-clock"></i>
-                                </div>
-
-                                <div class="meta-text">
-                                    <strong>습득 일시</strong>
-                                    <span>2026.05.19 오후 5:40</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="factor-box">
-                            <div class="factor-title">
-                                AI 분석 결과
-                            </div>
-
-                            <div class="factor-list">
-                                <div class="factor bad">
-                                    <i class="fa-solid fa-circle-xmark"></i>
-                                    카테고리 다름
-                                </div>
-
-                                <div class="factor good">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    색상 일치
-                                </div>
-
-                                <div class="factor mid">
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                    위치 거리 있음
-                                </div>
-
-                                <div class="factor mid">
-                                    <i class="fa-solid fa-circle-minus"></i>
-                                    시간 차이 있음
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="match-bar-wrap">
-                            <div class="match-bar">
-                                <div class="match-fill fill-68"></div>
-                            </div>
-
-                            <div class="bar-percent">
-                                68%
-                            </div>
-                        </div>
-
-                        <div class="button-area">
-                            <a th:href="@{/found/detail}" class="detail-btn">
-                                <i class="fa-solid fa-circle-info"></i>
-                                상세보기
-                            </a>
-
-                            <a th:href="@{/match/result(foundId=3,lostId=1)}" class="claim-btn">
-                                <i class="fa-solid fa-hand-holding-heart"></i>
-                                내 물건 같아요
-                            </a>
-                        </div>
-
-                    </div>
-
-                </article>
-
             </div>
-
-            <div class="notice-box">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-
-                <div>
-                    AI 추천 결과는 참고용입니다. 유사도가 높아도 바로 수령이 확정되는 것은 아니며,
-                    내 분실글과 습득물 정보를 비교한 뒤 보관 장소에서 본인 확인 절차를 거쳐야 합니다.
-                </div>
-            </div>
-
-        </main>
-
+        </section>
     </section>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const panel = document.querySelector(".recommend-page .lost-panel");
+    if (!panel) return;
 
-</div>
+    panel.querySelectorAll(".recommend-type-filter").forEach(function (oldFilter) {
+        oldFilter.remove();
+    });
 
+    const lostCards = Array.from(panel.querySelectorAll(".lost-select-card:not(.found-select-card)"));
+    const foundCards = Array.from(panel.querySelectorAll(".lost-select-card.found-select-card"));
+    const lostLists = Array.from(panel.querySelectorAll(".lost-select-list")).filter(function (list) {
+        return list.querySelector(".lost-select-card:not(.found-select-card)");
+    });
+    const foundLists = Array.from(panel.querySelectorAll(".lost-select-list")).filter(function (list) {
+        return list.querySelector(".lost-select-card.found-select-card");
+    });
+
+    lostCards.forEach(function (card) { card.dataset.recommendType = "lost"; });
+    foundCards.forEach(function (card) { card.dataset.recommendType = "found"; });
+
+    const filter = document.createElement("div");
+    filter.className = "recommend-type-filter";
+    filter.innerHTML = [
+        '<button type="button" class="recommend-type-btn" data-recommend-filter="all">&#51204;&#52404;</button>',
+        '<button type="button" class="recommend-type-btn lost" data-recommend-filter="lost">&#48516;&#49892;&#47932;</button>',
+        '<button type="button" class="recommend-type-btn found" data-recommend-filter="found">&#49845;&#46301;&#47932;</button>'
+    ].join("");
+
+    const firstTitle = panel.querySelector(".panel-title");
+    panel.insertBefore(filter, firstTitle || panel.firstChild);
+
+    const emptyBlocks = Array.from(panel.querySelectorAll(".empty-list"));
+    const allCards = lostCards.concat(foundCards);
+
+    function normalFilter(value) {
+        return value === "lost" || value === "found" ? value : "all";
+    }
+
+    function currentFilterFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return normalFilter(params.get("filter") || params.get("targetType"));
+    }
+
+    function applyFilter(type, updateUrl) {
+        type = normalFilter(type);
+
+        filter.querySelectorAll(".recommend-type-btn").forEach(function (btn) {
+            btn.classList.toggle("active", btn.dataset.recommendFilter === type);
+        });
+
+        allCards.forEach(function (card) {
+            const show = type === "all" || card.dataset.recommendType === type;
+            card.hidden = !show;
+            card.classList.toggle("is-filter-hidden", !show);
+        });
+
+        lostLists.forEach(function (list) {
+            list.hidden = type === "found";
+        });
+        foundLists.forEach(function (list) {
+            list.hidden = type === "lost";
+        });
+
+        emptyBlocks.forEach(function (empty) {
+            empty.hidden = true;
+        });
+
+        if (updateUrl) {
+            const url = new URL(window.location.href);
+            if (type === "all") {
+                url.searchParams.delete("filter");
+            } else {
+                url.searchParams.set("filter", type);
+            }
+            window.history.replaceState(null, "", url.toString());
+        }
+    }
+
+    filter.addEventListener("click", function (event) {
+        const button = event.target.closest(".recommend-type-btn");
+        if (!button) return;
+        applyFilter(button.dataset.recommendFilter || "all", true);
+    });
+
+    panel.addEventListener("click", function (event) {
+        const card = event.target.closest(".lost-select-card[data-recommend-type]");
+        if (!card) return;
+        const href = new URL(card.href, window.location.origin);
+        href.searchParams.set("filter", card.dataset.recommendType);
+        card.href = href.toString();
+    });
+
+    applyFilter(currentFilterFromUrl(), false);
+});
+</script>
 </body>
 </html>
